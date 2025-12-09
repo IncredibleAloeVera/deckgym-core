@@ -4,12 +4,20 @@ use pyo3::wrap_pyfunction;
 use std::collections::HashMap;
 
 use crate::{
-    deck::Deck,
+    deck::{Deck, is_basic},
     game::Game,
     models::{Ability, Attack, Card, EnergyType, PlayedCard},
     players::{create_players, fill_code_array, parse_player_code},
     state::{GameOutcome, State},
+    actions::{
+        attacks::Mechanic,
+        EFFECT_MECHANIC_MAP,
+    },
+    card_ids::CardId,
+    database::get_card_by_enum,
 };
+use std::collections::HashSet;
+
 
 /// Python wrapper for EnergyType
 #[pyclass]
@@ -191,12 +199,78 @@ impl PyCard {
         }
     }
 
+    #[getter]
+    fn mechanic_flags(&self) -> Vec<u8> {
+        let mut flags = vec![0u8; 64]; // Fixed size vector for mechanics
+        
+        // Get attacks
+        let attacks = match &self.card {
+            Card::Pokemon(p) => &p.attacks,
+            _ => return flags,
+        };
+
+        for attack in attacks {
+             if let Some(effect) = &attack.effect {
+                if let Some(mechanic) = EFFECT_MECHANIC_MAP.get(effect.as_str()) {
+                    let idx = mechanic_to_index(mechanic);
+                    if idx < 64 {
+                        flags[idx] = 1;
+                    }
+                }
+             }
+        }
+        flags
+    }
+
     fn __repr__(&self) -> String {
         format!(
             "Card(id='{}', name='{}')",
             self.card.get_id(),
             self.card.get_name()
         )
+    }
+}
+
+// Helper to map mechanic to index
+fn mechanic_to_index(mechanic: &Mechanic) -> usize {
+    match mechanic {
+        Mechanic::SelfHeal { .. } => 0,
+        Mechanic::SearchToHandByEnergy { .. } => 1,
+        Mechanic::SearchToBenchByName { .. } => 2,
+        Mechanic::InflictStatusCondition { .. } => 3,
+        Mechanic::ChanceStatusAttack { .. } => 4,
+        Mechanic::CantAttackNextTurn { .. } => 5,
+        Mechanic::DiscardRandomGlobalEnergy => 6,
+        Mechanic::DiscardEnergyFromOpponentActive => 7,
+        Mechanic::ExtraDamageIfEx { .. } => 8,
+        Mechanic::SelfDamage { .. } => 9,
+        Mechanic::CoinFlipExtraDamage { .. } => 10,
+        Mechanic::CoinFlipExtraDamageOrSelfDamage { .. } => 11,
+        Mechanic::ExtraDamageForEachHeads { .. } => 12,
+        Mechanic::CoinFlipNoEffect => 13,
+        Mechanic::SelfDiscardEnergy { .. } => 14,
+        Mechanic::ExtraDamageIfExtraEnergy { .. } => 15,
+        Mechanic::ExtraDamageIfBothHeads { .. } => 16,
+        Mechanic::DirectDamage { .. } => 17,
+        Mechanic::ChargeBench { .. } => 18,
+        Mechanic::DamageAndCardEffect { .. } => 19,
+        Mechanic::SelfDiscardAllEnergy => 20,
+        Mechanic::AlsoBenchDamage { .. } => 21,
+        Mechanic::AlsoChoiceBenchDamage { .. } => 22,
+        Mechanic::ExtraDamageIfHurt { .. } => 23,
+        Mechanic::ExtraDamageIfKnockedOutLastTurn { .. } => 24,
+        Mechanic::PreventAllDamageAndEffectsNextTurn { .. } => 25,
+        Mechanic::BenchCountDamage { .. } => 26,
+        Mechanic::ExtraDamagePerEnergy { .. } => 27,
+        Mechanic::ExtraDamageIfToolAttached { .. } => 28,
+        Mechanic::RecoilIfKo { .. } => 29,
+        Mechanic::DamageAndTurnEffect { .. } => 30,
+        Mechanic::ManaphyOceanicGift => 31,
+        Mechanic::PalkiaExDimensionalStorm => 32,
+        Mechanic::MegaBlazikenExMegaBurningAttack => 33,
+        Mechanic::MoltresExInfernoDance => 34,
+        Mechanic::CelebiExPowerfulBloom => 35,
+        Mechanic::MagikarpWaterfallEvolution => 36,
     }
 }
 
@@ -826,6 +900,91 @@ pub fn py_simulate(
     })
 }
 
+
+/// Run simulations using in-memory decks (no file I/O)
+#[pyfunction]
+#[pyo3(signature = (deck_a_cards, deck_b_cards, num_simulations=100))]
+pub fn py_simulate_decks(
+    deck_a_cards: Vec<String>,
+    deck_b_cards: Vec<String>,
+    num_simulations: u32,
+) -> PyResult<PySimulationResults> {
+    
+    // Helper to construct Deck from ID strings
+    let construct_deck = |cards: &Vec<String>| -> Result<Deck, String> {
+        let mut deck_cards = Vec::new();
+        for id_str in cards {
+             let card_id = CardId::from_card_id(id_str)
+                .ok_or_else(|| format!("Card ID not found: {}", id_str))?;
+             let card = get_card_by_enum(card_id);
+             deck_cards.push(card.clone());
+        }
+        
+        let mut energy_types = HashSet::new();
+        for card in &deck_cards {
+            if let Card::Pokemon(p) = card {
+                 energy_types.insert(p.energy_type);
+            }
+        }
+
+        Ok(Deck {
+            cards: deck_cards,
+            energy_types: energy_types.into_iter().collect(),
+        })
+    };
+
+    let deck_a = construct_deck(&deck_a_cards).map_err(|e| {
+         PyErr::new::<pyo3::exceptions::PyValueError, _>(e)
+    })?;
+    let deck_b = construct_deck(&deck_b_cards).map_err(|e| {
+         PyErr::new::<pyo3::exceptions::PyValueError, _>(e)
+    })?;
+    
+    // Basic validation
+    if deck_a.cards.len() != 20 {
+         return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Deck A has {} cards, expected 20", deck_a.cards.len())));
+    }
+
+    // Run simulations
+    let mut wins_per_deck = [0u32, 0u32, 0u32];
+
+    for _ in 0..num_simulations {
+        // Use default players (same as py_simulate fallback)
+        let players = fill_code_array(None);
+        let mut game = Game::new(create_players(deck_a.clone(), deck_b.clone(), players), rand::random());
+        let outcome = game.play();
+        
+        match outcome {
+            Some(GameOutcome::Win(winner)) => {
+                 if winner < 2 { wins_per_deck[winner] += 1; }
+            },
+            Some(GameOutcome::Tie) | None => wins_per_deck[2] += 1,
+        }
+    }
+
+    let total_games = num_simulations;
+
+    Ok(PySimulationResults {
+        total_games,
+        player_a_wins: wins_per_deck[0],
+        player_b_wins: wins_per_deck[1],
+        ties: wins_per_deck[2],
+        player_a_win_rate: wins_per_deck[0] as f32 / total_games as f32,
+        player_b_win_rate: wins_per_deck[1] as f32 / total_games as f32,
+        tie_rate: wins_per_deck[2] as f32 / total_games as f32,
+    })
+}
+
+
+/// Get a card by ID
+#[pyfunction]
+pub fn get_card(id: String) -> PyResult<PyCard> {
+    let card_id = CardId::from_card_id(&id)
+        .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("Card ID not found: {}", id)))?;
+    let card = get_card_by_enum(card_id);
+    Ok(PyCard { card: card.clone() })
+}
+
 /// Get available player types
 #[pyfunction]
 pub fn get_player_types() -> HashMap<String, String> {
@@ -854,6 +1013,8 @@ pub fn deckgym(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyGameOutcome>()?;
     m.add_class::<PySimulationResults>()?;
     m.add_function(wrap_pyfunction!(py_simulate, m)?)?;
+    m.add_function(wrap_pyfunction!(py_simulate_decks, m)?)?;
     m.add_function(wrap_pyfunction!(get_player_types, m)?)?;
+    m.add_function(wrap_pyfunction!(get_card, m)?)?;
     Ok(())
 }
