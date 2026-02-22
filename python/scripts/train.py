@@ -122,7 +122,7 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
     # Build config dict for logging/saving
     config_dict = {
         # Paths
-        "meta_deck_path": config.meta_deck_path,
+        "meta_decks_dir": config.meta_decks_dir,
         "save_path": config.save_path,
         "checkpoint_dir": config.checkpoint_dir,
         "tensorboard_dir": config.tensorboard_dir,
@@ -175,7 +175,7 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
     print(f"{'─' * 60}")
 
     print("\n  [▸] Paths:")
-    print(f"     Meta decks:        {config.meta_deck_path}")
+    print(f"     Meta decks:        {config.meta_decks_dir}")
     print(f"     Checkpoint dir:    {config.checkpoint_dir}")
     if config.resume_path:
         print(f"     Resume from:       {config.resume_path}")
@@ -219,7 +219,7 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
 
     # Setup environment(s)
     print("[1/4] Loading meta decks...")
-    deck_loader = MetaDeckLoader(config.meta_deck_path)
+    deck_loader = MetaDeckLoader(config.meta_decks_dir)
 
     print(f"[2/4] Creating {config.n_envs} environment(s) for self-play...")
     if config.n_envs == 1:
@@ -461,7 +461,7 @@ if __name__ == "__main__":
 
     # Paths
     parser.add_argument(
-        "--meta", default=_defaults.meta_deck_path, help="Meta deck definitions"
+        "--meta", default=_defaults.meta_decks_dir, help="Meta decks directory"
     )
     parser.add_argument("--save", default=_defaults.save_path, help="Model save path")
 
@@ -567,8 +567,8 @@ if __name__ == "__main__":
         config = TrainingConfig()
 
     # Override config with CLI arguments (CLI takes precedence)
-    if args.meta != _defaults.meta_deck_path:
-        config.meta_deck_path = args.meta
+    if args.meta != _defaults.meta_decks_dir:
+        config.meta_decks_dir = args.meta
     if args.save != _defaults.save_path:
         config.save_path = args.save
     if args.resume is not None:

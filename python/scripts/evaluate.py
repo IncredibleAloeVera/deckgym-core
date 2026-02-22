@@ -32,26 +32,23 @@ from deckgym.deck_loader import MetaDeckLoader, DeckInfo
 console = Console()
 
 class ScientificEvaluator:
-    def __init__(self, meta_json: str, model_code: str = "o1"):
-        self.meta_json = meta_json
+    def __init__(self, meta_dir: str, model_code: str = "o1"):
+        self.meta_dir = meta_dir
         self.model_code = model_code
         self.num_games = 1
-        self.loader = MetaDeckLoader(meta_json)
+        self.loader = MetaDeckLoader(meta_dir)
         self.stats = {}
         
     def analyze_data(self):
         """Minimal data analysis for Chaos mode."""
-        strengths = [d.strength for d in self.loader.decks]
         self.stats = {
             "total_decks": len(self.loader.decks),
             "archetypes_count": len(self.loader.archetypes),
-            "mean_strength": np.mean(strengths)
         }
         
         console.print(Panel(
             f"Total Decks in Meta-DB: [bold cyan]{self.stats['total_decks']}[/bold cyan]\n"
-            f"Archetypes Identified: [bold magenta]{self.stats['archetypes_count']}[/bold magenta]\n"
-            f"Global Mean Strength: [bold white]{self.stats['mean_strength']:.3f}[/bold white]",
+            f"Archetypes Identified: [bold magenta]{self.stats['archetypes_count']}[/bold magenta]\n",
             title="Dataset Summary", 
             border_style="blue"
         ))
@@ -172,8 +169,6 @@ class ScientificEvaluator:
                 content = f.read()
                 gen_decks.append(DeckInfo(
                     archetype=fpath.stem,
-                    strength=0.5,
-                    score=0.5,
                     deck_string=content
                 ))
         
@@ -348,10 +343,7 @@ class ScientificEvaluator:
                             
                         wr = m["p1_wins"] / m["total"]
                         p1_results.append({
-                            "p1_strength": p1_deck.strength,
-                            "p2_strength": p2_deck.strength,
                             "wr": wr,
-                            "diff": p1_deck.strength - p2_deck.strength,
                             "p1_arch": p1_deck.archetype,
                             "p2_arch": p2_deck.archetype,
                             "wins": m["p1_wins"],
@@ -509,7 +501,7 @@ class ScientificEvaluator:
 
 def main():
     parser = argparse.ArgumentParser(description="DeckGym Scientific Evaluation")
-    parser.add_argument("--meta", default="meta_deck.json", help="Path to meta_deck.json")
+    parser.add_argument("--meta", default="archetypes_by_era", help="Path to meta decks directory")
     
     subparsers = parser.add_subparsers(dest="mode", help="Evaluation mode", required=True)
     

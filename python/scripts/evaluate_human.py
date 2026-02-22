@@ -135,7 +135,7 @@ def main():
         "--deck-path",
         type=str,
         default=None,
-        help="Path to deck JSON (default: meta_deck.json)",
+        help="Path to deck JSON directory (default: archetypes_by_era)",
     )
     parser.add_argument(
         "--human-first",
@@ -146,7 +146,7 @@ def main():
     args = parser.parse_args()
 
     # Load deck loader
-    deck_json = args.deck_path or str(PROJECT_ROOT / "meta_deck.json")
+    deck_json = args.deck_path or str(PROJECT_ROOT / "archetypes_by_era")
     if not Path(deck_json).exists():
         print(f"ERROR: Deck file not found: {deck_json}")
         sys.exit(1)
@@ -181,10 +181,10 @@ def main():
                 deck_b_info = loader.sample_deck_info(mode="hierarchical")
 
             print(
-                f"Deck A: {deck_a_info.archetype} (strength: {deck_a_info.strength:.2f})"
+                f"Deck A: {deck_a_info.archetype}"
             )
             print(
-                f"Deck B: {deck_b_info.archetype} (strength: {deck_b_info.strength:.2f})"
+                f"Deck B: {deck_b_info.archetype}"
             )
 
             # Create temp deck files

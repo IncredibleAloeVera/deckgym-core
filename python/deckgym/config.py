@@ -130,7 +130,7 @@ class TrainingConfig:
     # -------------------------------------------------------------------------
     # Paths
     # -------------------------------------------------------------------------
-    meta_deck_path: str = "meta_deck.json"
+    meta_decks_dir: str = "archetypes_by_era"
     save_path: str = "models/rl_bot"
     checkpoint_dir: str = "./checkpoints/"
     tensorboard_dir: str = "./logs/"
@@ -365,7 +365,7 @@ class TrainingConfig:
 # Generated template - customize as needed
 
 paths:
-  meta_deck_path: "{self.meta_deck_path}"
+  meta_decks_dir: "{self.meta_decks_dir}"
   save_path: "{self.save_path}"
   checkpoint_dir: "{self.checkpoint_dir}"
   tensorboard_dir: "{self.tensorboard_dir}"
@@ -450,7 +450,7 @@ environment:
         # Paths
         if "paths" in config_dict:
             for key in [
-                "meta_deck_path",
+                "meta_decks_dir",
                 "save_path",
                 "checkpoint_dir",
                 "tensorboard_dir",
@@ -612,19 +612,7 @@ environment:
 # Default configuration
 DEFAULT_CONFIG = TrainingConfig()
 
-# Conservative config for unstable training
-CONSERVATIVE_CONFIG = TrainingConfig(
-    attention_embed_dim=256,
-    attention_num_heads=8,
-    attention_num_layers=2,  # Shallower
-    attention_ff_expansion_factor=2,  # Smaller FF
-    attention_temperature=1.5,  # Softer attention
-    attention_dropout=0.15,
-    attention_init_residual_scale=True,
-    policy_layers=(256, 128),
-    value_layers=(256,),
-    max_grad_norm=0.5,  # More aggressive clipping
-)
+
 
 
 # =============================================================================
@@ -647,7 +635,7 @@ def main():
         "--preset",
         "-p",
         type=str,
-        choices=["default", "conservative"],
+        choices=["default"],
         default="default",
         help="Which preset to use for generation",
     )
@@ -668,7 +656,6 @@ def main():
 
     presets = {
         "default": DEFAULT_CONFIG,
-        "conservative": CONSERVATIVE_CONFIG,
     }
 
     if args.generate_template:
