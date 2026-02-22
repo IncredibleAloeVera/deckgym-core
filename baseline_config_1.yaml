@@ -1,0 +1,75 @@
+# DeckGym Training Configuration
+# Generated template - customize as needed
+
+paths:
+  meta_decks_dir: "archetypes_by_era"
+  save_path: "models/rl_bot"
+  checkpoint_dir: "./checkpoints/"
+  tensorboard_dir: "./logs/"
+  resume_path: null
+
+model:
+  use_attention: true
+  attention_embed_dim: 512
+  attention_num_heads: 8
+  attention_num_layers: 3
+  attention_global_proj_dim: 256
+  attention_ff_expansion_factor: 4
+  attention_output_proj_factor: 2
+  attention_mask_threshold: 1e-06
+  
+  # Stability parameters
+  attention_dropout: 0.1
+  attention_pool_queries: 4
+  attention_temperature: 1.0
+  attention_init_residual_scale: true
+  
+  use_silu: true
+
+  net_arch:
+    pi: [512, 256, 128]
+    vf: [512, 256]
+
+ppo:
+  learning_rate: 1e-05
+  min_learning_rate: 5e-06
+  warmup_ratio: 0.02
+
+  n_steps: 256
+  batch_size: 1024
+  n_epochs: 8
+
+  gamma: 0.98
+  gae_lambda: 0.95
+  ent_coef: 0.02
+  vf_coef: 0.5
+  clip_range: 0.2
+  draw_reward: -0.5
+  max_grad_norm: 1.0
+  target_kl: 0.015
+
+training:
+  total_timesteps: 30000000
+  checkpoint_freq: 10000
+  n_envs: 12
+  use_batched_env: true
+  device: "auto"
+  onnx_device: "trt"
+  pfsp_opponent_device: "trt"
+  frozen_opponent_update_rollouts: 8
+  use_gradient_checkpointing: false
+  brutal_resume: false
+
+  # PFSP settings
+  use_pfsp: true
+  pfsp_pool_size: 10
+  pfsp_add_every_n_rollouts: 8
+  pfsp_select_every_n_rollouts: 2
+  pfsp_priority_exponent: 2.0
+  pfsp_checkpoint_dir: "./checkpoints/pfsp_pool/"
+  pfsp_baseline_curriculum: [[0, ["v", "w"]], [500000, ["aa", "er"]], [2000000, ["er", "o2"]], [5000000, ["o2t", "o1"]], [10000000, ["e2", "o1", "o2"]]]
+
+environment:
+  max_turns: 99
+  max_actions_per_turn: 50
+  max_total_actions: 500
