@@ -49,7 +49,7 @@ ppo:
   target_kl: 0.015
 
 training:
-  total_timesteps: 30000000
+  total_timesteps: 100000000
   checkpoint_freq: 50000
   n_envs: 24
   use_batched_env: true
