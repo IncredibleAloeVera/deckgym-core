@@ -67,7 +67,7 @@ class TestLeagueLogger(unittest.TestCase):
         # Average of 0.75 and 0.25 = 0.5
         self.assertEqual(wr, 0.5)
 
-    def test_get_global_winrate(self):
+    def test_get_pool_winrate(self):
         """Test global winrate (excludes omniscient)."""
         self.pool.opponents = {
             "m1": {"wins": 10, "losses": 40, "draws": 0, "is_baseline": False},  # Fair
@@ -82,7 +82,7 @@ class TestLeagueLogger(unittest.TestCase):
         }
         self.pool.get_data.side_effect = lambda name: self.pool.opponents.get(name)
 
-        wr = self.league_logger.get_global_winrate()
+        wr = self.league_logger.get_pool_winrate()
         # m1: 40 wins, 50 games; baseline_er: 20 wins, 40 games
         # Total: 60 wins, 90 games = 66.7%
         expected = 60 / 90

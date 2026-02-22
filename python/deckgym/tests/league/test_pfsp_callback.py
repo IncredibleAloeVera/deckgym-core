@@ -92,7 +92,7 @@ class TestPFSPCallback(unittest.TestCase):
         self.callback.episode_results = [("m1", "agent_win")] * 20
 
         self.callback.selector.update_curriculum.return_value = ([], [])
-        self.callback.league_logger.get_global_winrate.return_value = 0.8
+        self.callback.league_logger.get_pool_winrate.return_value = 0.8
 
         with patch.object(self.callback, "_add_to_pool"):
             self.callback._on_rollout_end()
@@ -113,7 +113,7 @@ class TestPFSPCallback(unittest.TestCase):
         self.callback.episode_results = [("m1", "agent_win")] * 20
 
         self.callback.selector.update_curriculum.return_value = ([], [])
-        self.callback.league_logger.get_global_winrate.return_value = 0.8
+        self.callback.league_logger.get_pool_winrate.return_value = 0.8
 
         with patch.object(self.callback, "_add_to_pool"):
             self.callback._on_rollout_end()
@@ -138,7 +138,7 @@ class TestPFSPCallback(unittest.TestCase):
         self.callback.episode_results = [("m1", "agent_win")] * 20
 
         self.callback.selector.update_curriculum.return_value = ([], [])
-        self.callback.league_logger.get_global_winrate.return_value = 0.8
+        self.callback.league_logger.get_pool_winrate.return_value = 0.8
 
         with patch.object(self.callback, "_add_to_pool") as mock_add:
             self.callback._on_rollout_end()
