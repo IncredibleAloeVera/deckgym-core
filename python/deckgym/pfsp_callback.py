@@ -182,19 +182,20 @@ class PFSPCallback(BaseCallback):
         # "All-Time" means cumulative winrate reset at each refresh 
         if self.rollout_count % self.add_to_pool_every_n_rollouts == 0:
             # Use All-Time (cumulative) winrate for the addition decision
-            all_time_wr = self.league_logger.get_global_winrate(rollout_results=None)
+            all_time_wr = self.league_logger.get_pool_winrate(rollout_results=None)
             min_wr_to_add = getattr(self.env.config, "pfsp_min_winrate_to_add", 0.50)
 
             if self.verbose > 0:
                 print(f"\n[PFSP] --- Pool Refresh Check (Rollout {self.rollout_count}) ---")
-                print(f"[PFSP] All-Time WR: {all_time_wr:.1%} (Required: {min_wr_to_add:.1%})")
+                print(f"[PFSP] All-Time Pool WR: {all_time_wr:.1%} (Required: {min_wr_to_add:.1%})")
 
-            if all_time_wr >= min_wr_to_add or self.pool.model_count < self.pool.pool_size:
+            # Check strictly >= min_wr_to_add before entering pool (do not bypass for initial pool population)
+            if all_time_wr >= min_wr_to_add:
                 self._add_to_pool()
                 # Reset ALL statistics only when pool composition changes
 
             elif self.verbose > 0:
-                print(f"[PFSP] Agent rejected: Winrate {all_time_wr:.1%} is below required {min_wr_to_add:.1%}")
+                print(f"[PFSP] Agent rejected: Pool Winrate {all_time_wr:.1%} is below required {min_wr_to_add:.1%}")
             # Reset all stats at each refresh (even if agent not added)
             self.pool.reset_statistics()
             self.pool.reset_total_statistics()

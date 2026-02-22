@@ -3,7 +3,7 @@
 League Logger for training progress tracking.
 
 Simplified metrics:
-- WR Global: Agent winrate against all opponents EXCEPT omniscient bots (e2, e3, etc.)
+- WR Pool: Agent winrate against the PFSP historical pool (pfsp_Xk opponents)
 - WR vs e2: Agent winrate specifically against e2 (expectiminimax depth 2)
 
 Baseline Codes:
@@ -96,7 +96,7 @@ class LeagueLogger:
     Handles logging of league metrics to TensorBoard and console.
 
     Simplified to two key metrics:
-    - WR Global (e2 excluded): Overall performance against fair opponents
+    - WR Pool (PFSP excluded baselines): Overall performance against the historical self-play pool
     - WR vs e2: Benchmark against optimal play
     """
 
@@ -144,68 +144,10 @@ class LeagueLogger:
             return r["losses"] / total  # Agent wins = opponent losses
         return None
 
-    def get_global_winrate(
+    def get_pool_winrate(
         self, rollout_results: Optional[Dict[str, Dict[str, int]]] = None
     ) -> float:
-        """
-        Agent winrate against ALL opponents EXCEPT omniscient bots.
-        Includes: self-play, fair baselines, ONNX models.
-
-        Uses weighted average (by games played), not simple mean of winrates.
-        """
-        names = []
-        for name, data in self.pool.opponents.items():
-            if data.get("is_baseline"):
-                code = data.get("baseline_code", "")
-                if self._is_omniscient(code):
-                    continue
-            names.append(name)
-
-        if not names:
-            return 0.5
-
-        total_wins = 0
-        total_games = 0
-
-        if rollout_results is not None:
-            # Per-rollout calculation (weighted)
-            for n in names:
-                if n in rollout_results:
-                    r = rollout_results[n]
-                    games = r["wins"] + r["losses"] + r["draws"]
-                    agent_wins = r["losses"]  # Agent wins = opponent losses
-                    total_wins += agent_wins
-                    total_games += games
-        else:
-            # Cumulative calculation (weighted)
-            for n in names:
-                data = self.pool.get_data(n)
-                if data:
-                    games = data["wins"] + data["losses"] + data["draws"]
-                    agent_wins = data["losses"]
-                    total_wins += agent_wins
-                    total_games += games
-
-        if total_games > 0:
-            return total_wins / total_games
-        return 0.5
-
-    def get_e2_winrate(
-        self, rollout_results: Optional[Dict[str, Dict[str, int]]] = None
-    ) -> Optional[float]:
-        """Agent winrate specifically against e2."""
-        if "baseline_e2" not in self.pool.opponents:
-            return None
-        if rollout_results is not None:
-            wr = self._get_winrate_from_rollout("baseline_e2", rollout_results)
-            if wr is not None:
-                return wr
-        return self._get_winrate("baseline_e2")
-
-    def get_self_play_winrate(
-        self, rollout_results: Optional[Dict[str, Dict[str, int]]] = None
-    ) -> float:
-        """Backward compatibility: average agent winrate against non-baseline opponents."""
+        """ Backward compatibility: average agent winrate against non-baseline opponents (the PFSP pool). """
         names = [n for n, d in self.pool.opponents.items() if not d.get("is_baseline")]
         if not names:
             return 0.5
@@ -223,6 +165,19 @@ class LeagueLogger:
             winrates = [self._get_winrate(n) for n in names]
             return float(np.mean(winrates))
 
+    def get_e2_winrate(
+        self, rollout_results: Optional[Dict[str, Dict[str, int]]] = None
+    ) -> Optional[float]:
+        """Agent winrate specifically against e2."""
+        if "baseline_e2" not in self.pool.opponents:
+            return None
+        if rollout_results is not None:
+            wr = self._get_winrate_from_rollout("baseline_e2", rollout_results)
+            if wr is not None:
+                return wr
+        return self._get_winrate("baseline_e2")
+
+
     def log_metrics(
         self,
         rollout_count: int,
@@ -236,19 +191,19 @@ class LeagueLogger:
                             If provided, metrics use per-rollout data.
                             Otherwise falls back to cumulative stats.
         """
-        global_wr = self.get_global_winrate(rollout_results)
+        pool_wr = self.get_pool_winrate(rollout_results)
         e2_wr = self.get_e2_winrate(rollout_results)
 
         if self.logger:
-            self.logger.record("pfsp/winrate_global", global_wr)
+            self.logger.record("pfsp/winrate_pool", pool_wr)
             if e2_wr is not None:
                 self.logger.record("pfsp/winrate_e2", e2_wr)
 
         if self.verbose > 0:
-            self._print_summary(rollout_count, global_wr, e2_wr)
+            self._print_summary(rollout_count, pool_wr, e2_wr)
 
     def _print_summary(
-        self, rollout_count: int, global_wr: float, e2_wr: Optional[float]
+        self, rollout_count: int, pool_wr: float, e2_wr: Optional[float]
     ):
         """Print beautiful CLI summary."""
         e2_str = f"{e2_wr:.1%}" if e2_wr is not None else "—"
@@ -264,9 +219,9 @@ class LeagueLogger:
         print(f"│{_pad_left(pool_line, col_width)}│")
         print(f"├{'─'*col_width}┤")
 
-        wr_global_line = f"  📊 WR Global (e2 excl.):  {global_wr:>6.1%}"
+        wr_pool_line = f"  📊 WR Pool (PFSP):        {pool_wr:>6.1%}"
         wr_e2_line = f"  🎯 WR vs e2:              {e2_str:>6}"
-        print(f"│{_pad_left(wr_global_line, col_width)}│")
+        print(f"│{_pad_left(wr_pool_line, col_width)}│")
         print(f"│{_pad_left(wr_e2_line, col_width)}│")
         print(f"└{'─'*col_width}┘")
 
