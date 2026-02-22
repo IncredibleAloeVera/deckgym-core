@@ -10,7 +10,7 @@ paths:
 
 model:
   use_attention: true
-  attention_embed_dim: 512
+  attention_embed_dim: 256
   attention_num_heads: 8
   attention_num_layers: 3
   attention_global_proj_dim: 256
@@ -50,8 +50,8 @@ ppo:
 
 training:
   total_timesteps: 30000000
-  checkpoint_freq: 10000
-  n_envs: 12
+  checkpoint_freq: 50000
+  n_envs: 24
   use_batched_env: true
   device: "auto"
   onnx_device: "trt"
@@ -67,7 +67,7 @@ training:
   pfsp_select_every_n_rollouts: 2
   pfsp_priority_exponent: 2.0
   pfsp_checkpoint_dir: "./checkpoints/pfsp_pool/"
-  pfsp_baseline_curriculum: [[0, ["v", "w"]], [500000, ["aa", "er"]], [2000000, ["er", "o2"]], [5000000, ["o2t", "o1"]], [10000000, ["e2", "o1", "o2"]]]
+  pfsp_baseline_curriculum: [[0, ["v", "w"]], [500000, ["aa", "er"]], [2000000, ["er"]], [5000000, ["er"]], [10000000, ["e2"]]]
 
 environment:
   max_turns: 99

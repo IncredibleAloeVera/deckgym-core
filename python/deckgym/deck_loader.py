@@ -132,7 +132,11 @@ class MetaDeckLoader:
             if "-" not in card_id:
                 continue
             set_code, number = card_id.split("-", 1)
-            lines.append(f"{count} {set_code.upper()} {number}")
+            if len(set_code) == 2 and set_code.lower().startswith("p"):
+                formatted_set = f"P-{set_code[1].upper()}"
+            else:
+                formatted_set = set_code.capitalize()
+            lines.append(f"{count} {formatted_set} {number}")
         return "\n".join(lines)
 
 
