@@ -27,7 +27,11 @@ def get_incomplete_cards():
                 if number.isdigit():
                     incomplete_ids.add(f"{set_code}-{number}")
         
-        print(f"Found {len(incomplete_ids)} incomplete card IDs.")
+        # Manually exclude missing P-B promos (026-032)
+        missing_pb_promos = {f"pb-0{i}" for i in range(26, 33)}
+        incomplete_ids.update(missing_pb_promos)
+
+        print(f"Found {len(incomplete_ids)} incomplete card IDs (including {len(missing_pb_promos)} manual exclusions).")
         return incomplete_ids
     except subprocess.CalledProcessError as e:
         print(f"Error running card_status: {e}")
