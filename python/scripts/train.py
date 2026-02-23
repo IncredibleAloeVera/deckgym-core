@@ -40,7 +40,7 @@ from deckgym.models.extractors import (
     CardAttentionExtractor,
     create_attention_policy_kwargs,
 )
-from deckgym.callbacks import PFSPCallback, EpisodeMetricsCallback, FrozenOpponentCallback
+from deckgym.callbacks import PFSPCallback, EpisodeMetricsCallback, FrozenOpponentCallback, PauseResumeCallback
 
 # Import configuration and constants
 from deckgym.config import TrainingConfig, DEFAULT_CONFIG, OBSERVATION_SIZE
@@ -354,6 +354,7 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
             name_prefix="rl_bot",
         ),
         EpisodeMetricsCallback(verbose=0),
+        PauseResumeCallback(verbose=1),
     ]
 
     # Add PFSP or simple frozen opponent callback
