@@ -57,7 +57,7 @@ class PFSPCallback(BaseCallback):
         )
         self.bridge = LeagueBridge(
             env,
-            device=getattr(env.config, "pfsp_opponent_device", "trt"),
+            device=getattr(env.config, "pfsp_opponent_device", "cuda"),
             verbose=verbose,
         )
         self.league_logger = LeagueLogger(self.pool, verbose=verbose)

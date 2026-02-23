@@ -10,8 +10,8 @@ Baseline Codes:
 - v, w: Simple heuristic bots (ValueFunction, WeightedRandom)
 - aa, er: Attach-Attack, Evolution Rusher
 - e2, e3, e4: Expectiminimax (depth 2/3/4) - omniscient, excluded from global WR
-- o[n][device]: ONNX model (n=index from newest, device=c/g/t for cpu/cuda/trt)
-  Examples: o1t = newest ONNX on TensorRT, o2c = 2nd newest on CPU
+- o[n][device]: ONNX model (n=index from newest, device=c/g for cpu/cuda)
+  Examples: o1g = newest ONNX on CUDA, o2c = 2nd newest on CPU
 """
 
 from typing import Dict, List, Optional

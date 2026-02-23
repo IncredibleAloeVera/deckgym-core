@@ -10,7 +10,7 @@ class TestLeagueBridge(unittest.TestCase):
         self.mock_game = MagicMock()
         self.mock_env = MagicMock()
         self.mock_env.vec_game = self.mock_game
-        self.bridge = LeagueBridge(env=self.mock_env, device="trt", verbose=1)
+        self.bridge = LeagueBridge(env=self.mock_env, device="cuda", verbose=1)
 
     def test_export_model(self):
         mock_model = MagicMock()
@@ -22,7 +22,7 @@ class TestLeagueBridge(unittest.TestCase):
     def test_add_onnx_to_rust(self):
         self.bridge.add_onnx_to_rust("m1", "/path/to/m1.onnx")
         self.mock_game.add_onnx_to_pool.assert_called_with(
-            "m1", "/path/to/m1.onnx", False, "trt"
+            "m1", "/path/to/m1.onnx", False, "cuda"
         )
 
     def test_add_baseline_to_rust(self):
