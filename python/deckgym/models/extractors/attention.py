@@ -16,11 +16,6 @@ Architecture:
     4. Pool attended cards via learned queries
     5. Concatenate with global features
     6. Pass through policy/value heads
-
-Observation Space (V4):
-    - Total: 13762 dims
-    - Global: 42 dims
-    - Cards: 40 cards * 343 features/card
 """
 
 import math

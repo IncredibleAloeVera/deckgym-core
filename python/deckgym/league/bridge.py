@@ -22,10 +22,10 @@ class LeagueBridge:
     Responsibilities:
     - Exporting Stable-Baselines3 models to ONNX.
     - Synchronizing the opponent pool with the Rust vec_game.
-    - Managing hardware devices (TRT, CUDA, CPU) for opponents.
+    - Managing hardware devices (CUDA, CPU) for opponents.
     """
 
-    def __init__(self, env: BatchedDeckGymEnv, device: str = "trt", verbose: int = 1):
+    def __init__(self, env: BatchedDeckGymEnv, device: str = "cuda", verbose: int = 1):
         self.env = env
         self.device = device
         self.verbose = verbose

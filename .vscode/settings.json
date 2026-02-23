@@ -1,3 +1,11 @@
 {
-  "rust-analyzer.cargo.features": ["tui", "python"]
+  "rust-analyzer.cargo.features": [
+    "tui",
+    "python"
+  ],
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }

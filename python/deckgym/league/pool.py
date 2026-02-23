@@ -48,9 +48,12 @@ class OpponentPool:
         """Check if an opponent is in the pool."""
         return name in self.opponents
 
-    def get_data(self, name: str) -> Optional[Dict]:
+    def get_data(self, name: str) -> Dict:
         """Get data for a specific opponent."""
-        return self.opponents.get(name)
+        result = self.opponents.get(name)
+        if result is None:
+            raise KeyError(f"Opponent '{name}' not found")
+        return result
 
     def reset_statistics(self):
         """Reset per-rollout win/loss/draw statistics for all opponents."""
@@ -85,7 +88,7 @@ class OpponentPool:
 
 
     def get_eviction_candidates(
-        self, exclude_names: List[str] = None
+        self, exclude_names: List[str] = []
     ) -> List[Tuple[str, float, int]]:
         """
         Get non-baseline opponents ranked for eviction.

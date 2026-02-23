@@ -57,7 +57,7 @@ pub(crate) fn forecast_end_turn(state: &State) -> (Probabilities, Mutations) {
                 state.turn_count = 1;
                 state.end_turn_maintenance();
                 start_mutation(rng, state, action);
-                state.queue_draw_action(state.current_player, 1);
+                state.maybe_draw_card(state.current_player);
             }));
         }
 

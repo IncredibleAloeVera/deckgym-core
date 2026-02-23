@@ -1,5 +1,5 @@
-// Observation Tensor Generation - V5: Stadium Card Support
-// V5 adds active stadium encoding (128-dim text embedding + 1 presence flag) to global features.
+// Observation Tensor Generation - V5fix: Attached Tool Embedding
+// V5fix adds 128-dim tool text embedding on played/static cards (attached_tool support).
 
 use std::collections::HashMap;
 use lazy_static::lazy_static;
@@ -70,14 +70,14 @@ pub const MAX_CARDS_IN_OBS: usize = 40;
 
 // --- Feature Dimensions ---
 
-pub const FEATURES_PER_CARD: usize = 603;
+pub const FEATURES_PER_CARD: usize = 731;
 // Breakdown:
 // 1 (hp) + 11 (types) + 9 (weakness) + 8 (flags: ex, mega, pokemon, tool, trainer, item, stadium, fossil)
 // + 8 (meta: line_size (4: None,1,2,3), is_final (3: None,F,T), ready) + 1 (retreat) + 4 (status)
 // + 138 (atk1: 1 dmg, 128 emb, 9 en) + 138 (atk2: 1 dmg, 128 emb, 9 en)
 // + 128 (talent emb) + 4 (location one-hot) + 4 (slot one-hot) + 1 (allied) + 128 (supporter emb)
-// + 9 (type references) + 11 (mechanic references)
-// = 603
+// + 128 (attached tool emb) + 9 (type references) + 11 (mechanic references)
+// = 731
 
 pub const GLOBAL_FEATURES: usize = 1   // turn count
     + 3                                 // points (diff, self, opponent)
@@ -313,7 +313,21 @@ fn encode_played_card(p: &PlayedCard, state: &State, loc: usize, allied: f32, sl
         obs.extend_from_slice(&EMPTY_EMBEDDING);
     }
 
-    // References 9 + 9 = 18
+    // Attached tool embedding 128
+    if let Some(tool) = &p.attached_tool {
+        let tool_id = tool.get_id();
+        if let Some(f) = CARD_FEATURES_MAP.get(&tool_id) {
+            obs.extend_from_slice(&f.supporter.embedding);
+            merge_refs(&mut type_refs, &f.supporter.type_refs);
+            merge_refs(&mut mech_refs, &f.supporter.mech_refs);
+        } else {
+            obs.extend_from_slice(&EMPTY_EMBEDDING);
+        }
+    } else {
+        obs.extend_from_slice(&EMPTY_EMBEDDING);
+    }
+
+    // References 9 + 11 = 20
     obs.extend_from_slice(&type_refs);
     obs.extend_from_slice(&mech_refs);
 }
@@ -434,7 +448,10 @@ fn encode_static_card(c: &Card, loc: usize, allied: f32, slot: Option<usize>, ob
         obs.extend_from_slice(&EMPTY_EMBEDDING);
     }
 
-    // References 9 + 9 = 18
+    // Attached tool embedding 128 (always empty for static cards)
+    obs.extend_from_slice(&EMPTY_EMBEDDING);
+
+    // References 9 + 11 = 20
     obs.extend_from_slice(&type_refs);
     obs.extend_from_slice(&mech_refs);
 }

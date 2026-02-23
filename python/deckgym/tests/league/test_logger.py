@@ -54,8 +54,8 @@ class TestLeagueLogger(unittest.TestCase):
         wr = self.league_logger._get_winrate("test")
         self.assertEqual(wr, 0.5)
 
-    def test_get_self_play_winrate(self):
-        """Test self-play winrate calculation (non-baseline only)."""
+    def test_get_pool_winrate_average(self):
+        """Test global winrate calculation (non-baseline only)."""
         self.pool.opponents = {
             "m1": {"wins": 10, "losses": 30, "draws": 0, "is_baseline": False},  # WR = 0.75
             "m2": {"wins": 30, "losses": 10, "draws": 0, "is_baseline": False},  # WR = 0.25
@@ -63,30 +63,38 @@ class TestLeagueLogger(unittest.TestCase):
         }
         self.pool.get_data.side_effect = lambda name: self.pool.opponents.get(name)
 
-        wr = self.league_logger.get_self_play_winrate()
+        wr = self.league_logger.get_pool_winrate()
         # Average of 0.75 and 0.25 = 0.5
         self.assertEqual(wr, 0.5)
 
-    def test_get_pool_winrate(self):
-        """Test global winrate (excludes omniscient)."""
+    def test_get_pool_winrate_weighted(self):
+        """Test global winrate (excludes all baselines - simplified logic)."""
         self.pool.opponents = {
-            "m1": {"wins": 10, "losses": 40, "draws": 0, "is_baseline": False},  # Fair
+            "m1": {"wins": 10, "losses": 40, "draws": 0, "is_baseline": False},  # Fair (80% agent WR)
             "baseline_e2": {
                 "wins": 40, "losses": 10, "draws": 0, "is_baseline": True, 
                 "baseline_code": "e2"
-            },  # Omniscient - excluded
+            },  # Omniscient - now excluded from pool WR
             "baseline_er": {
                 "wins": 20, "losses": 20, "draws": 0, "is_baseline": True,
                 "baseline_code": "er"
-            },  # Fair baseline
+            },  # Fair baseline - ALSO excluded from pool WR in current impl
         }
         self.pool.get_data.side_effect = lambda name: self.pool.opponents.get(name)
 
         wr = self.league_logger.get_pool_winrate()
-        # m1: 40 wins, 50 games; baseline_er: 20 wins, 40 games
-        # Total: 60 wins, 90 games = 66.7%
-        expected = 60 / 90
-        self.assertAlmostEqual(wr, expected, places=2)
+        # Only m1 is included: 40 losses (agent wins) / 50 total = 0.8
+        self.assertEqual(wr, 0.8)
+
+    def test_get_e2_winrate(self):
+        """Test winrate specifically against e2."""
+        self.pool.opponents = {
+            "baseline_e2": {"wins": 40, "losses": 10, "draws": 0, "is_baseline": True},
+        }
+        self.pool.get_data.side_effect = lambda name: self.pool.opponents.get(name)
+        
+        wr = self.league_logger.get_e2_winrate()
+        self.assertEqual(wr, 0.2) # 10 losses (agent wins) / 50 total = 0.2
 
     def test_log_metrics(self):
         """Test that log_metrics records to SB3 logger."""
@@ -97,8 +105,8 @@ class TestLeagueLogger(unittest.TestCase):
 
         self.league_logger.log_metrics(rollout_count=100)
 
-        # Should record global winrate
-        self.sb3_logger.record.assert_any_call("pfsp/winrate_global", 0.8)
+        # Should record pool winrate
+        self.sb3_logger.record.assert_any_call("pfsp/winrate_pool", 0.8)
 
     def test_log_metrics_with_rollout_results(self):
         """Test log_metrics with per-rollout results."""
@@ -111,7 +119,7 @@ class TestLeagueLogger(unittest.TestCase):
 
         self.league_logger.log_metrics(rollout_count=100, rollout_results=rollout_results)
 
-        self.sb3_logger.record.assert_any_call("pfsp/winrate_global", 0.75)
+        self.sb3_logger.record.assert_any_call("pfsp/winrate_pool", 0.75)
 
 
 if __name__ == "__main__":

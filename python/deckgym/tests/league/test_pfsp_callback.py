@@ -9,7 +9,7 @@ class TestPFSPCallback(unittest.TestCase):
     def setUp(self):
         self.mock_env = MagicMock()
         self.mock_env.config = MagicMock()
-        self.mock_env.config.pfsp_opponent_device = "trt"
+        self.mock_env.config.pfsp_opponent_device = "cuda"
         self.mock_env.config.pfsp_baseline_curriculum = [(0, ["v"])]
         self.mock_env.vec_game = MagicMock()
 

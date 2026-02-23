@@ -27,12 +27,12 @@ import json
 
 # Card features
 GLOBAL_FEATURES = 171  # 1 turn + 3 points + 2 deck + 2 hand + 2 discard + 32 deck_energy + 1 has_stadium + 128 stadium_emb
-FEATURES_PER_CARD = 603
+FEATURES_PER_CARD = 731
 MAX_CARDS_IN_GAME = 40
 OBSERVATION_SIZE = GLOBAL_FEATURES + (MAX_CARDS_IN_GAME * FEATURES_PER_CARD)  # 24291
 
 # Action space
-ACTION_SPACE_SIZE = 175  # Must match src/rl/action_mask.rs
+ACTION_SPACE_SIZE = 179  # Must match src/rl/action_mask.rs
 
 # Energy types
 NUM_ENERGY_TYPES = 10  # Includes colorless
@@ -70,7 +70,7 @@ TRUESKILL_DRAW_PROBABILITY = 0.01  # Probability of draw
 # Default evaluation games
 N_ROBIN_ROUNDS = 10  # Brute force for precision
 EVAL_REPORTS_DIR = "eval_reports"
-EVAL_DEFAULT_DEVICE = "trt"
+EVAL_DEFAULT_DEVICE = "cuda"
 
 
 # =============================================================================
@@ -211,7 +211,7 @@ class TrainingConfig:
     # At each stage, the baselines are replaced. Codes:
     #   v=ValueFunction, w=WeightedRandom, aa=AttachAttack, er=EvolutionRusher
     #   e2/e3/e4=Expectiminimax(depth) - omniscient, excluded from global WR
-    #   o[n][device]=ONNX model (n=index from newest, device=c/g/t for cpu/cuda/trt)
+    #   o[n][device]=ONNX model (n=index from newest, device=c/g for cpu/cuda)
     #     Examples: o1 = newest ONNX on CUDA, o2c = 2nd newest on CPU
     # Order: Learn coherence first (o2/attention), then resist exploits (o1/MLP)
     pfsp_baseline_curriculum: List[Tuple[int, List[str]]] = field(
@@ -241,8 +241,8 @@ class TrainingConfig:
     # Hardware
     # -------------------------------------------------------------------------
     device: str = "auto"  # "auto", "cuda", "cpu"
-    onnx_device: str = "trt"  # "auto", "cuda", "trt", "cpu"
-    pfsp_opponent_device: str = "trt"  # "auto", "cuda", "trt", "cpu"
+    onnx_device: str = "cuda"  # "auto", "cuda", "cpu"
+    pfsp_opponent_device: str = "cuda"  # "auto", "cuda", "cpu"
     use_gradient_checkpointing: bool = (
         False  # Trade compute for memory (~30% slower, ~60% less VRAM)
     )
