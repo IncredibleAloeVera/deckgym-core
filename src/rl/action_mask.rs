@@ -4,7 +4,7 @@
 // Maps ALL SimpleAction variants to fixed indices for RL compatibility.
 //
 // =============================================================================
-// ACTION SPACE LAYOUT v2.0 (175 indices total)
+// ACTION SPACE LAYOUT v3.0 (179 indices total)
 // =============================================================================
 //
 // SECTION 1: Board Actions (0-29)
@@ -20,7 +20,7 @@
 //   17-20   : DiscardFossil from slot (0-3)
 //   21-24   : Heal Pokemon at slot (0-3) - ability-triggered
 //   25-28   : AttachFromDiscard to slot (0-3) - ability-triggered
-//   29      : (reserved)
+//   29      : (padding)
 //
 // SECTION 2: Hand Actions (30-129)
 // ---------------------------------
@@ -40,25 +40,25 @@
 //   +3 : Target Bench 2 (slot 2)
 //   +4 : Target Bench 3 (slot 3)
 //
-// SECTION 3: Resolution Actions (130-174)
+// SECTION 3: Resolution Actions (130-168)
 // ----------------------------------------
 // These handle complex multi-step actions and special cases.
 //
 //   130-133 : ApplyDamage to opponent slot (0-3) - attack targeting
-//   134     : (reserved)
-//   135-138 : Resolution Place/Evolve to slot (0-3) - from deck search
-//   139     : (reserved)
-//   140-159 : Select hand card by index (0-19) - for discard/communicate
-//   160     : DrawCard
-//   161     : Noop (pass)
-//   162     : ApplyEeveeBagDamageBoost
-//   163     : HealAllEeveeEvolutions
-//   164     : MoveEnergy
-//   165     : MoveAllDamage
-//   166     : ShuffleOpponentSupporter
-//   167     : DiscardOpponentSupporter
-//   168     : Attach (non-turn energy, e.g. from ability)
-//   169-174 : (reserved for future expansion)
+//   134-137 : Resolution Place/Evolve to slot (0-3) - from deck search
+//   138-157 : Select hand card by index (0-19) - for discard/communicate
+//   158     : DrawCard
+//   159     : Noop (pass)
+//   160     : ApplyEeveeBagDamageBoost
+//   161     : HealAllEeveeEvolutions
+//   162     : MoveEnergy
+//   163     : MoveAllDamage
+//   164     : ShuffleOpponentSupporter
+//   165     : DiscardOpponentSupporter
+//   166     : Attach (non-turn energy, e.g. from ability)
+//   167     : HealAndDiscardEnergy
+//   168     : ReturnPokemonToHand
+//   169-178 : (reserved for future expansion)
 //
 // =============================================================================
 
@@ -72,7 +72,7 @@ use crate::state::State;
 // --- Constants ---
 
 /// Total size of the discrete action space
-pub const ACTION_SPACE_SIZE: usize = 175;
+pub const ACTION_SPACE_SIZE: usize = 179;
 
 // --- Helper Types ---
 
@@ -203,7 +203,7 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
             } else {
                 // Resolution Place (e.g. from Deck Search)
                 if *in_play_idx <= 3 {
-                    Some(135 + in_play_idx)
+                    Some(134 + in_play_idx)
                 } else {
                     None
                 }
@@ -226,7 +226,7 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
             } else {
                 // Resolution Evolve (e.g. from Deck Search)
                 if *in_play_idx <= 3 {
-                    Some(135 + in_play_idx)
+                    Some(134 + in_play_idx)
                 } else {
                     None
                 }
@@ -248,16 +248,15 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
                 }
             } else {
                 // If not in hand, it's a Resolution Action (Target Selection)
-                // Map to Resolution Indices 135-138
                 if *in_play_idx <= 3 {
-                    Some(135 + in_play_idx)
+                    Some(134 + in_play_idx)
                 } else {
                     None
                 }
             }
         }
 
-        // --- 3. Resolution Actions (130-174) ---
+        // --- 3. Resolution Actions (130-168) ---
 
         // ApplyDamage Targets (Target Selection)
         SimpleAction::ApplyDamage { targets, .. } => {
@@ -276,7 +275,7 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
         SimpleAction::DiscardOwnCards { cards } => {
             maps.card_index.get(&cards.first().unwrap().get_id()).and_then(|&idx| {
                 if idx < 20 {
-                    Some(140 + idx)
+                    Some(138 + idx)
                 } else {
                     None
                 }
@@ -285,13 +284,13 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
         SimpleAction::CommunicatePokemon { hand_pokemon: card } => maps
             .card_index
             .get(&card.get_id())
-            .and_then(|&idx| if idx < 20 { Some(140 + idx) } else { None }),
+            .and_then(|&idx| if idx < 20 { Some(138 + idx) } else { None }),
         SimpleAction::ShufflePokemonIntoDeck { hand_pokemon } => {
             // For ShufflePokemonIntoDeck, it's a Vec<Card>. Use first.
             if let Some(c) = hand_pokemon.first() {
                 maps.card_index.get(&c.get_id()).and_then(|&idx| {
                     if idx < 20 {
-                        Some(140 + idx)
+                        Some(138 + idx)
                     } else {
                         None
                     }
@@ -302,20 +301,20 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
         }
 
         // Misc
-        SimpleAction::DrawCard { .. } => Some(160),
-        SimpleAction::Noop => Some(161),
-        SimpleAction::ApplyEeveeBagDamageBoost => Some(162),
-        SimpleAction::HealAllEeveeEvolutions => Some(163),
-        SimpleAction::MoveEnergy { .. } => Some(164),
-        SimpleAction::MoveAllDamage { .. } => Some(165),
-        SimpleAction::ShuffleOpponentSupporter { .. } => Some(166),
-        SimpleAction::DiscardOpponentSupporter { .. } => Some(167),
+        SimpleAction::DrawCard { .. } => Some(158),
+        SimpleAction::Noop => Some(159),
+        SimpleAction::ApplyEeveeBagDamageBoost => Some(160),
+        SimpleAction::HealAllEeveeEvolutions => Some(161),
+        SimpleAction::MoveEnergy { .. } => Some(162),
+        SimpleAction::MoveAllDamage { .. } => Some(163),
+        SimpleAction::ShuffleOpponentSupporter { .. } => Some(164),
+        SimpleAction::DiscardOpponentSupporter { .. } => Some(165),
         SimpleAction::Attach {
             is_turn_energy: false,
             ..
-        } => Some(168), // Non-turn attach
-        SimpleAction::HealAndDiscardEnergy { .. } => Some(169),
-        SimpleAction::ReturnPokemonToHand { .. } => Some(170),
+        } => Some(166), // Non-turn attach
+        SimpleAction::HealAndDiscardEnergy { .. } => Some(167),
+        SimpleAction::ReturnPokemonToHand { .. } => Some(168),
     };
 
     if index.is_none() {

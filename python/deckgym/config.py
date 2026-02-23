@@ -32,7 +32,7 @@ MAX_CARDS_IN_GAME = 40
 OBSERVATION_SIZE = GLOBAL_FEATURES + (MAX_CARDS_IN_GAME * FEATURES_PER_CARD)  # 24291
 
 # Action space
-ACTION_SPACE_SIZE = 175  # Must match src/rl/action_mask.rs
+ACTION_SPACE_SIZE = 179  # Must match src/rl/action_mask.rs
 
 # Energy types
 NUM_ENERGY_TYPES = 10  # Includes colorless
