@@ -66,6 +66,44 @@ cargo run --bin tui --features tui -- example_decks/venusaur-exeggutor.txt examp
 - **Shift+A/Shift+D**: Scroll through opponent's hand cards
 - **Q/Esc**: Quit
 
+## DRL Pipeline
+
+> Most scripts support `--help` / `-h` for full argument details.
+
+**Setup**
+
+```bash
+maturin develop --release --features onnx     # Build Python bindings (with ONNX for self-play)
+cargo build --release --features onnx         # Build Rust binary (needed by evaluation scripts)
+```
+
+**Training**
+
+```bash
+python python/scripts/train.py --config <config.yaml>
+python python/scripts/train.py --config <config.yaml> --resume <checkpoint.zip>
+```
+
+**Evaluation**
+
+```bash
+python python/scripts/evaluate.py chaos <model_code>            # Full archetype matrix
+python python/scripts/evaluate.py generalization <model_code>   # Unseen decks protocol
+python python/scripts/evaluate_human.py                         # Human vs bot (TUI)
+```
+
+**Diagnostics & Data**
+
+```bash
+python python/scripts/diagnose_model.py <model.zip>    # Gradient and attention health check
+python python/scripts/generate_embeddings.py            # Regenerate card_features.json
+python python/scripts/clean_archetypes.py               # Filter archetypes with incomplete cards
+```
+
+See [RL_ARCHITECTURE.md](./RL_ARCHITECTURE.md) for the full technical reference.
+
+---
+
 ## Contributing
 
 New to Open Source? See [CONTRIBUTING.md](./CONTRIBUTING.md).
