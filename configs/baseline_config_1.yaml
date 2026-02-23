@@ -3,9 +3,9 @@
 
 paths:
   meta_decks_dir: "archetypes_by_era"
-  save_path: "models/rl_bot"
-  checkpoint_dir: "./checkpoints/"
-  tensorboard_dir: "./logs/"
+  save_path: "models/baseline_1"
+  checkpoint_dir: "./checkpoints/baseline_1"
+  tensorboard_dir: "./logs/baseline_1"
   resume_path: null
 
 model:
@@ -66,7 +66,7 @@ training:
   pfsp_add_every_n_rollouts: 8
   pfsp_select_every_n_rollouts: 2
   pfsp_priority_exponent: 2.0
-  pfsp_checkpoint_dir: "./checkpoints/pfsp_pool/"
+  pfsp_checkpoint_dir: "./checkpoints/baseline_1/pfsp_pool/"
   pfsp_baseline_curriculum: [[0, ["v", "w"]], [500000, ["aa", "er"]], [2000000, ["er"]], [5000000, ["e2"]]]
 
 environment:
