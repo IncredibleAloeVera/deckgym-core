@@ -49,13 +49,13 @@ ppo:
   target_kl: 0.015
 
 training:
-  total_timesteps: 100000000
+  total_timesteps: 5000000
   checkpoint_freq: 50000
   n_envs: 24
   use_batched_env: true
   device: "auto"
-  onnx_device: "trt"
-  pfsp_opponent_device: "trt"
+  onnx_device: "cuda"
+  pfsp_opponent_device: "cuda"
   frozen_opponent_update_rollouts: 8
   use_gradient_checkpointing: false
   brutal_resume: false
@@ -67,7 +67,7 @@ training:
   pfsp_select_every_n_rollouts: 2
   pfsp_priority_exponent: 2.0
   pfsp_checkpoint_dir: "./checkpoints/pfsp_pool/"
-  pfsp_baseline_curriculum: [[0, ["v", "w"]], [500000, ["aa", "er"]], [2000000, ["er"]], [5000000, ["er"]], [10000000, ["e2"]]]
+  pfsp_baseline_curriculum: [[0, ["v", "w"]], [500000, ["aa", "er"]], [2000000, ["er"]], [5000000, ["e2"]]]
 
 environment:
   max_turns: 99
