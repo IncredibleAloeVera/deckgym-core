@@ -303,11 +303,6 @@ impl State {
             .filter(|(i, _)| *i != 0)
     }
 
-    pub(crate) fn queue_draw_action(&mut self, actor: usize, amount: u8) {
-        self.move_generation_stack
-            .push((actor, vec![SimpleAction::DrawCard { amount }]));
-    }
-
     pub fn maybe_get_active(&self, player: usize) -> Option<&PlayedCard> {
         self.in_play_pokemon[player][0].as_ref()
     }
@@ -335,7 +330,7 @@ impl State {
         self.current_player = (self.current_player + 1) % 2;
         self.turn_count += 1;
         self.end_turn_maintenance();
-        self.queue_draw_action(self.current_player, 1);
+        self.maybe_draw_card(self.current_player);
         self.generate_energy();
     }
 

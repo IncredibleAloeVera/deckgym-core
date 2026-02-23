@@ -132,10 +132,7 @@ pub(crate) fn on_end_turn(player_ending_turn: usize, state: &mut State) {
         {
             // At the end of your turn, if this Pokémon is in the Active Spot, draw a card.
             debug!("Legendary Pulse: Drawing a card");
-            state.move_generation_stack.push((
-                player_ending_turn,
-                vec![SimpleAction::DrawCard { amount: 1 }],
-            ));
+            state.maybe_draw_card(player_ending_turn);
         }
         if ability_id == AbilityId::A3b057SnorlaxExFullMouthManner {
             // At the end of your turn, if this Pokémon is in the Active Spot, heal 20 damage from it.
