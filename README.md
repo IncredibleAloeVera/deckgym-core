@@ -16,15 +16,11 @@ While the core simulation runs on CPU, using ONNX neural networks with GPU accel
 
 ### GPU Acceleration (Optional)
 
-If you plan to use the `onnx` feature with CUDA or TensorRT:
+If you plan to use the `onnx` feature with CUDA:
 - **NVIDIA GPU** (Compute Capability 7.0+)
 - **NVIDIA Driver**
 - **CUDA Toolkit** (11.8+)
 - **cuDNN** (8.x or 9.x)
-- **TensorRT** (Optional, for TensorRT provider)
-
-> [!NOTE]
-> **Automatic Discovery**: The build system automatically discovers these libraries on your system. You **do not** need to manually set `LD_LIBRARY_PATH`.
 
 ## Usage
 
@@ -207,5 +203,6 @@ cargo run --bin card_enum_generator -- --incremental-attack-ma
 and manually copy-paste into the ever changing `src/actions/effect_mechanic_map.rs`.
 
 **Profiling Main Script**
+```bash
 sudo cargo flamegraph --root --dev -- simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 && open flamegraph.svg
 ```
