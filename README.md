@@ -1,14 +1,25 @@
 <img src="./images/logo.svg" alt="Logo" width="100" height="100">
 
-# deckgym-core: Pokémon TCG Pocket Simulator
+# deckgym-core: Deep RL for Pokémon TCG Pocket
 
 ![Card Implemented](https://img.shields.io/badge/Cards_Implemented-1709_%2F_2408_%2871.0%25%29-yellow)
 
-**deckgym-core** is a high-performance Rust library designed for simulating Pokémon TCG Pocket games. It features a command-line interface (CLI) capable of running 10,000 simulations in approximately 3 seconds. This is the library that powers https://www.deckgym.com.
+> Fork of deckgym-core focused on **training a Deep Reinforcement Learning agent** to play Pokémon TCG Pocket at a competitive level.
 
-Its mission is to elevate the competitive TCG Pocket scene by helping players optimize their decks through large-scale simulations.
+The Rust simulator serves as a high-performance environment (10k games in ~3s). On top of it, a full **PPO + Transformer** training pipeline produces ONNX policies that play directly inside the engine.
 
-Join our Discord: https://discord.gg/ymxXHrzhak!
+### Key components at a glance
+
+- **Rust game engine** — full TCG Pocket rules, vectorized batched env (`VecGame`), O(1) FFI per step
+- **Observation tensor** — 29,411-dim flat vector (171 global + 40 cards × 731 features each), with 128-dim text embeddings (SentenceTransformer + PCA)
+- **Action space** — 179 fixed indices covering board, hand, and resolution actions
+- **Transformer policy** — `CardAttentionExtractor` (self-attention + learned pooling), exported to ONNX for Rust-side inference
+- **Training** — `MaskablePPO` (SB3) with PFSP opponent pool, curriculum deck loading, TrueSkill ratings
+- **Evaluation** — full archetype matrix + generalization protocol, JSON/Markdown reports
+
+See [RL_ARCHITECTURE.md](./RL_ARCHITECTURE.md) for the full technical breakdown.
+
+---
 
 ## System Requirements
 
