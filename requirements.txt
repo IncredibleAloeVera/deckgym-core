@@ -27,6 +27,10 @@ maturin>=1.5.0
 # Rating system
 trueskill>=0.4.5
 
+# Embedding generation
+sentence-transformers>=5.2.0
+scikit-learn>=1.8.0
+
 # Misc
 pyo3_runtime>=0.0.1
 pytest>=9.0.2
