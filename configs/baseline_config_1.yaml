@@ -49,9 +49,9 @@ ppo:
   target_kl: 0.015
 
 training:
-  total_timesteps: 5000000
+  total_timesteps: 50000000
   checkpoint_freq: 50000
-  n_envs: 24
+  n_envs: 126
   use_batched_env: true
   device: "auto"
   onnx_device: "cuda"
