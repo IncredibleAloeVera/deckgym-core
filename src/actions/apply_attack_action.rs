@@ -313,7 +313,10 @@ fn forecast_effect_attack_by_attack_id(
         AttackId::A4105BinacleDualChop => {
             probabilistic_damage_attack(vec![0.25, 0.5, 0.25], vec![0, 30, 60])
         }
-        AttackId::A4134EeveeFindAFriend => pokemon_search_outcomes(acting_player, state, false),
+        AttackId::A4134EeveeFindAFriend | AttackId::PB017SwabluFindAFriend => {
+            pokemon_search_outcomes(acting_player, state, false)
+        }
+
         AttackId::A4146UrsaringSwingAround => {
             probabilistic_damage_attack(vec![0.25, 0.5, 0.25], vec![60, 80, 100])
         }

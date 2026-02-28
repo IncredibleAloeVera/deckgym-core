@@ -62,6 +62,7 @@ pub enum AttackId {
     A4077CleffaTwinklyCall,
     A4105BinacleDualChop,
     A4134EeveeFindAFriend,
+    PB017SwabluFindAFriend,
     A4146UrsaringSwingAround,
     A4a021FeebasLeapOut,
     A4a023MantykeSplashyToss,
@@ -239,7 +240,7 @@ lazy_static::lazy_static! {
         // B1a 002 IvysaurSynthesis now uses Mechanic::SelfChargeActive
         m.insert(("B1a 097", 0), AttackId::A3a061SilvallyBraveBuddies);
 
-        // Promo
+        // Promo - P-A
         m.insert(("P-A 049", 0), AttackId::A2a063SnorlaxCollapse);
         m.insert(("P-A 060", 0), AttackId::A1a001ExeggcuteGrowthSpurt);
         m.insert(("P-A 067", 0), AttackId::A3085CosmogTeleport);
@@ -248,7 +249,11 @@ lazy_static::lazy_static! {
         m.insert(("P-A 084", 0), AttackId::A3a019TapuKokoExPlasmaHurricane);
         m.insert(("P-A 093", 0), AttackId::A4077CleffaTwinklyCall);
 
+        // Promo - P-B
+        m.insert(("P-B 017", 0), AttackId::PB017SwabluFindAFriend);
+
         m
+
     };
 }
 
