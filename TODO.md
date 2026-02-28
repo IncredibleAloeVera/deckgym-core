@@ -3,7 +3,7 @@
 - [x] Remove draw-card in the rust simulator as a manual action as it should be automatic. Currently there is 5 actions on average during the DRL training, cutting that by 1 means 20% less steps per turn.
 
 - [x] Encode attached tool description (text embedding) on played Pokemon cards in observation tensor (`src/rl/observation.rs`). Currently tools only get a 1-bit `is_tool` flag but the model has no way to know *what* tool is attached to a Pokemon.
-- [ ] Training interpretability logging: add metrics that reveal *what* the model is learning during training, not just whether it is learning.
+- [x] Training interpretability logging: add metrics that reveal *what* the model is learning during training, not just whether it is learning.
   - Relative entropy (normalised by number of valid actions) — raw entropy is misleading because the action space varies heavily between steps
   - Per-action-category frequency histograms (attack / retreat / trainer / energy / end-turn) over time — to detect if the model develops recognisable habits or gets stuck in degenerate policies
   - Value head statistics (mean, std, percentiles) per episode outcome — to verify the critic is calibrating correctly
@@ -24,7 +24,7 @@ Medium priority :
   - **Attention visualisation** (BerViz): expose per-head attention weights from `OnnxSafeAttention` via PyTorch hooks; display card-to-card heatmaps showing which board elements the model focuses on at each decision point
   - **Feature attribution** (Captum Integrated Gradients): for a given state + chosen action, identify which observation features (HP, energy counts, specific cards) most influenced the decision; requires a label mapping from flat obs indices → card/feature names based on the layout in `RL_ARCHITECTURE.md` and `observation.rs`
   - **Policy latent UMAP/t-SNE**: collect `(policy_latent, value, action_category, turn, point_diff)` across thousands of game positions and project to 2D to reveal and name strategy clusters (e.g. setup phase, aggressive pressure, defensive stall, forced-decision)
-  - Entry point script `python/scripts/interpret_model.py`: loads a checkpoint, runs self-play or evaluation games, and produces HTML/image reports
+  - Entry point script `python/scripts/interpret_model.py`: loads a user-specified model, runs self-play or evaluation games, and produces reports
 
 - [ ] Design and Implement AI deckbuilder
 - [ ] Use Typer for every python scripts that support CLI
