@@ -3,6 +3,7 @@ import subprocess
 import os
 import sys
 from pathlib import Path
+import typer
 
 def get_incomplete_cards():
     """Run cargo bin card_status to get list of incomplete cards."""
@@ -84,10 +85,15 @@ def clean_archetypes(input_path, output_path, incomplete_ids):
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(clean_data, f, indent=2)
 
-if __name__ == "__main__":
+def main():
+    """Filter archetype dataset to exclude decks containing incomplete cards."""
     repo_root = Path(__file__).parent.parent.parent
     input_file = repo_root / "ultimate-archetypes.json"
     output_file = repo_root / "ultimate-archetypes-clean.json"
-    
+
     incomplete_cards = get_incomplete_cards()
     clean_archetypes(input_file, output_file, incomplete_cards)
+
+
+if __name__ == "__main__":
+    typer.run(main)

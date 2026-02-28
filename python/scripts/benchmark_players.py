@@ -7,6 +7,7 @@ Usage: python python/scripts/benchmark_players.py
 import subprocess
 import re
 import sys
+import typer
 
 # Players to benchmark (excluding mcts and human)
 PLAYERS = [
@@ -112,4 +113,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

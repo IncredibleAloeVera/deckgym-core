@@ -5,7 +5,6 @@ Extensive Chaos: Performs a full matrix cross-evaluation (396x396) to eliminate 
 Generalization: Tests the model's ability to generalize to unseen decks.
 """
 
-import argparse
 import json
 import math
 import os
@@ -19,6 +18,7 @@ from pathlib import Path
 from typing import List, Dict, Optional, Tuple, Any
 
 import numpy as np
+import typer
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -499,28 +499,28 @@ class ScientificEvaluator:
         console.print("\n")
         console.print(summary_table)
 
-def main():
-    parser = argparse.ArgumentParser(description="DeckGym Scientific Evaluation")
-    parser.add_argument("--meta", default="archetypes_by_era", help="Path to meta decks directory")
-    
-    subparsers = parser.add_subparsers(dest="mode", help="Evaluation mode", required=True)
-    
-    # Chaos mode
-    chaos_parser = subparsers.add_parser("chaos", help="Extensive Chaos mode")
-    chaos_parser.add_argument("model", help="Model code (e.g. o1, o2c, etc.)")
-    
-    # Generalization mode
-    gen_parser = subparsers.add_parser("generalization", help="Generalization Protocol")
-    gen_parser.add_argument("model", help="Model code (e.g. o1, o2c, etc.)")
-    
-    args = parser.parse_args()
-    
-    evaluator = ScientificEvaluator(args.meta, args.model)
-    
-    if args.mode == "chaos":
-        evaluator.run_all()
-    elif args.mode == "generalization":
-        evaluator.run_generalization_protocol()
+app = typer.Typer(help="DeckGym Scientific Evaluation")
+
+
+@app.command("chaos")
+def chaos(
+    model: str = typer.Argument(..., help="Model code (e.g. o1, o2c, etc.)"),
+    meta: str = typer.Option("archetypes_by_era", "--meta", help="Path to meta decks directory"),
+):
+    """Extensive Chaos mode: full matrix cross-evaluation across all archetypes."""
+    evaluator = ScientificEvaluator(meta, model)
+    evaluator.run_all()
+
+
+@app.command("generalization")
+def generalization(
+    model: str = typer.Argument(..., help="Model code (e.g. o1, o2c, etc.)"),
+    meta: str = typer.Option("archetypes_by_era", "--meta", help="Path to meta decks directory"),
+):
+    """Generalization Protocol: measures how well the model generalises to unseen decks."""
+    evaluator = ScientificEvaluator(meta, model)
+    evaluator.run_generalization_protocol()
+
 
 if __name__ == "__main__":
-    main()
+    app()

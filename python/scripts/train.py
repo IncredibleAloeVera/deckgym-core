@@ -16,13 +16,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 import os
 import tempfile
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
 import gymnasium as gym
 import torch
+import typer
 import yaml
 
 # Enable TensorFloat32 for faster matmul on Ampere+ GPUs
@@ -445,167 +445,93 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
 # Entry Point
 # =============================================================================
 
-if __name__ == "__main__":
-    import argparse
+app = typer.Typer(pretty_exceptions_show_locals=False)
 
-    parser = argparse.ArgumentParser(
-        description="Train Pokemon TCG Pocket RL bot",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
 
-    # Create default config for default values
+@app.command()
+def cli(
+    # Config file
+    config: Optional[Path] = typer.Option(None, "--config", help="Path to YAML config file"),
+    # Paths
+    meta: Optional[str] = typer.Option(None, "--meta", help="Meta decks directory"),
+    save: Optional[str] = typer.Option(None, "--save", help="Model save path"),
+    resume: Optional[str] = typer.Option(None, "--resume", help="Path to checkpoint to resume from"),
+    # Training
+    steps: Optional[int] = typer.Option(None, "--steps", help="Total training steps"),
+    checkpoint_freq: Optional[int] = typer.Option(None, "--checkpoint-freq", help="Checkpoint frequency"),
+    # PPO
+    lr: Optional[float] = typer.Option(None, "--lr", help="Peak learning rate (after warmup)"),
+    min_lr: Optional[float] = typer.Option(None, "--min-lr", help="Final learning rate"),
+    batch_size: Optional[int] = typer.Option(None, "--batch-size", help="Batch size"),
+    n_steps: Optional[int] = typer.Option(None, "--n-steps", help="Steps per env per rollout"),
+    n_epochs: Optional[int] = typer.Option(None, "--n-epochs", help="PPO epochs per update"),
+    ent_coef: Optional[float] = typer.Option(None, "--ent-coef", help="Entropy coefficient"),
+    # Self-play
+    opponent_update_rollouts: Optional[int] = typer.Option(None, "--opponent-update-rollouts", help="Update frozen opponent every N rollouts"),
+    # Parallelization
+    n_envs: Optional[int] = typer.Option(None, "--n-envs", help="Number of parallel environments"),
+    no_batched_env: bool = typer.Option(False, "--no-batched-env", help="Disable Rust-side batching"),
+    # Attention
+    no_attention: bool = typer.Option(False, "--no-attention", help="Disable attention, use MLP instead"),
+    attention_dim: Optional[int] = typer.Option(None, "--attention-dim", help="Attention embedding dimension"),
+    attention_heads: Optional[int] = typer.Option(None, "--attention-heads", help="Number of attention heads"),
+    attention_layers: Optional[int] = typer.Option(None, "--attention-layers", help="Number of transformer layers"),
+    # Device
+    device: str = typer.Option("auto", "--device", help="Training device: cpu, cuda, auto"),
+):
+    """Train the Pokemon TCG Pocket RL agent."""
     _defaults = DEFAULT_CONFIG
 
-    # Config file (YAML) - load entire config from file
-    parser.add_argument(
-        "--config", type=str, default=None, help="Path to YAML config file"
-    )
-
-    # Paths
-    parser.add_argument(
-        "--meta", default=_defaults.meta_decks_dir, help="Meta decks directory"
-    )
-    parser.add_argument("--save", default=_defaults.save_path, help="Model save path")
-
-    # Training
-    parser.add_argument(
-        "--steps",
-        type=int,
-        default=_defaults.total_timesteps,
-        help="Total training steps",
-    )
-    parser.add_argument(
-        "--checkpoint-freq",
-        type=int,
-        default=_defaults.checkpoint_freq,
-        help="Checkpoint frequency",
-    )
-
-    # PPO hyperparameters
-    parser.add_argument(
-        "--lr",
-        type=float,
-        default=_defaults.base_learning_rate,
-        help="Peak learning rate (after warmup)",
-    )
-    parser.add_argument(
-        "--min-lr",
-        type=float,
-        default=_defaults.min_learning_rate,
-        help="Final learning rate",
-    )
-    parser.add_argument(
-        "--batch-size", type=int, default=_defaults.batch_size, help="Batch size"
-    )
-    parser.add_argument(
-        "--n-steps",
-        type=int,
-        default=_defaults.n_steps,
-        help="Steps per env per rollout",
-    )
-    parser.add_argument(
-        "--n-epochs", type=int, default=_defaults.n_epochs, help="PPO epochs per update"
-    )
-    parser.add_argument(
-        "--ent-coef", type=float, default=_defaults.ent_coef, help="Entropy coefficient"
-    )
-
-    # Self-play
-    parser.add_argument(
-        "--opponent-update-rollouts",
-        type=int,
-        default=_defaults.frozen_opponent_update_rollouts,
-        help="Update frozen opponent every N rollouts",
-    )
-
-    # Parallelization
-    parser.add_argument(
-        "--n-envs",
-        type=int,
-        default=_defaults.n_envs,
-        help="Number of parallel environments",
-    )
-    parser.add_argument(
-        "--no-batched-env", action="store_true", help="Disable Rust-side batching"
-    )
-
-    # Resume
-    parser.add_argument(
-        "--resume",
-        default=_defaults.resume_path,
-        help="Path to checkpoint to resume from",
-    )
-
-    # Attention policy
-    parser.add_argument(
-        "--no-attention", action="store_true", help="Disable attention, use MLP instead"
-    )
-    parser.add_argument(
-        "--attention-dim", type=int, default=None, help="Attention embedding dimension"
-    )
-    parser.add_argument(
-        "--attention-heads", type=int, default=None, help="Number of attention heads"
-    )
-    parser.add_argument(
-        "--attention-layers",
-        type=int,
-        default=None,
-        help="Number of transformer layers",
-    )
-
-    # Device
-    parser.add_argument(
-        "--device", default=_defaults.device, choices=["cpu", "cuda", "auto"]
-    )
-
-    args = parser.parse_args()
-
     # Load config from YAML if provided, otherwise use defaults
-    if args.config:
-        print(f"Loading configuration from {args.config}...")
-        config = TrainingConfig.from_yaml(args.config)
-        print(f"  Loaded config: {Path(args.config).stem}")
+    if config:
+        print(f"Loading configuration from {config}...")
+        cfg = TrainingConfig.from_yaml(str(config))
+        print(f"  Loaded config: {config.stem}")
     else:
-        config = TrainingConfig()
+        cfg = TrainingConfig()
 
-    # Override config with CLI arguments (CLI takes precedence)
-    if args.meta != _defaults.meta_decks_dir:
-        config.meta_decks_dir = args.meta
-    if args.save != _defaults.save_path:
-        config.save_path = args.save
-    if args.resume is not None:
-        config.resume_path = args.resume
-    if args.steps != _defaults.total_timesteps:
-        config.total_timesteps = args.steps
-    if args.checkpoint_freq != _defaults.checkpoint_freq:
-        config.checkpoint_freq = args.checkpoint_freq
-    if args.lr != _defaults.base_learning_rate:
-        config.base_learning_rate = args.lr
-    if args.min_lr != _defaults.min_learning_rate:
-        config.min_learning_rate = args.min_lr
-    if args.batch_size != _defaults.batch_size:
-        config.batch_size = args.batch_size
-    if args.n_steps != _defaults.n_steps:
-        config.n_steps = args.n_steps
-    if args.n_epochs != _defaults.n_epochs:
-        config.n_epochs = args.n_epochs
-    if args.ent_coef != _defaults.ent_coef:
-        config.ent_coef = args.ent_coef
-    if args.opponent_update_rollouts != _defaults.frozen_opponent_update_rollouts:
-        config.frozen_opponent_update_rollouts = args.opponent_update_rollouts
-    if args.n_envs != _defaults.n_envs:
-        config.n_envs = args.n_envs
-    if args.no_batched_env:
-        config.use_batched_env = False
-    if args.no_attention:
-        config.use_attention = False
-    if args.attention_dim is not None:
-        config.attention_embed_dim = args.attention_dim
-    if args.attention_heads is not None:
-        config.attention_num_heads = args.attention_heads
-    if args.attention_layers is not None:
-        config.attention_num_layers = args.attention_layers
-    if args.device != _defaults.device:
-        config.device = args.device
+    # Override config with CLI arguments (only when explicitly provided)
+    if meta is not None:
+        cfg.meta_decks_dir = meta
+    if save is not None:
+        cfg.save_path = save
+    if resume is not None:
+        cfg.resume_path = resume
+    if steps is not None:
+        cfg.total_timesteps = steps
+    if checkpoint_freq is not None:
+        cfg.checkpoint_freq = checkpoint_freq
+    if lr is not None:
+        cfg.base_learning_rate = lr
+    if min_lr is not None:
+        cfg.min_learning_rate = min_lr
+    if batch_size is not None:
+        cfg.batch_size = batch_size
+    if n_steps is not None:
+        cfg.n_steps = n_steps
+    if n_epochs is not None:
+        cfg.n_epochs = n_epochs
+    if ent_coef is not None:
+        cfg.ent_coef = ent_coef
+    if opponent_update_rollouts is not None:
+        cfg.frozen_opponent_update_rollouts = opponent_update_rollouts
+    if n_envs is not None:
+        cfg.n_envs = n_envs
+    if no_batched_env:
+        cfg.use_batched_env = False
+    if no_attention:
+        cfg.use_attention = False
+    if attention_dim is not None:
+        cfg.attention_embed_dim = attention_dim
+    if attention_heads is not None:
+        cfg.attention_num_heads = attention_heads
+    if attention_layers is not None:
+        cfg.attention_num_layers = attention_layers
+    if device != "auto":
+        cfg.device = device
 
-    train(config)
+    train(cfg)
+
+
+if __name__ == "__main__":
+    app()

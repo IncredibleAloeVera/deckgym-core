@@ -12,7 +12,14 @@ Or as a module:
     python -m deckgym.embeddings.generator
 """
 
+import typer
 from deckgym.embeddings import generate_all
 
-if __name__ == "__main__":
+
+def main():
+    """Generate text embeddings for all Pokemon TCG Pocket cards."""
     generate_all()
+
+
+if __name__ == "__main__":
+    typer.run(main)

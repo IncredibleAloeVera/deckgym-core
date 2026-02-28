@@ -2,9 +2,9 @@
 """Diagnostic script for attention model.
 Usage: python python/scripts/diagnose_model.py path/to/model.zip"""
 
-import argparse
 import numpy as np
 import torch
+import typer
 from sb3_contrib import MaskablePPO
 from deckgym.config import (
     DIAG_GRADIENT_IMBALANCE_WARNING,
@@ -154,27 +154,24 @@ def analyze_attention_layers(model):
             print(f"    {name:55s}: μ={weights.mean():7.4f}, σ={weights.std():6.4f}")
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Model Diagnostics, including gradient, weight and bias analysis.")
-    parser.add_argument("model", type=str, help="Path to the model .zip file")
-    args = parser.parse_args()
-
+def main(model: str = typer.Argument(..., help="Path to the model .zip file")):
+    """Diagnose an RL model: gradient norms, weight distributions, attention stats."""
     print("=" * 70)
     print("MODEL DIAGNOSTIC")
     print("=" * 70)
-    print(f"Model: {args.model}\n")
+    print(f"Model: {model}\n")
 
     # Load model
     print("Loading model...")
-    model = MaskablePPO.load(args.model, device="cpu")
-    print(f"  Device: {model.device}")
-    print(f"  Observation space: {model.observation_space.shape}")
-    print(f"  Action space: {model.action_space.n}")
+    loaded = MaskablePPO.load(model, device="cpu")
+    print(f"  Device: {loaded.device}")
+    print(f"  Observation space: {loaded.observation_space.shape}")
+    print(f"  Action space: {loaded.action_space.n}")
 
     # Run diagnostics
-    grad_ratio = analyze_gradients(model)
-    analyze_weights(model)
-    analyze_attention_layers(model)
+    grad_ratio = analyze_gradients(loaded)
+    analyze_weights(loaded)
+    analyze_attention_layers(loaded)
 
     # Summary
     print("\n" + "=" * 70)
@@ -196,4 +193,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

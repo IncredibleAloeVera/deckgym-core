@@ -13,13 +13,15 @@ Usage:
     python scripts/evaluate_human.py --mirror           # Both players use same deck
 """
 
-import argparse
 import subprocess
 import sys
 import tempfile
 import json
 from pathlib import Path
 from datetime import datetime
+from typing import Optional
+
+import typer
 
 # Add python directory to path for imports
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -108,48 +110,19 @@ def prompt_result() -> str:
         print("Invalid input. Please enter w/l/d/q.")
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Evaluate human skill against Expectiminimax bots"
-    )
-    parser.add_argument(
-        "--games",
-        "-n",
-        type=int,
-        default=50,
-        help="Number of games to play (default: 50)",
-    )
-    parser.add_argument(
-        "--opponent",
-        "-o",
-        type=str,
-        default="e2",
-        help="Opponent bot code: e1, e2, e3, e4, r, w, er, aa, v (default: e2)",
-    )
-    parser.add_argument(
-        "--mirror",
-        action="store_true",
-        help="Both players use the same deck (mirror match)",
-    )
-    parser.add_argument(
-        "--deck-path",
-        type=str,
-        default=None,
-        help="Path to deck JSON directory (default: archetypes_by_era)",
-    )
-    parser.add_argument(
-        "--human-first",
-        action="store_true",
-        help="Human always plays first (default: alternates)",
-    )
-
-    args = parser.parse_args()
-
+def main(
+    games: int = typer.Option(50, "--games", "-n", help="Number of games to play"),
+    opponent: str = typer.Option("e2", "--opponent", "-o", help="Opponent bot code: e1, e2, e3, e4, r, w, er, aa, v"),
+    mirror: bool = typer.Option(False, "--mirror", help="Both players use the same deck (mirror match)"),
+    deck_path: Optional[str] = typer.Option(None, "--deck-path", help="Path to deck JSON directory (default: archetypes_by_era)"),
+    human_first: bool = typer.Option(False, "--human-first", help="Human always plays first (default: alternates)"),
+):
+    """Evaluate human skill against Expectiminimax bots."""
     # Load deck loader
-    deck_json = args.deck_path or str(PROJECT_ROOT / "archetypes_by_era")
+    deck_json = deck_path or str(PROJECT_ROOT / "archetypes_by_era")
     if not Path(deck_json).exists():
         print(f"ERROR: Deck file not found: {deck_json}")
-        sys.exit(1)
+        raise typer.Exit(1)
 
     loader = MetaDeckLoader(deck_json)
     print(f"Loaded {len(loader.decks)} decks from {len(loader.archetypes)} archetypes")
@@ -159,23 +132,23 @@ def main():
     game_log = []
 
     print(f"\n{'='*60}")
-    print(f"HUMAN VS {args.opponent.upper()} EVALUATION")
+    print(f"HUMAN VS {opponent.upper()} EVALUATION")
     print(f"{'='*60}")
-    print(f"Games: {args.games}")
-    print(f"Opponent: {args.opponent}")
-    print(f"Mirror mode: {'ON' if args.mirror else 'OFF'}")
+    print(f"Games: {games}")
+    print(f"Opponent: {opponent}")
+    print(f"Mirror mode: {'ON' if mirror else 'OFF'}")
     print(f"{'='*60}\n")
 
     try:
-        for game_num in range(1, args.games + 1):
-            print(f"\n--- GAME {game_num}/{args.games} ---")
+        for game_num in range(1, games + 1):
+            print(f"\n--- GAME {game_num}/{games} ---")
             print(
                 f"Current stats: W:{stats['wins']} L:{stats['losses']} D:{stats['draws']}"
             )
 
             # Sample decks
             deck_a_info = loader.sample_deck_info(mode="hierarchical")
-            if args.mirror:
+            if mirror:
                 deck_b_info = deck_a_info
             else:
                 deck_b_info = loader.sample_deck_info(mode="hierarchical")
@@ -193,13 +166,13 @@ def main():
 
             try:
                 # Alternate who plays first (or always human first if requested)
-                if args.human_first:
+                if human_first:
                     human_position = 0
                 else:
                     human_position = (game_num - 1) % 2
 
                 # Run the game
-                run_game(deck_a_path, deck_b_path, human_position, args.opponent)
+                run_game(deck_a_path, deck_b_path, human_position, opponent)
 
                 # Get result from user
                 result = prompt_result()
@@ -255,25 +228,25 @@ def main():
         print(f"Draw rate: {draw_rate:.1f}%")
 
         # Interpretation
-        print(f"\n--- INTERPRETATION vs {args.opponent.upper()} ---")
+        print(f"\n--- INTERPRETATION vs {opponent.upper()} ---")
         if win_rate >= 60:
-            print(f"🏆 ABOVE {args.opponent.upper()} level - You're stronger!")
+            print(f"🏆 ABOVE {opponent.upper()} level - You're stronger!")
         elif win_rate >= 45:
-            print(f"⚖️  EQUIVALENT to {args.opponent.upper()} - Evenly matched")
+            print(f"⚖️  EQUIVALENT to {opponent.upper()} - Evenly matched")
         elif win_rate >= 30:
-            print(f"📉 BELOW {args.opponent.upper()} level - Room for improvement")
+            print(f"📉 BELOW {opponent.upper()} level - Room for improvement")
         else:
-            print(f"❌ SIGNIFICANTLY below {args.opponent.upper()} - Keep practicing!")
+            print(f"❌ SIGNIFICANTLY below {opponent.upper()} - Keep practicing!")
 
     # Save log
     log_path = (
         PROJECT_ROOT
-        / f"human_eval_{args.opponent}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        / f"human_eval_{opponent}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     )
     with open(log_path, "w") as f:
         json.dump(
             {
-                "opponent": args.opponent,
+                "opponent": opponent,
                 "stats": stats,
                 "games": game_log,
             },
@@ -284,4 +257,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

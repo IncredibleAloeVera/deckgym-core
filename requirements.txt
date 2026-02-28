@@ -35,3 +35,4 @@ scikit-learn>=1.8.0
 pyo3_runtime>=0.0.1
 pytest>=9.0.2
 rich>=14.2.0
+typer>=0.24.1
