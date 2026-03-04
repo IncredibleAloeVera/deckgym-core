@@ -36,7 +36,7 @@ ppo:
   warmup_ratio: 0.02
 
   n_steps: 256
-  batch_size: 1024
+  batch_size: 512
   n_epochs: 8
 
   gamma: 0.98
@@ -51,13 +51,13 @@ ppo:
 training:
   total_timesteps: 50000000
   checkpoint_freq: 50000
-  n_envs: 126
+  n_envs: 64
   use_batched_env: true
   device: "auto"
   onnx_device: "cuda"
   pfsp_opponent_device: "cuda"
   frozen_opponent_update_rollouts: 8
-  use_gradient_checkpointing: false
+  use_gradient_checkpointing: true
   brutal_resume: false
 
   # PFSP settings

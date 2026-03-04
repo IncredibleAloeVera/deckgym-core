@@ -1,5 +1,13 @@
 [!] High priority :
 
+- [ ] VRAM leak causing OOM after ~39M steps: investigate source (suspect ONNX pool VRAM not fully freed on `remove_onnx_from_pool`, or growing gradient buffers from gradient checkpointing interaction).
+
+- [ ] Resume: auto-detect and load ONNX model files from the PFSP pool checkpoint directory (`pfsp_checkpoint_dir`) on `--resume`, so the opponent pool is restored without manual intervention.
+
+- [ ] Graceful exit support during training:
+  - `e` → clean exit: finish current PPO optimisation phase, save checkpoint, then quit
+  - `q` → brutal exit: immediate kill (equivalent to current `KeyboardInterrupt`)
+
 - [x] Remove draw-card in the rust simulator as a manual action as it should be automatic. Currently there is 5 actions on average during the DRL training, cutting that by 1 means 20% less steps per turn.
 
 - [x] Encode attached tool description (text embedding) on played Pokemon cards in observation tensor (`src/rl/observation.rs`). Currently tools only get a 1-bit `is_tool` flag but the model has no way to know *what* tool is attached to a Pokemon.

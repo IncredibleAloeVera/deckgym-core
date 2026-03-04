@@ -16,9 +16,6 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Tuple
 
-# When run as `python python/deckgym/onnx_export.py`, Python auto-inserts
-# the script's directory (python/deckgym/) as sys.path[0], which shadows
-# the deckgym *package*. Fix: remove it and insert the parent python/ dir.
 _SCRIPT_DIR = str(Path(__file__).resolve().parent)
 _PYTHON_DIR = str(Path(__file__).resolve().parent.parent)
 if _SCRIPT_DIR in sys.path:

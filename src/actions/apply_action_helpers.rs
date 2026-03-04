@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use log::debug;
 use rand::rngs::StdRng;
+use rand::seq::SliceRandom;
 
 use crate::{
     actions::{
@@ -11,7 +12,7 @@ use crate::{
     hooks::{
         get_counterattack_damage, modify_damage, on_end_turn, on_knockout, should_poison_attacker,
     },
-    models::{Card, TrainerType},
+    models::{Card, EnergyType, TrainerType},
     state::GameOutcome,
     State,
 };
@@ -107,55 +108,61 @@ fn forecast_pokemon_checkup(state: &State) -> (Probabilities, Mutations) {
         let paralyzed_to_handle = paralyzed_to_handle.clone();
         let poisons_to_handle = poisons_to_handle.clone();
         let burns_to_handle = burns_to_handle.clone();
-        let (start_probs, start_mutations) = start_turn_ability_outcomes(state, next_player);
-        for (start_prob, start_mutation) in start_probs.into_iter().zip(start_mutations) {
-            let sleeps_to_handle = sleeps_to_handle.clone();
-            let paralyzed_to_handle = paralyzed_to_handle.clone();
-            let poisons_to_handle = poisons_to_handle.clone();
-            let burns_to_handle = burns_to_handle.clone();
-            let outcome = outcome.clone();
-            probabilities.push(base_probability * start_prob);
-            outcomes.push(Box::new(move |rng, state, action| {
-                // Important for these to happen before Pokemon Checkup (Zeraora, Suicune, etc)
-                on_end_turn(action.actor, state);
+        probabilities.push(base_probability);
+        outcomes.push(Box::new(move |rng, state, action| {
+            // Important for these to happen before Pokemon Checkup (Zeraora, Suicune, etc)
+            on_end_turn(action.actor, state);
 
-                apply_pokemon_checkup(
-                    state,
-                    sleeps_to_handle.clone(),
-                    paralyzed_to_handle.clone(),
-                    poisons_to_handle.clone(),
-                    burns_to_handle.clone(),
-                    outcome.clone(),
-                );
+            apply_pokemon_checkup(
+                state,
+                sleeps_to_handle.clone(),
+                paralyzed_to_handle.clone(),
+                poisons_to_handle.clone(),
+                burns_to_handle.clone(),
+                outcome.clone(),
+            );
 
-                start_mutation(rng, state, action);
-            }));
-        }
+            // Start-of-turn abilities execute AFTER the turn advance and card draw,
+            // so they search the actual current deck state.
+            apply_start_turn_ability(rng, state, next_player);
+        }));
     }
     (probabilities, outcomes)
 }
 
-fn start_turn_ability_outcomes(state: &State, player: usize) -> (Probabilities, Mutations) {
+/// Execute start-of-turn abilities at runtime, after the turn has advanced and a card
+/// has been drawn. This ensures the ability searches the actual current deck state.
+fn apply_start_turn_ability(rng: &mut StdRng, state: &mut State, player: usize) {
     let Some(active) = state.maybe_get_active(player) else {
-        return (vec![1.0], vec![noop_mutation()]);
+        return;
     };
     let Some(ability) = active.card.get_ability() else {
-        return (vec![1.0], vec![noop_mutation()]);
+        return;
     };
     let Some(mechanic) = ability_mechanic_from_effect(&ability.effect) else {
-        return (vec![1.0], vec![noop_mutation()]);
+        return;
     };
 
     match mechanic {
         AbilityMechanic::StartTurnRandomPokemonToHand { energy_type } => {
-            shared_mutations::pokemon_search_outcomes_by_type_for_player(
-                player,
-                state,
-                false,
-                *energy_type,
-            )
+            // Search the deck for a matching Pokemon and transfer it to hand
+            let eligible: Vec<Card> = state.decks[player]
+                .cards
+                .iter()
+                .filter(|card| {
+                    let type_matches = card.get_type().map(|t| t == *energy_type).unwrap_or(false);
+                    matches!(card, Card::Pokemon(_)) && type_matches
+                })
+                .cloned()
+                .collect();
+
+            if let Some(chosen) = eligible.choose(rng) {
+                let chosen = chosen.clone();
+                state.transfer_card_from_deck_to_hand(player, &chosen);
+                state.decks[player].shuffle(false, rng);
+            }
         }
-        _ => (vec![1.0], vec![noop_mutation()]),
+        _ => {}
     }
 }
 
