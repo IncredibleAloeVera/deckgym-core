@@ -40,7 +40,7 @@ from deckgym.models.extractors import (
     CardAttentionExtractor,
     create_attention_policy_kwargs,
 )
-from deckgym.callbacks import PFSPCallback, EpisodeMetricsCallback, FrozenOpponentCallback, PauseResumeCallback, InterpretabilityCallback
+from deckgym.callbacks import PFSPCallback, EpisodeMetricsCallback, FrozenOpponentCallback, PauseResumeCallback, InterpretabilityCallback, MemoryMonitorCallback
 
 # Import configuration and constants
 from deckgym.config import TrainingConfig, DEFAULT_CONFIG, OBSERVATION_SIZE
@@ -355,6 +355,7 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
         ),
         EpisodeMetricsCallback(verbose=0),
         InterpretabilityCallback(verbose=0),
+        MemoryMonitorCallback(verbose=0),
         PauseResumeCallback(verbose=1),
     ]
 
