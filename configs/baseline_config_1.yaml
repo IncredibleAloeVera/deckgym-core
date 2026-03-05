@@ -58,7 +58,7 @@ training:
   pfsp_opponent_device: "cuda"
   frozen_opponent_update_rollouts: 8
   use_gradient_checkpointing: true
-  brutal_resume: false
+  brutal_resume: true
 
   # PFSP settings
   use_pfsp: true
