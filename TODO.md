@@ -4,7 +4,7 @@
 
 - [ ] Resume: auto-detect and load ONNX model files from the PFSP pool checkpoint directory (`pfsp_checkpoint_dir`) on `--resume`, so the opponent pool is restored without manual intervention.
 
-- [ ] Graceful exit support during training:
+- [X] Graceful exit support during training:
   - `e` → clean exit: finish current PPO optimisation phase, save checkpoint, then quit
   - `q` → brutal exit: immediate kill (equivalent to current `KeyboardInterrupt`)
 
