@@ -59,6 +59,7 @@ training:
   frozen_opponent_update_rollouts: 8
   use_gradient_checkpointing: true
   brutal_resume: true
+  resume_subtract_steps: true
 
   # PFSP settings
   use_pfsp: true

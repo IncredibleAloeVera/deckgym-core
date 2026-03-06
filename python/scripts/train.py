@@ -40,7 +40,7 @@ from deckgym.models.extractors import (
     CardAttentionExtractor,
     create_attention_policy_kwargs,
 )
-from deckgym.callbacks import PFSPCallback, EpisodeMetricsCallback, FrozenOpponentCallback, PauseResumeCallback, InterpretabilityCallback, MemoryMonitorCallback
+from deckgym.callbacks import PFSPCallback, EpisodeMetricsCallback, FrozenOpponentCallback, InteractiveControlCallback, InterpretabilityCallback, MemoryMonitorCallback
 
 # Import configuration and constants
 from deckgym.config import TrainingConfig, DEFAULT_CONFIG, OBSERVATION_SIZE
@@ -356,7 +356,7 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
         EpisodeMetricsCallback(verbose=0),
         InterpretabilityCallback(verbose=0),
         MemoryMonitorCallback(verbose=0),
-        PauseResumeCallback(verbose=1),
+        InteractiveControlCallback(checkpoint_dir=config.checkpoint_dir, verbose=1),
     ]
 
     # Add PFSP or simple frozen opponent callback
@@ -428,9 +428,19 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
             f"      Opponent updates: every {config.frozen_opponent_update_rollouts} rollouts"
         )
 
+    # Compute effective total timesteps (subtract already-done steps on resume if requested)
+    effective_total_timesteps = config.total_timesteps
+    if config.resume_path and config.resume_subtract_steps:
+        steps_done = model.num_timesteps
+        effective_total_timesteps = max(0, config.total_timesteps - steps_done)
+        print(
+            f"      Resume: {steps_done:,} steps done, {effective_total_timesteps:,} remaining "
+            f"(of {config.total_timesteps:,} total)"
+        )
+
     with diag_logger.capture_panic(env_provider=lambda: env):
         model.learn(
-            total_timesteps=config.total_timesteps,
+            total_timesteps=effective_total_timesteps,
             callback=callbacks,
             progress_bar=True,
         )
@@ -479,6 +489,8 @@ def cli(
     attention_layers: Optional[int] = typer.Option(None, "--attention-layers", help="Number of transformer layers"),
     # Device
     device: str = typer.Option("auto", "--device", help="Training device: cpu, cuda, auto"),
+    # Resume
+    subtract_resume_steps: bool = typer.Option(False, "--subtract-resume-steps", help="Subtract already-done steps from total_timesteps on resume"),
 ):
     """Train the Pokemon TCG Pocket RL agent."""
     _defaults = DEFAULT_CONFIG
@@ -530,6 +542,8 @@ def cli(
         cfg.attention_num_layers = attention_layers
     if device != "auto":
         cfg.device = device
+    if subtract_resume_steps:
+        cfg.resume_subtract_steps = True
 
     train(cfg)
 

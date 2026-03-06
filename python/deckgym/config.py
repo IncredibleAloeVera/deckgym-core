@@ -142,6 +142,7 @@ class TrainingConfig:
     total_timesteps: int = 30_000_000
     checkpoint_freq: int = 10_000
     brutal_resume: bool = False  # Skip curriculum and jump to final stage
+    resume_subtract_steps: bool = False  # Subtract already-done steps from total_timesteps on resume
 
     # -------------------------------------------------------------------------
     # PPO Hyperparameters
@@ -422,6 +423,7 @@ training:
   frozen_opponent_update_rollouts: {self.frozen_opponent_update_rollouts}
   use_gradient_checkpointing: {str(self.use_gradient_checkpointing).lower()}
   brutal_resume: {str(self.brutal_resume).lower()}
+  resume_subtract_steps: {str(self.resume_subtract_steps).lower()}
 
   # PFSP settings
   use_pfsp: {str(self.use_pfsp).lower()}
@@ -529,6 +531,7 @@ environment:
                 "pfsp_priority_exponent",
                 "pfsp_checkpoint_dir",
                 "brutal_resume",
+                "resume_subtract_steps",
                 "pfsp_baseline_curriculum",
             ]:
                 if key in training:
