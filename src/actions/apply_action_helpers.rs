@@ -7,12 +7,12 @@ use rand::seq::SliceRandom;
 use crate::{
     actions::{
         abilities::AbilityMechanic, ability_mechanic_from_effect,
-        effect_ability_mechanic_map::get_ability_mechanic, shared_mutations, SimpleAction,
+        effect_ability_mechanic_map::get_ability_mechanic, SimpleAction,
     },
     hooks::{
         get_counterattack_damage, modify_damage, on_end_turn, on_knockout, should_poison_attacker,
     },
-    models::{Card, EnergyType, TrainerType},
+    models::{Card, TrainerType},
     state::GameOutcome,
     State,
 };
@@ -27,6 +27,19 @@ pub(crate) type Probabilities = Vec<f64>;
 pub(crate) type FnMutation = Box<dyn Fn(&mut StdRng, &mut State, &Action)>;
 pub(crate) type Mutation = Box<dyn FnOnce(&mut StdRng, &mut State, &Action)>;
 pub(crate) type Mutations = Vec<Mutation>;
+
+/// Forecast start-of-turn ability outcomes for a given player.
+/// Returns a single deterministic outcome that applies the ability at mutation time.
+/// The actual randomness (e.g. picking a card) is handled inside apply_start_turn_ability via rng.
+fn start_turn_ability_outcomes(
+    _state: &State,
+    player: usize,
+) -> (Probabilities, Mutations) {
+    let mutation: Mutation = Box::new(move |rng, state, _action| {
+        apply_start_turn_ability(rng, state, player);
+    });
+    (vec![1.0], vec![mutation])
+}
 
 /// Advance state to the next turn (i.e. maintain current_player and turn_count)
 pub(crate) fn forecast_end_turn(state: &State) -> (Probabilities, Mutations) {
@@ -615,10 +628,6 @@ pub(crate) fn wrap_with_common_logic(mutation: Mutation) -> Mutation {
             state.end_turn_pending = true;
         }
     })
-}
-
-fn noop_mutation() -> Mutation {
-    Box::new(|_, _, _| {})
 }
 
 #[cfg(test)]
