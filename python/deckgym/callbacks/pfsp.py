@@ -6,6 +6,8 @@ Modular implementation delegating to specialized components in the league packag
 """
 
 import gc
+import re
+from pathlib import Path
 from typing import Dict, List, Optional
 from stable_baselines3.common.callbacks import BaseCallback
 
@@ -95,8 +97,15 @@ class PFSPCallback(BaseCallback):
                 },
             )
 
-        # Add initial untrained model
-        self._add_to_pool()
+        # Restore pool from checkpoint directory on resume, otherwise add initial model
+        is_resume = getattr(self.env.config, "resume_path", None) is not None
+        restored = 0
+        if is_resume:
+            restored = self._restore_pool_from_checkpoints()
+
+        if restored == 0:
+            # No checkpoints found (or not resuming) — add initial untrained model
+            self._add_to_pool()
 
         # Initialize Rust pool
         self.bridge.clear_rust_pool()
@@ -235,13 +244,19 @@ class PFSPCallback(BaseCallback):
         """Orchestrate saving and adding a new model to the league."""
         name = f"pfsp_{self.num_timesteps // 1000}k"
         path = self.pool.checkpoint_dir / f"{name}.zip"
+        onnx_path = str(self.pool.checkpoint_dir / f"{name}.onnx")
 
         # Save model
         self.model.save(str(path))
 
+        # Export ONNX to checkpoint dir (persists across restarts)
+        from deckgym.onnx_export import export_policy_to_onnx
+        export_policy_to_onnx(self.model, onnx_path, validate=False)
+
         # Add to local pool
         data = {
             "path": str(path),
+            "onnx_path": onnx_path,
             "wins": 0,
             "losses": 0,
             "draws": 0,
@@ -250,9 +265,7 @@ class PFSPCallback(BaseCallback):
         }
         self.pool.add_opponent(name, data)
 
-        # Add to Rust via bridge
-        onnx_path = self.bridge.export_model(self.model, name)
-        data["onnx_path"] = onnx_path
+        # Add to Rust pool
         self.bridge.add_onnx_to_rust(name, onnx_path)
 
         # Eviction if pool full
@@ -280,6 +293,54 @@ class PFSPCallback(BaseCallback):
         if self.verbose > 0:
             print(f"[PFSP] Saved and added model: {name}")
         gc.collect()
+
+    def _restore_pool_from_checkpoints(self) -> int:
+        """
+        Scan pfsp_checkpoint_dir for ONNX files and restore them into the pool.
+
+        Returns the number of models restored.
+        """
+        checkpoint_dir = self.pool.checkpoint_dir
+        onnx_files = sorted(checkpoint_dir.glob("pfsp_*.onnx"))
+
+        if not onnx_files:
+            if self.verbose > 0:
+                print(f"[PFSP] Resume: no ONNX checkpoints found in {checkpoint_dir}")
+            return 0
+
+        # Parse step count from filename (e.g., pfsp_1000k.onnx -> 1000000)
+        def parse_step(path: Path) -> int:
+            match = re.search(r"pfsp_(\d+)k", path.stem)
+            return int(match.group(1)) * 1000 if match else 0
+
+        # Sort by step (newest last) and keep at most pool_size
+        onnx_files.sort(key=parse_step)
+        if len(onnx_files) > self.pool.pool_size:
+            onnx_files = onnx_files[-self.pool.pool_size :]
+
+        restored = 0
+        for onnx_path in onnx_files:
+            name = onnx_path.stem  # e.g., "pfsp_1000k"
+            zip_path = onnx_path.with_suffix(".zip")
+            step = parse_step(onnx_path)
+
+            data = {
+                "path": str(zip_path) if zip_path.exists() else None,
+                "onnx_path": str(onnx_path),
+                "wins": 0,
+                "losses": 0,
+                "draws": 0,
+                "added_at_step": step,
+                "is_baseline": False,
+            }
+            self.pool.add_opponent(name, data)
+            restored += 1
+
+        if self.verbose > 0:
+            print(
+                f"[PFSP] Resume: restored {restored} model(s) from {checkpoint_dir}"
+            )
+        return restored
 
     def _add_onnx_baseline_to_rust(self, name: str, code: str):
         """Resolve an ONNX baseline code to a path and add it to Rust ONNX pool."""

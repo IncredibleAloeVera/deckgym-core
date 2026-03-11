@@ -456,6 +456,19 @@ def train(config: TrainingConfig = DEFAULT_CONFIG):
 # Entry Point
 # =============================================================================
 
+
+def find_latest_checkpoint(checkpoint_dir: str) -> Optional[str]:
+    """
+    Return the path of the most recently modified .zip file in checkpoint_dir,
+    or None if no checkpoints exist.
+    """
+    cp_dir = Path(checkpoint_dir)
+    if not cp_dir.is_dir():
+        return None
+    zips = sorted(cp_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime)
+    return str(zips[-1]) if zips else None
+
+
 app = typer.Typer(pretty_exceptions_show_locals=False)
 
 
@@ -466,7 +479,7 @@ def cli(
     # Paths
     meta: Optional[str] = typer.Option(None, "--meta", help="Meta decks directory"),
     save: Optional[str] = typer.Option(None, "--save", help="Model save path"),
-    resume: Optional[str] = typer.Option(None, "--resume", help="Path to checkpoint to resume from"),
+    resume: Optional[str] = typer.Option(None, "--resume", help="Path to checkpoint to resume from. Pass 'latest' or 'auto' to automatically load the most recent checkpoint in the checkpoint directory."),
     # Training
     steps: Optional[int] = typer.Option(None, "--steps", help="Total training steps"),
     checkpoint_freq: Optional[int] = typer.Option(None, "--checkpoint-freq", help="Checkpoint frequency"),
@@ -509,7 +522,19 @@ def cli(
     if save is not None:
         cfg.save_path = save
     if resume is not None:
-        cfg.resume_path = resume
+        if resume.lower() in ("latest", "auto"):
+            # Auto-detect the most recent checkpoint in the checkpoint directory
+            detected = find_latest_checkpoint(cfg.checkpoint_dir)
+            if detected is None:
+                print(
+                    f"[WARNING] --resume {resume}: no .zip checkpoint found in "
+                    f"'{cfg.checkpoint_dir}'. Starting from scratch."
+                )
+            else:
+                print(f"[--resume {resume}] Auto-detected latest checkpoint: {detected}")
+                cfg.resume_path = detected
+        else:
+            cfg.resume_path = resume
     if steps is not None:
         cfg.total_timesteps = steps
     if checkpoint_freq is not None:

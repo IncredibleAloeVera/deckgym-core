@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Tests for PFSPCallback."""
+import os
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import MagicMock, patch
-from deckgym.pfsp_callback import PFSPCallback
+from deckgym.callbacks.pfsp import PFSPCallback
 
 
 class TestPFSPCallback(unittest.TestCase):
@@ -27,6 +30,7 @@ class TestPFSPCallback(unittest.TestCase):
         # Ensure config returns values, not mocks, for comparisons
         self.mock_env.config.pfsp_min_winrate_to_add = 0.50
         self.mock_env.config.draw_reward = -0.5
+        self.mock_env.config.resume_path = None
 
     def test_on_training_start(self):
         """Test training start initializes pool mode."""
@@ -83,6 +87,8 @@ class TestPFSPCallback(unittest.TestCase):
         """Test curriculum update is called."""
         # Mock components
         self.callback.pool = MagicMock()
+        self.callback.pool.model_count = 1
+        self.callback.pool.pool_size = 5
         self.callback.selector = MagicMock()
         self.callback.league_logger = MagicMock()
         self.callback.bridge = MagicMock()
@@ -104,6 +110,8 @@ class TestPFSPCallback(unittest.TestCase):
         """Test pool results are updated on rollout end."""
         # Mock components
         self.callback.pool = MagicMock()
+        self.callback.pool.model_count = 1
+        self.callback.pool.pool_size = 5
         self.callback.selector = MagicMock()
         self.callback.league_logger = MagicMock()
         self.callback.bridge = MagicMock()
@@ -145,6 +153,116 @@ class TestPFSPCallback(unittest.TestCase):
 
             # Should trigger pool addition (every 10)
             mock_add.assert_called_once()
+
+
+    def test_restore_pool_from_checkpoints(self):
+        """Test that ONNX files in checkpoint dir are restored on resume."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Create fake ONNX files in the checkpoint dir
+            for name in ["pfsp_100k.onnx", "pfsp_500k.onnx", "pfsp_1000k.onnx"]:
+                Path(tmpdir, name).write_bytes(b"fake_onnx")
+            # Also create a .zip for one of them
+            Path(tmpdir, "pfsp_500k.zip").write_bytes(b"fake_zip")
+
+            callback = PFSPCallback(
+                env=self.mock_env,
+                n_envs=4,
+                pool_size=5,
+                checkpoint_dir=tmpdir,
+                verbose=0,
+            )
+            callback.model = MagicMock()
+            callback._logger = MagicMock()
+
+            restored = callback._restore_pool_from_checkpoints()
+
+            self.assertEqual(restored, 3)
+            self.assertIn("pfsp_100k", callback.pool.opponents)
+            self.assertIn("pfsp_500k", callback.pool.opponents)
+            self.assertIn("pfsp_1000k", callback.pool.opponents)
+
+            # Check that zip path is set only when file exists
+            self.assertIsNone(callback.pool.opponents["pfsp_100k"]["path"])
+            self.assertIsNotNone(callback.pool.opponents["pfsp_500k"]["path"])
+            self.assertIsNone(callback.pool.opponents["pfsp_1000k"]["path"])
+
+            # Check step parsing
+            self.assertEqual(callback.pool.opponents["pfsp_100k"]["added_at_step"], 100000)
+            self.assertEqual(callback.pool.opponents["pfsp_1000k"]["added_at_step"], 1000000)
+
+    def test_restore_pool_respects_pool_size(self):
+        """Test that only the newest pool_size models are restored."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            for i in range(10):
+                Path(tmpdir, f"pfsp_{i * 100}k.onnx").write_bytes(b"fake_onnx")
+
+            callback = PFSPCallback(
+                env=self.mock_env,
+                n_envs=4,
+                pool_size=3,
+                checkpoint_dir=tmpdir,
+                verbose=0,
+            )
+            callback.model = MagicMock()
+            callback._logger = MagicMock()
+
+            restored = callback._restore_pool_from_checkpoints()
+
+            self.assertEqual(restored, 3)
+            # Should keep the 3 newest (700k, 800k, 900k)
+            self.assertIn("pfsp_700k", callback.pool.opponents)
+            self.assertIn("pfsp_800k", callback.pool.opponents)
+            self.assertIn("pfsp_900k", callback.pool.opponents)
+            self.assertNotIn("pfsp_100k", callback.pool.opponents)
+
+    def test_on_training_start_resume_restores_pool(self):
+        """Test that _on_training_start restores pool on resume instead of adding untrained model."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            Path(tmpdir, "pfsp_500k.onnx").write_bytes(b"fake_onnx")
+
+            self.mock_env.config.resume_path = "/some/checkpoint.zip"
+
+            callback = PFSPCallback(
+                env=self.mock_env,
+                n_envs=4,
+                pool_size=5,
+                checkpoint_dir=tmpdir,
+                verbose=0,
+            )
+            callback.model = MagicMock()
+            callback._logger = MagicMock()
+
+            with patch.object(callback, "_add_to_pool") as mock_add:
+                callback._on_training_start()
+
+                # Should NOT call _add_to_pool since checkpoints were restored
+                mock_add.assert_not_called()
+
+            # Pool should have the restored model
+            self.assertIn("pfsp_500k", callback.pool.opponents)
+            self.assertTrue(callback.pool_mode)
+
+    def test_on_training_start_resume_no_checkpoints_falls_back(self):
+        """Test that _on_training_start falls back to _add_to_pool when no checkpoints found."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Empty checkpoint dir
+            self.mock_env.config.resume_path = "/some/checkpoint.zip"
+
+            callback = PFSPCallback(
+                env=self.mock_env,
+                n_envs=4,
+                pool_size=5,
+                checkpoint_dir=tmpdir,
+                verbose=0,
+            )
+            callback.model = MagicMock()
+            callback._logger = MagicMock()
+
+            with patch.object(callback, "_add_to_pool") as mock_add:
+                callback._on_training_start()
+
+                # Should fall back to _add_to_pool since no checkpoints found
+                mock_add.assert_called_once()
 
 
 if __name__ == "__main__":
