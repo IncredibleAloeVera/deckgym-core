@@ -108,7 +108,9 @@ def main():
     for json_file in json_files:
         total, removed = clean_era_file(json_file, incomplete_ids)
         kept = total - removed
-        print(f"  {json_file.name:20s}  total={total:6d}  removed={removed:5d}  kept={kept:6d}")
+        print(
+            f"  {json_file.name:20s}  total={total:6d}  removed={removed:5d}  kept={kept:6d}"
+        )
         total_all += total
         removed_all += removed
 

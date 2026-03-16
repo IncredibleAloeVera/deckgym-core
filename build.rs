@@ -1,6 +1,6 @@
-use std::process::Command;
-use std::path::Path;
 use std::collections::HashSet;
+use std::path::Path;
+use std::process::Command;
 
 fn main() {
     #[cfg(target_os = "linux")]
@@ -17,8 +17,7 @@ fn main() {
         if let Ok(output) = Command::new("ldconfig").arg("-p").output() {
             let stdout = String::from_utf8_lossy(&output.stdout);
             for line in stdout.lines() {
-                if line.contains("libcudnn.so") || 
-                   line.contains("libcublas.so") {
+                if line.contains("libcudnn.so") || line.contains("libcublas.so") {
                     if let Some(path_part) = line.split("=>").last() {
                         if let Some(parent) = Path::new(path_part.trim()).parent() {
                             paths.insert(parent.to_path_buf());
@@ -30,9 +29,9 @@ fn main() {
 
         // 2. Add standard fallback paths
         let fallbacks = [
-            "/usr/local/cuda/lib64", 
+            "/usr/local/cuda/lib64",
             "/usr/local/cuda/targets/x86_64-linux/lib",
-            "/usr/lib/x86_64-linux-gnu", 
+            "/usr/lib/x86_64-linux-gnu",
             "/lib/x86_64-linux-gnu",
         ];
         for fb in fallbacks {

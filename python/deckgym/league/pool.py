@@ -86,7 +86,6 @@ class OpponentPool:
                     self.opponents[opp_name]["draws"] += 1
                     self.opponents[opp_name]["total_draws"] += 1
 
-
     def get_eviction_candidates(
         self, exclude_names: List[str] = []
     ) -> List[Tuple[str, float, int]]:

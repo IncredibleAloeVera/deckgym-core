@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Tests for InteractiveControlCallback."""
+
 import threading
 import time
 import unittest
@@ -101,25 +102,29 @@ class TestInteractiveControlCallback(unittest.TestCase):
         self.callback._clean_exit.set()
         self.callback._on_rollout_start()
 
-        expected_path = os.path.join(
-            self.callback.checkpoint_dir, "rl_bot_1000_steps"
-        )
+        expected_path = os.path.join(self.callback.checkpoint_dir, "rl_bot_1000_steps")
         self.callback.model.save.assert_called_once_with(expected_path)
-        self.assertTrue(self.callback._stop_now.is_set(), "_stop_now must be set to abort next rollout")
+        self.assertTrue(
+            self.callback._stop_now.is_set(),
+            "_stop_now must be set to abort next rollout",
+        )
 
     def test_brutal_exit_raises_interrupt(self):
         """Pressing 'q' should immediately raise a KeyboardInterrupt in the listener thread."""
         import sys
         from unittest.mock import patch, MagicMock
-        
+
         # Simulate 'q' being read from stdin
-        with patch("sys.stdin.read", return_value="q"), \
-             patch("select.select", return_value=([sys.stdin], [], [])), \
-             patch("sys.stdin.fileno", return_value=0), \
-             patch("termios.tcgetattr", return_value=MagicMock()), \
-             patch("termios.tcsetattr"), \
-             patch("tty.setcbreak"):
-            
+        with patch("sys.stdin.read", return_value="q"), patch(
+            "select.select", return_value=([sys.stdin], [], [])
+        ), patch("sys.stdin.fileno", return_value=0), patch(
+            "termios.tcgetattr", return_value=MagicMock()
+        ), patch(
+            "termios.tcsetattr"
+        ), patch(
+            "tty.setcbreak"
+        ):
+
             # _listen_for_key should catch the inner KeyboardInterrupt and re-raise it
             with self.assertRaisesRegex(KeyboardInterrupt, "User pressed 'q'"):
                 self.callback._listen_for_key()

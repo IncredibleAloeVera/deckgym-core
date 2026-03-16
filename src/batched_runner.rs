@@ -197,12 +197,7 @@ impl BatchedGameRunner {
             .into_par_iter()
             .enumerate()
             .map(|(i, (deck_a, deck_b))| {
-                GameInstance::new(
-                    deck_a,
-                    deck_b,
-                    base_seed.wrapping_add(i as u64),
-                    &cpu_codes,
-                )
+                GameInstance::new(deck_a, deck_b, base_seed.wrapping_add(i as u64), &cpu_codes)
             })
             .collect();
 
@@ -326,7 +321,12 @@ impl BatchedGameRunner {
             total_actions += (p0_active.len() + p1_active.len()) as u64;
 
             if total_steps % 10 == 0 {
-                log::info!("[{}] Iteration {}, active games: {}", "INFO", total_steps, p0_active.len() + p1_active.len());
+                log::info!(
+                    "[{}] Iteration {}, active games: {}",
+                    "INFO",
+                    total_steps,
+                    p0_active.len() + p1_active.len()
+                );
             }
 
             // Step player 0's games
@@ -349,7 +349,10 @@ impl BatchedGameRunner {
             const MAX_STEPS_PER_GAME: usize = 2000;
             for game in &mut self.games {
                 if !game.is_game_over() && game.step_count > MAX_STEPS_PER_GAME {
-                    log::warn!("[WARNING] Game exceeded {} steps. Forcing Tie.", MAX_STEPS_PER_GAME);
+                    log::warn!(
+                        "[WARNING] Game exceeded {} steps. Forcing Tie.",
+                        MAX_STEPS_PER_GAME
+                    );
                     game.state.winner = Some(GameOutcome::Tie);
                 }
             }
@@ -360,10 +363,15 @@ impl BatchedGameRunner {
                 if let Some(ref pb) = self.progress {
                     pb.set_position(new_completed as u64);
                 }
-                
+
                 // Print a parsable progress line for Python UI
                 let global_completed = self.progress_offset + new_completed;
-                log::info!("[{}] [#######] {}/{}", "PROGRESS", global_completed, self.progress_total);
+                log::info!(
+                    "[{}] [#######] {}/{}",
+                    "PROGRESS",
+                    global_completed,
+                    self.progress_total
+                );
 
                 self.completed_count = new_completed;
             }
@@ -376,8 +384,11 @@ impl BatchedGameRunner {
 
         // Print stats (timing breakdown available via ONNX_DEBUG=1)
         let ts = &self.timing_stats;
-        let total_time = ts.obs_collection + ts.mask_collection + ts.onnx_inference
-            + ts.action_resolution + ts.action_application;
+        let total_time = ts.obs_collection
+            + ts.mask_collection
+            + ts.onnx_inference
+            + ts.action_resolution
+            + ts.action_application;
 
         eprintln!(
             "  [Batched] {} iterations, avg batch {:.0}, {:.1}% in inference",
@@ -388,12 +399,14 @@ impl BatchedGameRunner {
 
         // Detailed timing breakdown if ONNX_DEBUG is set
         if std::env::var("ONNX_DEBUG").is_ok() {
-            eprintln!("  [Timing] obs:{:.2}s mask:{:.2}s infer:{:.2}s resolve:{:.2}s apply:{:.2}s",
+            eprintln!(
+                "  [Timing] obs:{:.2}s mask:{:.2}s infer:{:.2}s resolve:{:.2}s apply:{:.2}s",
                 ts.obs_collection.as_secs_f64(),
                 ts.mask_collection.as_secs_f64(),
                 ts.onnx_inference.as_secs_f64(),
                 ts.action_resolution.as_secs_f64(),
-                ts.action_application.as_secs_f64());
+                ts.action_application.as_secs_f64()
+            );
         }
 
         // Collect outcomes
@@ -529,14 +542,11 @@ impl BatchedGameRunner {
             }
         }
 
-        self.games
-            .par_iter_mut()
-            .enumerate()
-            .for_each(|(i, game)| {
-                if let Some(action) = &actions_to_apply[i] {
-                    apply_action(&mut game.rng, &mut game.state, action);
-                }
-            });
+        self.games.par_iter_mut().enumerate().for_each(|(i, game)| {
+            if let Some(action) = &actions_to_apply[i] {
+                apply_action(&mut game.rng, &mut game.state, action);
+            }
+        });
         self.timing_stats.action_application += t4.elapsed();
     }
 
@@ -547,7 +557,7 @@ impl BatchedGameRunner {
         }
 
         let t0 = Instant::now();
-        
+
         // Create a mask for active games for fast lookup in par_iter
         let mut mask = vec![false; self.games.len()];
         for &idx in game_indices {

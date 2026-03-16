@@ -1,11 +1,11 @@
 // Observation Tensor Generation - V5fix: Attached Tool Embedding
 // V5fix adds 128-dim tool text embedding on played/static cards (attached_tool support).
 
-use std::collections::HashMap;
 use lazy_static::lazy_static;
 use serde::Deserialize;
+use std::collections::HashMap;
 
-use crate::hooks::{get_retreat_cost};
+use crate::hooks::get_retreat_cost;
 use crate::models::{Card, EnergyType, PlayedCard};
 use crate::state::State;
 
@@ -35,7 +35,6 @@ lazy_static! {
         let json_str = include_str!("generated/card_features.json");
         serde_json::from_str(json_str).expect("Failed to parse card_features.json")
     };
-    
     static ref EMPTY_EMBEDDING: Vec<f32> = vec![0.0; 128];
     static ref EMPTY_TYPE_REFS: Vec<f32> = vec![0.0; 9];
     static ref EMPTY_MECH_REFS: Vec<f32> = vec![0.0; 11];
@@ -86,7 +85,7 @@ pub const GLOBAL_FEATURES: usize = 1   // turn count
     + 2                                 // discard sizes (self, opponent)
     + 32                                // energy generated (2 players * 2 slots * 8 units)
     + 1                                 // has_stadium flag
-    + 128;                              // stadium text embedding
+    + 128; // stadium text embedding
 
 pub const OBSERVATION_SIZE: usize = GLOBAL_FEATURES + (MAX_CARDS_IN_OBS * FEATURES_PER_CARD);
 
@@ -228,22 +227,37 @@ fn encode_global_features(state: &State, perspective: usize, obs: &mut Vec<f32>)
     }
 }
 
-fn encode_played_card(p: &PlayedCard, state: &State, loc: usize, allied: f32, slot: Option<usize>, obs: &mut Vec<f32>) {
+fn encode_played_card(
+    p: &PlayedCard,
+    state: &State,
+    loc: usize,
+    allied: f32,
+    slot: Option<usize>,
+    obs: &mut Vec<f32>,
+) {
     let card_id = p.get_id();
     let mut type_refs = [0.0; 9];
     let mut mech_refs = [0.0; 11];
-    
+
     // Properties
     obs.push(p.get_remaining_hp() as f32); // HP raw
     encode_type_one_hot(p.get_energy_type(), obs); // Types 11
     encode_weakness_one_hot(p.card.get_weakness(), obs); // Weakness 9
-    
+
     // Flags 8
     obs.push(if p.card.is_ex() { 1.0 } else { 0.0 });
     obs.push(if p.card.is_mega() { 1.0 } else { 0.0 });
-    obs.push(if matches!(p.card, Card::Pokemon(_)) { 1.0 } else { 0.0 });
+    obs.push(if matches!(p.card, Card::Pokemon(_)) {
+        1.0
+    } else {
+        0.0
+    });
     obs.push(p.card.is_tool() as i32 as f32);
-    obs.push(if matches!(p.card, Card::Trainer(_)) { 1.0 } else { 0.0 });
+    obs.push(if matches!(p.card, Card::Trainer(_)) {
+        1.0
+    } else {
+        0.0
+    });
     obs.push(p.card.is_item() as i32 as f32);
     obs.push(p.card.is_stadium() as i32 as f32);
     obs.push(p.card.is_fossil() as i32 as f32);
@@ -253,7 +267,7 @@ fn encode_played_card(p: &PlayedCard, state: &State, loc: usize, allied: f32, sl
     encode_meta(&card_id, ready, obs);
 
     obs.push((get_retreat_cost(state, p).len() as f32 / 4.0).clamp(0.0, 1.0)); // Retreat
-    
+
     // Status 4
     obs.push(if p.confused { 1.0 } else { 0.0 });
     obs.push(if p.burned { 1.0 } else { 0.0 });
@@ -295,8 +309,12 @@ fn encode_played_card(p: &PlayedCard, state: &State, loc: usize, allied: f32, sl
     }
 
     // Position 4 + 4 + 1 = 9
-    for i in 0..4 { obs.push(if i == loc { 1.0 } else { 0.0 }); }
-    for i in 0..4 { obs.push(if slot == Some(i) { 1.0 } else { 0.0 }); }
+    for i in 0..4 {
+        obs.push(if i == loc { 1.0 } else { 0.0 });
+    }
+    for i in 0..4 {
+        obs.push(if slot == Some(i) { 1.0 } else { 0.0 });
+    }
     obs.push(allied);
 
     // Supporter embedding 128 — skip for fossils (identical text, no information)
@@ -336,13 +354,13 @@ fn encode_static_card(c: &Card, loc: usize, allied: f32, slot: Option<usize>, ob
     let card_id = c.get_id();
     let mut type_refs = [0.0; 9];
     let mut mech_refs = [0.0; 11];
-    
+
     match c {
         Card::Pokemon(pk) => {
             obs.push(pk.hp as f32);
             encode_type_one_hot(Some(pk.energy_type), obs);
             encode_weakness_one_hot(pk.weakness, obs);
-            
+
             obs.push(if c.is_ex() { 1.0 } else { 0.0 });
             obs.push(if c.is_mega() { 1.0 } else { 0.0 });
             obs.push(1.0); // is_pokemon
@@ -351,7 +369,7 @@ fn encode_static_card(c: &Card, loc: usize, allied: f32, slot: Option<usize>, ob
             obs.push(0.0); // is_item
             obs.push(0.0); // is_stadium
             obs.push(0.0); // is_fossil
-            
+
             // Meta 8
             encode_meta(&card_id, 0.0, obs);
             obs.push((pk.retreat_cost.len() as f32 / 4.0).clamp(0.0, 1.0));
@@ -382,14 +400,14 @@ fn encode_static_card(c: &Card, loc: usize, allied: f32, slot: Option<usize>, ob
             } else {
                 obs.extend_from_slice(&EMPTY_EMBEDDING);
             }
-        },
+        }
         Card::Trainer(t) if t.trainer_card_type == crate::models::TrainerType::Fossil => {
             // Fossils are special Pokemon: Colorless type, Fighting weakness,
             // fixed 40 HP, no attacks, but meaningful evolution line metadata
             obs.push(40.0); // HP always 40
             encode_type_one_hot(Some(EnergyType::Colorless), obs);
             encode_weakness_one_hot(Some(EnergyType::Fighting), obs);
-            
+
             obs.push(0.0); // ex
             obs.push(0.0); // mega
             obs.push(0.0); // pokemon
@@ -398,19 +416,19 @@ fn encode_static_card(c: &Card, loc: usize, allied: f32, slot: Option<usize>, ob
             obs.push(0.0); // item
             obs.push(0.0); // stadium
             obs.push(1.0); // fossil
-            
+
             // Meta 8 — fossils have meaningful line_size and is_final_stage
             encode_meta(&card_id, 0.0, obs);
             obs.push(0.0); // retreat
             obs.extend_from_slice(&[0.0; 4]); // no status
             obs.extend_from_slice(&[0.0; 276]); // no attacks
             obs.extend_from_slice(&EMPTY_EMBEDDING); // no talent
-        },
+        }
         Card::Trainer(_) => {
             obs.push(0.0); // hp
             encode_type_one_hot(None, obs);
             encode_weakness_one_hot(None, obs);
-            
+
             obs.push(0.0); // ex
             obs.push(0.0); // mega
             obs.push(0.0); // pokemon
@@ -419,7 +437,7 @@ fn encode_static_card(c: &Card, loc: usize, allied: f32, slot: Option<usize>, ob
             obs.push(c.is_item() as i32 as f32);
             obs.push(c.is_stadium() as i32 as f32);
             obs.push(0.0); // fossil
-            
+
             // Meta 8 + Retreat 1
             encode_meta(&card_id, 0.0, obs);
             obs.push(0.0); // retreat
@@ -430,8 +448,12 @@ fn encode_static_card(c: &Card, loc: usize, allied: f32, slot: Option<usize>, ob
     }
 
     // Position
-    for i in 0..4 { obs.push(if i == loc { 1.0 } else { 0.0 }); }
-    for i in 0..4 { obs.push(if slot == Some(i) { 1.0 } else { 0.0 }); }
+    for i in 0..4 {
+        obs.push(if i == loc { 1.0 } else { 0.0 });
+    }
+    for i in 0..4 {
+        obs.push(if slot == Some(i) { 1.0 } else { 0.0 });
+    }
     obs.push(allied);
 
     // Supporter embedding 128 — skip for fossils (identical text, no information)
@@ -511,16 +533,29 @@ fn energy_to_index_9(e: EnergyType) -> Option<usize> {
 
 fn all_energy_types() -> [EnergyType; 10] {
     [
-        EnergyType::Grass, EnergyType::Fire, EnergyType::Water, EnergyType::Lightning,
-        EnergyType::Psychic, EnergyType::Fighting, EnergyType::Darkness, EnergyType::Metal,
-        EnergyType::Dragon, EnergyType::Colorless,
+        EnergyType::Grass,
+        EnergyType::Fire,
+        EnergyType::Water,
+        EnergyType::Lightning,
+        EnergyType::Psychic,
+        EnergyType::Fighting,
+        EnergyType::Darkness,
+        EnergyType::Metal,
+        EnergyType::Dragon,
+        EnergyType::Colorless,
     ]
 }
 
 fn deck_energy_types() -> [EnergyType; 8] {
     [
-        EnergyType::Grass, EnergyType::Fire, EnergyType::Water, EnergyType::Lightning,
-        EnergyType::Psychic, EnergyType::Fighting, EnergyType::Darkness, EnergyType::Metal,
+        EnergyType::Grass,
+        EnergyType::Fire,
+        EnergyType::Water,
+        EnergyType::Lightning,
+        EnergyType::Psychic,
+        EnergyType::Fighting,
+        EnergyType::Darkness,
+        EnergyType::Metal,
     ]
 }
 

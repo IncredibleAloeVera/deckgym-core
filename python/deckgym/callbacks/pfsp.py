@@ -189,7 +189,7 @@ class PFSPCallback(BaseCallback):
             self.episode_results.clear()
 
         # Add current agent to pool
-        # "All-Time" means cumulative winrate reset at each refresh 
+        # "All-Time" means cumulative winrate reset at each refresh
         if self.rollout_count % self.add_to_pool_every_n_rollouts == 0:
             # Use All-Time (cumulative) winrate for the addition decision
             all_time_wr = self.league_logger.get_pool_winrate(rollout_results=None)
@@ -198,19 +198,29 @@ class PFSPCallback(BaseCallback):
             pool_not_full = self.pool.model_count < self.pool.pool_size
 
             if self.verbose > 0:
-                print(f"\n[PFSP] --- Pool Refresh Check (Rollout {self.rollout_count}) ---")
-                print(f"[PFSP] All-Time WR: {all_time_wr:.1%} (Required: {min_wr_to_add:.1%}) | Pool: {self.pool.model_count}/{self.pool.pool_size} models")
+                print(
+                    f"\n[PFSP] --- Pool Refresh Check (Rollout {self.rollout_count}) ---"
+                )
+                print(
+                    f"[PFSP] All-Time WR: {all_time_wr:.1%} (Required: {min_wr_to_add:.1%}) | Pool: {self.pool.model_count}/{self.pool.pool_size} models"
+                )
 
             if all_time_wr >= min_wr_to_add:
                 if self.verbose > 0:
-                    print(f"[PFSP] Agent accepted: WR {all_time_wr:.1%} >= {min_wr_to_add:.1%}")
+                    print(
+                        f"[PFSP] Agent accepted: WR {all_time_wr:.1%} >= {min_wr_to_add:.1%}"
+                    )
                 self._add_to_pool()
             elif pool_not_full:
                 if self.verbose > 0:
-                    print(f"[PFSP] Agent accepted (pool not full): WR {all_time_wr:.1%} below {min_wr_to_add:.1%}, but pool has room ({self.pool.model_count}/{self.pool.pool_size})")
+                    print(
+                        f"[PFSP] Agent accepted (pool not full): WR {all_time_wr:.1%} below {min_wr_to_add:.1%}, but pool has room ({self.pool.model_count}/{self.pool.pool_size})"
+                    )
                 self._add_to_pool()
             elif self.verbose > 0:
-                print(f"[PFSP] Agent rejected: WR {all_time_wr:.1%} below {min_wr_to_add:.1%} and pool is full")
+                print(
+                    f"[PFSP] Agent rejected: WR {all_time_wr:.1%} below {min_wr_to_add:.1%} and pool is full"
+                )
             # Reset all stats at each refresh (even if agent not added)
             self.pool.reset_statistics()
             self.pool.reset_total_statistics()
@@ -251,6 +261,7 @@ class PFSPCallback(BaseCallback):
 
         # Export ONNX to checkpoint dir (persists across restarts)
         from deckgym.onnx_export import export_policy_to_onnx
+
         export_policy_to_onnx(self.model, onnx_path, validate=False)
 
         # Add to local pool
@@ -337,9 +348,7 @@ class PFSPCallback(BaseCallback):
             restored += 1
 
         if self.verbose > 0:
-            print(
-                f"[PFSP] Resume: restored {restored} model(s) from {checkpoint_dir}"
-            )
+            print(f"[PFSP] Resume: restored {restored} model(s) from {checkpoint_dir}")
         return restored
 
     def _add_onnx_baseline_to_rust(self, name: str, code: str):
@@ -378,7 +387,8 @@ class PFSPCallback(BaseCallback):
         try:
             # Extract number from 'o1', 'o1t', 'o1c', etc.
             import re
-            match = re.search(r'o(\d+)', code)
+
+            match = re.search(r"o(\d+)", code)
             idx = int(match.group(1)) - 1 if match else 0
         except (ValueError, IndexError):
             idx = 0
@@ -393,14 +403,18 @@ class PFSPCallback(BaseCallback):
                 if input_dim == OBSERVATION_SIZE:
                     valid_models.append(path)
                 elif self.verbose > 1:
-                    print(f"[PFSP] Skipping {path}: expected dim {OBSERVATION_SIZE}, got {input_dim}")
+                    print(
+                        f"[PFSP] Skipping {path}: expected dim {OBSERVATION_SIZE}, got {input_dim}"
+                    )
             except Exception as e:
                 if self.verbose > 1:
                     print(f"[PFSP] Could not head ONNX {path}: {e}")
 
         if not valid_models:
             if self.verbose > 0:
-                print(f"[PFSP WARNING] No ONNX models found with dim {OBSERVATION_SIZE} in models/")
+                print(
+                    f"[PFSP WARNING] No ONNX models found with dim {OBSERVATION_SIZE} in models/"
+                )
             return None
 
         # Return the requested index (clamped to available models)

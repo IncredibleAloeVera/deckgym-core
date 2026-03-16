@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Tests for PFSPCallback."""
+
 import os
 import tempfile
 import unittest
@@ -51,9 +52,9 @@ class TestPFSPCallback(unittest.TestCase):
         # Mock env info with episode results
         self.callback.locals = {
             "infos": [
-                {"episode": {"r": 1.0}},   # Agent win
+                {"episode": {"r": 1.0}},  # Agent win
                 {"episode": {"r": -1.0}},  # Agent loss (opp win)
-                {},                         # No episode info
+                {},  # No episode info
                 {"episode": {"r": -0.5}},  # Draw
             ]
         }
@@ -154,7 +155,6 @@ class TestPFSPCallback(unittest.TestCase):
             # Should trigger pool addition (every 10)
             mock_add.assert_called_once()
 
-
     def test_restore_pool_from_checkpoints(self):
         """Test that ONNX files in checkpoint dir are restored on resume."""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -187,8 +187,12 @@ class TestPFSPCallback(unittest.TestCase):
             self.assertIsNone(callback.pool.opponents["pfsp_1000k"]["path"])
 
             # Check step parsing
-            self.assertEqual(callback.pool.opponents["pfsp_100k"]["added_at_step"], 100000)
-            self.assertEqual(callback.pool.opponents["pfsp_1000k"]["added_at_step"], 1000000)
+            self.assertEqual(
+                callback.pool.opponents["pfsp_100k"]["added_at_step"], 100000
+            )
+            self.assertEqual(
+                callback.pool.opponents["pfsp_1000k"]["added_at_step"], 1000000
+            )
 
     def test_restore_pool_respects_pool_size(self):
         """Test that only the newest pool_size models are restored."""

@@ -40,7 +40,14 @@ from deckgym.models.extractors import (
     CardAttentionExtractor,
     create_attention_policy_kwargs,
 )
-from deckgym.callbacks import PFSPCallback, EpisodeMetricsCallback, FrozenOpponentCallback, InteractiveControlCallback, InterpretabilityCallback, MemoryMonitorCallback
+from deckgym.callbacks import (
+    PFSPCallback,
+    EpisodeMetricsCallback,
+    FrozenOpponentCallback,
+    InteractiveControlCallback,
+    InterpretabilityCallback,
+    MemoryMonitorCallback,
+)
 
 # Import configuration and constants
 from deckgym.config import TrainingConfig, DEFAULT_CONFIG, OBSERVATION_SIZE
@@ -60,14 +67,12 @@ from deckgym.config import TrainingConfig, DEFAULT_CONFIG, OBSERVATION_SIZE
 # SelfPlayEnv is now imported from deckgym.envs.SelfPlayEnv
 
 
-
 # =============================================================================
 # Training Callbacks (Moved to deckgym/callbacks/)
 # =============================================================================
 
 # EpisodeMetricsCallback, FrozenOpponentCallback, PFSPCallback are now imported
 # from deckgym.callbacks
-
 
 
 # =============================================================================
@@ -475,35 +480,75 @@ app = typer.Typer(pretty_exceptions_show_locals=False)
 @app.command()
 def cli(
     # Config file
-    config: Optional[Path] = typer.Option(None, "--config", help="Path to YAML config file"),
+    config: Optional[Path] = typer.Option(
+        None, "--config", help="Path to YAML config file"
+    ),
     # Paths
     meta: Optional[str] = typer.Option(None, "--meta", help="Meta decks directory"),
     save: Optional[str] = typer.Option(None, "--save", help="Model save path"),
-    resume: Optional[str] = typer.Option(None, "--resume", help="Path to checkpoint to resume from. Pass 'latest' or 'auto' to automatically load the most recent checkpoint in the checkpoint directory."),
+    resume: Optional[str] = typer.Option(
+        None,
+        "--resume",
+        help="Path to checkpoint to resume from. Pass 'latest' or 'auto' to automatically load the most recent checkpoint in the checkpoint directory.",
+    ),
     # Training
     steps: Optional[int] = typer.Option(None, "--steps", help="Total training steps"),
-    checkpoint_freq: Optional[int] = typer.Option(None, "--checkpoint-freq", help="Checkpoint frequency"),
+    checkpoint_freq: Optional[int] = typer.Option(
+        None, "--checkpoint-freq", help="Checkpoint frequency"
+    ),
     # PPO
-    lr: Optional[float] = typer.Option(None, "--lr", help="Peak learning rate (after warmup)"),
-    min_lr: Optional[float] = typer.Option(None, "--min-lr", help="Final learning rate"),
+    lr: Optional[float] = typer.Option(
+        None, "--lr", help="Peak learning rate (after warmup)"
+    ),
+    min_lr: Optional[float] = typer.Option(
+        None, "--min-lr", help="Final learning rate"
+    ),
     batch_size: Optional[int] = typer.Option(None, "--batch-size", help="Batch size"),
-    n_steps: Optional[int] = typer.Option(None, "--n-steps", help="Steps per env per rollout"),
-    n_epochs: Optional[int] = typer.Option(None, "--n-epochs", help="PPO epochs per update"),
-    ent_coef: Optional[float] = typer.Option(None, "--ent-coef", help="Entropy coefficient"),
+    n_steps: Optional[int] = typer.Option(
+        None, "--n-steps", help="Steps per env per rollout"
+    ),
+    n_epochs: Optional[int] = typer.Option(
+        None, "--n-epochs", help="PPO epochs per update"
+    ),
+    ent_coef: Optional[float] = typer.Option(
+        None, "--ent-coef", help="Entropy coefficient"
+    ),
     # Self-play
-    opponent_update_rollouts: Optional[int] = typer.Option(None, "--opponent-update-rollouts", help="Update frozen opponent every N rollouts"),
+    opponent_update_rollouts: Optional[int] = typer.Option(
+        None,
+        "--opponent-update-rollouts",
+        help="Update frozen opponent every N rollouts",
+    ),
     # Parallelization
-    n_envs: Optional[int] = typer.Option(None, "--n-envs", help="Number of parallel environments"),
-    no_batched_env: bool = typer.Option(False, "--no-batched-env", help="Disable Rust-side batching"),
+    n_envs: Optional[int] = typer.Option(
+        None, "--n-envs", help="Number of parallel environments"
+    ),
+    no_batched_env: bool = typer.Option(
+        False, "--no-batched-env", help="Disable Rust-side batching"
+    ),
     # Attention
-    no_attention: bool = typer.Option(False, "--no-attention", help="Disable attention, use MLP instead"),
-    attention_dim: Optional[int] = typer.Option(None, "--attention-dim", help="Attention embedding dimension"),
-    attention_heads: Optional[int] = typer.Option(None, "--attention-heads", help="Number of attention heads"),
-    attention_layers: Optional[int] = typer.Option(None, "--attention-layers", help="Number of transformer layers"),
+    no_attention: bool = typer.Option(
+        False, "--no-attention", help="Disable attention, use MLP instead"
+    ),
+    attention_dim: Optional[int] = typer.Option(
+        None, "--attention-dim", help="Attention embedding dimension"
+    ),
+    attention_heads: Optional[int] = typer.Option(
+        None, "--attention-heads", help="Number of attention heads"
+    ),
+    attention_layers: Optional[int] = typer.Option(
+        None, "--attention-layers", help="Number of transformer layers"
+    ),
     # Device
-    device: str = typer.Option("auto", "--device", help="Training device: cpu, cuda, auto"),
+    device: str = typer.Option(
+        "auto", "--device", help="Training device: cpu, cuda, auto"
+    ),
     # Resume
-    subtract_resume_steps: bool = typer.Option(False, "--subtract-resume-steps", help="Subtract already-done steps from total_timesteps on resume"),
+    subtract_resume_steps: bool = typer.Option(
+        False,
+        "--subtract-resume-steps",
+        help="Subtract already-done steps from total_timesteps on resume",
+    ),
 ):
     """Train the Pokemon TCG Pocket RL agent."""
     _defaults = DEFAULT_CONFIG
@@ -531,7 +576,9 @@ def cli(
                     f"'{cfg.checkpoint_dir}'. Starting from scratch."
                 )
             else:
-                print(f"[--resume {resume}] Auto-detected latest checkpoint: {detected}")
+                print(
+                    f"[--resume {resume}] Auto-detected latest checkpoint: {detected}"
+                )
                 cfg.resume_path = detected
         else:
             cfg.resume_path = resume

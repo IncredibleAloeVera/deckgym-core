@@ -75,10 +75,16 @@ class MetaDeckLoader:
             era_name = json_file.stem
             with open(json_file, "r", encoding="utf-8") as f:
                 archetypes_data = json.load(f)
-            self._load_era_data(era_name, archetypes_data, max_archetypes, max_decks_per_archetype)
+            self._load_era_data(
+                era_name, archetypes_data, max_archetypes, max_decks_per_archetype
+            )
 
     def _load_era_data(
-        self, era_name: str, archetypes_data: list, max_archetypes: int = None, max_decks_per_archetype: int = None
+        self,
+        era_name: str,
+        archetypes_data: list,
+        max_archetypes: int = None,
+        max_decks_per_archetype: int = None,
     ):
         """Load decks from a parsed JSON list for a specific era."""
         current_era_archetypes = []
@@ -139,8 +145,6 @@ class MetaDeckLoader:
             lines.append(f"{count} {formatted_set} {number}")
         return "\n".join(lines)
 
-
-
     # =========================================================================
     # Sampling Methods
     # =========================================================================
@@ -169,7 +173,6 @@ class MetaDeckLoader:
         deck = random.choice(archetype.decks)
         return deck.deck_string
 
-
     def sample_deck_info(self, mode: str = "hierarchical") -> DeckInfo:
         """Sample a deck with full info."""
         if mode == "hierarchical":
@@ -181,14 +184,14 @@ class MetaDeckLoader:
     def sample_n_deck_info(self, n: int, mode: str = "hierarchical") -> list[DeckInfo]:
         """
         Sample N decks with the specified strategy.
-        
+
         Args:
             n: Number of decks to sample
             mode: Sampling mode ('uniform', 'hierarchical')
         """
         if n <= 0:
             return []
-            
+
         if mode == "uniform":
             return random.choices(self.decks, k=n)
         elif mode == "hierarchical":
@@ -207,7 +210,6 @@ class MetaDeckLoader:
     def get_archetypes(self) -> list[str]:
         """Get list of all archetypes."""
         return list(self.archetypes.keys())
-
 
     def sample_pair(self, mode: str = "hierarchical") -> tuple[str, str]:
         """Sample two decks for self-play."""
@@ -276,9 +278,7 @@ if __name__ == "__main__":
         loader.archetypes.values(), key=lambda a: a.deck_count, reverse=True
     )
     for arch in archetypes[:10]:
-        print(
-            f"  {arch.name[:40]:40s} | decks={arch.deck_count:3d}"
-        )
+        print(f"  {arch.name[:40]:40s} | decks={arch.deck_count:3d}")
 
     print("\n--- Sample decks (hierarchical) ---")
     for _ in range(3):

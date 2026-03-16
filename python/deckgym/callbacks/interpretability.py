@@ -42,14 +42,14 @@ from stable_baselines3.common.callbacks import BaseCallback
 # Action-category boundaries (see RL_ARCHITECTURE.md, action_mask.rs)
 # ------------------------------------------------------------------
 ACTION_CATEGORIES: Dict[str, range] = {
-    "end_turn":   range(0, 1),
-    "attack":     range(1, 3),
-    "retreat":    range(3, 6),
-    "ability":    range(6, 10),
-    "energy":     range(10, 14),
-    "bench":      range(14, 17),
+    "end_turn": range(0, 1),
+    "attack": range(1, 3),
+    "retreat": range(3, 6),
+    "ability": range(6, 10),
+    "energy": range(10, 14),
+    "bench": range(14, 17),
     # 17–29: DiscardFossil, Heal, AttachFromDiscard, FlipCoin → "other"
-    "hand":       range(30, 130),
+    "hand": range(30, 130),
     "resolution": range(130, 169),
 }
 
@@ -140,9 +140,7 @@ class InterpretabilityCallback(BaseCallback):
                         f"interpretability/value_std_{outcome}",
                         float(arr.std()) if len(arr) > 1 else 0.0,
                     )
-                    self.logger.record(
-                        f"interpretability/value_n_{outcome}", len(arr)
-                    )
+                    self.logger.record(f"interpretability/value_n_{outcome}", len(arr))
 
     # ------------------------------------------------------------------
     # Per-step collection
@@ -206,7 +204,9 @@ class InterpretabilityCallback(BaseCallback):
         locs = self.locals
         dones = locs.get("dones")
         rewards = locs.get("rewards")
-        values = locs.get("values")  # shape (n_envs, 1) tensor from PPO collect_rollouts
+        values = locs.get(
+            "values"
+        )  # shape (n_envs, 1) tensor from PPO collect_rollouts
 
         if dones is None or rewards is None or values is None:
             return

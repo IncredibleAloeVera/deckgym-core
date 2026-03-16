@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Tests for OpponentSelector."""
+
 import unittest
 from unittest.mock import MagicMock
 import numpy as np
@@ -47,7 +48,7 @@ class TestOpponentSelector(unittest.TestCase):
         """At step 150, should be in stage 1."""
         # First set stage 0
         self.selector.update_curriculum(50)
-        
+
         # Now move to stage 1
         added, removed = self.selector.update_curriculum(150)
         self.assertEqual(set(self.selector.current_baselines), {"v", "e2"})
@@ -59,7 +60,7 @@ class TestOpponentSelector(unittest.TestCase):
         # Set up previous stages
         self.selector.update_curriculum(50)
         self.selector.update_curriculum(150)
-        
+
         # Move to stage 2
         added, removed = self.selector.update_curriculum(250)
         self.assertEqual(set(self.selector.current_baselines), {"e2", "er"})
@@ -85,11 +86,11 @@ class TestOpponentSelector(unittest.TestCase):
         }
 
         prios = self.selector.get_priorities(exclude_baselines=True)
-        
+
         self.assertIn("m1", prios)
         self.assertIn("m2", prios)
         self.assertNotIn("b1", prios)
-        
+
         # m1 has higher opp winrate so should have higher priority
         self.assertGreater(prios["m1"], prios["m2"])
 
@@ -97,20 +98,30 @@ class TestOpponentSelector(unittest.TestCase):
         """Test that priority exponent affects priorities."""
         self.pool.opponents = {
             # With Laplace smoothing, these become (11/12)^exp and (6/12)^exp
-            "m1": {"wins": 10, "losses": 0, "draws": 0, "is_baseline": False},  # Strong opp
-            "m2": {"wins": 5, "losses": 5, "draws": 0, "is_baseline": False},   # Medium opp
+            "m1": {
+                "wins": 10,
+                "losses": 0,
+                "draws": 0,
+                "is_baseline": False,
+            },  # Strong opp
+            "m2": {
+                "wins": 5,
+                "losses": 5,
+                "draws": 0,
+                "is_baseline": False,
+            },  # Medium opp
         }
 
         # With exp = 1.0
         self.selector.priority_exponent = 1.0
         prios_1 = self.selector.get_priorities(exclude_baselines=True)
         ratio_1 = prios_1["m1"] / prios_1["m2"]
-        
+
         # With exp = 2.0 - should increase the ratio (focus more on hard opponents)
         self.selector.priority_exponent = 2.0
         prios_2 = self.selector.get_priorities(exclude_baselines=True)
         ratio_2 = prios_2["m1"] / prios_2["m2"]
-        
+
         # Higher exponent should increase the ratio between priorities
         self.assertGreater(ratio_2, ratio_1)
 

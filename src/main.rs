@@ -4,11 +4,8 @@ use deckgym::optimize::{ParallelConfig, SimulationConfig};
 use deckgym::players::{fill_code_array, parse_player_code, PlayerCode};
 use deckgym::simulate::initialize_logger;
 use deckgym::state::GameOutcome;
-use deckgym::{
-    cli_optimize, is_onnx_player, simulate, simulate_batched, BatchedGameRunner, Deck,
-};
+use deckgym::{cli_optimize, is_onnx_player, simulate, simulate_batched, BatchedGameRunner, Deck};
 use log::warn;
-
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -112,7 +109,10 @@ fn simulate_against_folder(
                 .expect("Failed to read directory")
                 .filter_map(|e| {
                     let path = e.ok()?.path();
-                    if path.is_file() && (path.extension() == Some(std::ffi::OsStr::new("txt")) || path.extension() == Some(std::ffi::OsStr::new("json"))) {
+                    if path.is_file()
+                        && (path.extension() == Some(std::ffi::OsStr::new("txt"))
+                            || path.extension() == Some(std::ffi::OsStr::new("json")))
+                    {
                         Some(path.to_string_lossy().to_string())
                     } else {
                         None
@@ -133,11 +133,16 @@ fn simulate_against_folder(
     }
 
     // Pre-load all decks to avoid redundant Disk I/O during matrix generation
-    println!("Loading {} decks...", decks_a_paths.len() + decks_b_paths.len());
-    let decks_a: Vec<Deck> = decks_a_paths.iter()
+    println!(
+        "Loading {} decks...",
+        decks_a_paths.len() + decks_b_paths.len()
+    );
+    let decks_a: Vec<Deck> = decks_a_paths
+        .iter()
         .map(|p| Deck::from_file(p).expect("Failed to load deck A"))
         .collect();
-    let decks_b: Vec<Deck> = decks_b_paths.iter()
+    let decks_b: Vec<Deck> = decks_b_paths
+        .iter()
         .map(|p| Deck::from_file(p).expect("Failed to load deck B"))
         .collect();
 
@@ -164,7 +169,7 @@ fn simulate_against_folder(
                 } else {
                     games_per_matchup
                 };
-                
+
                 if count > 0 {
                     for _ in 0..count {
                         deck_pairs.push((deck_a.clone(), deck_b.clone()));
@@ -176,24 +181,25 @@ fn simulate_against_folder(
 
         if !deck_pairs.is_empty() {
             let mut outcomes = Vec::with_capacity(deck_pairs.len());
-            
+
             let mut completed_before = 0;
             // Split into chunks to avoid CUDA OOM and improve progress feedback
             const MAX_BATCH_SIZE: usize = 1024;
             for chunk in deck_pairs.chunks(MAX_BATCH_SIZE) {
                 let chunk_vec = chunk.to_vec();
                 let runner = BatchedGameRunner::new(
-                    chunk_vec, 
-                    player_codes.clone(), 
+                    chunk_vec,
+                    player_codes.clone(),
                     seed,
                     completed_before,
-                    num_games_total as usize
-                ).expect("Failed to create BatchRunner");
+                    num_games_total as usize,
+                )
+                .expect("Failed to create BatchRunner");
                 let chunk_outcomes = runner.run_all();
                 outcomes.extend(chunk_outcomes);
                 completed_before += chunk.len();
             }
-            
+
             // Collect results back into matchups
             let mut matchup_idx = 0;
             let mut outcome_idx = 0;
@@ -222,10 +228,13 @@ fn simulate_against_folder(
                             }
                             outcome_idx += 1;
                         }
-                        
+
                         // Print parseable result for Python
-                        warn!("RESULT: {} VS {} | WINS: {} LOSSES: {} TIES: {}", decks_a_paths[i], decks_b_paths[j], w, l, t);
-                        
+                        warn!(
+                            "RESULT: {} VS {} | WINS: {} LOSSES: {} TIES: {}",
+                            decks_a_paths[i], decks_b_paths[j], w, l, t
+                        );
+
                         a_wins_total += w;
                         b_wins_total += l;
                         ties_total += t;
@@ -236,9 +245,21 @@ fn simulate_against_folder(
 
             let total = outcomes.len() as f64;
             warn!("\nSummary Results (All Matchups Combined):");
-            warn!("Player 0 won: {} ({:.2}%)", a_wins_total, (a_wins_total as f64 / total) * 100.0);
-            warn!("Player 1 won: {} ({:.2}%)", b_wins_total, (b_wins_total as f64 / total) * 100.0);
-            warn!("Draws: {} ({:.2}%)", ties_total, (ties_total as f64 / total) * 100.0);
+            warn!(
+                "Player 0 won: {} ({:.2}%)",
+                a_wins_total,
+                (a_wins_total as f64 / total) * 100.0
+            );
+            warn!(
+                "Player 1 won: {} ({:.2}%)",
+                b_wins_total,
+                (b_wins_total as f64 / total) * 100.0
+            );
+            warn!(
+                "Draws: {} ({:.2}%)",
+                ties_total,
+                (ties_total as f64 / total) * 100.0
+            );
         }
     } else {
         // Sequential/CPU fallback (though rarely used now for scientific eval)
@@ -252,8 +273,22 @@ fn simulate_against_folder(
                 };
 
                 if count > 0 {
-                    warn!("\nMatchup {}/{}: {} vs {}", matchup_idx + 1, num_matchups, decks_a_paths[i], decks_b_paths[j]);
-                    simulate(&decks_a_paths[i], &decks_b_paths[j], Some(player_codes.clone()), count, seed, parallel, num_threads);
+                    warn!(
+                        "\nMatchup {}/{}: {} vs {}",
+                        matchup_idx + 1,
+                        num_matchups,
+                        decks_a_paths[i],
+                        decks_b_paths[j]
+                    );
+                    simulate(
+                        &decks_a_paths[i],
+                        &decks_b_paths[j],
+                        Some(player_codes.clone()),
+                        count,
+                        seed,
+                        parallel,
+                        num_threads,
+                    );
                 }
                 matchup_idx += 1;
             }
@@ -293,7 +328,9 @@ fn main() {
             let has_onnx = player_codes.iter().any(|p| is_onnx_player(p));
 
             // Check if either is a directory
-            if std::path::Path::new(&deck_a).is_dir() || std::path::Path::new(&deck_b_or_folder).is_dir() {
+            if std::path::Path::new(&deck_a).is_dir()
+                || std::path::Path::new(&deck_b_or_folder).is_dir()
+            {
                 simulate_against_folder(
                     &deck_a,
                     &deck_b_or_folder,
@@ -305,13 +342,7 @@ fn main() {
                 );
             } else if has_onnx {
                 // ONNX detected: use batched inference for GPU efficiency
-                simulate_batched(
-                    &deck_a,
-                    &deck_b_or_folder,
-                    player_codes,
-                    num,
-                    seed,
-                );
+                simulate_batched(&deck_a, &deck_b_or_folder, player_codes, num, seed);
             } else {
                 // CPU-only: use standard rayon-based parallel simulation
                 simulate(

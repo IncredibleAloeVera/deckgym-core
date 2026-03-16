@@ -56,7 +56,6 @@ class TestOpponentPool(unittest.TestCase):
         self.assertEqual(data["losses"], 2)
         self.assertEqual(data["draws"], 1)
 
-
     def test_eviction_candidates(self):
         # Pool size is 3
         o1 = {

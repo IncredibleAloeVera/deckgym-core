@@ -29,7 +29,6 @@ DECK_A = "example_decks/venusaur-exeggutor.txt"
 DECK_B = "example_decks/altaria.txt"
 
 
-
 def run_benchmark(player_code: str) -> float:
     """Run benchmark for a player and return total_time_sec."""
     cmd = ["cargo", "run", "--release"]
@@ -47,7 +46,7 @@ def run_benchmark(player_code: str) -> float:
             str(NUM_GAMES),
             "--players",
             f"{player_code},{player_code}",
-            "--parallel"
+            "--parallel",
         ]
     )
 

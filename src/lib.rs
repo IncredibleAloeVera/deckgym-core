@@ -1,6 +1,7 @@
 mod ability_ids;
 pub mod actions;
 mod attack_ids;
+pub mod batched_runner;
 pub mod card_ids;
 pub mod card_logic;
 pub mod card_validation;
@@ -25,10 +26,10 @@ pub mod temp_deck;
 pub mod test_helpers; // TODO: Compile/Expose only in test mode?
 pub mod tools;
 pub mod vec_game;
-pub mod batched_runner;
 
 pub use ability_ids::AbilityId;
 pub use attack_ids::AttackId;
+pub use batched_runner::{is_onnx_player, BatchedGameRunner};
 pub use deck::Deck;
 pub use game::Game;
 pub use hooks::to_playable_card;
@@ -39,7 +40,6 @@ pub use optimize::{
     ParallelConfig, SimulationConfig,
 };
 pub use simulate::{simulate, simulate_batched, Simulation, SimulationCallbacks};
-pub use batched_runner::{BatchedGameRunner, is_onnx_player};
 pub use simulation_event_handler::ComputedStats;
 pub use state::State;
 

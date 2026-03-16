@@ -404,19 +404,14 @@ pub fn simulate_batched(
     let deck_pairs = vec![(deck_a, deck_b); num_simulations as usize];
 
     // Create and run the batched runner
-    let runner = match BatchedGameRunner::new(
-        deck_pairs,
-        player_codes,
-        seed,
-        0,
-        num_simulations as usize
-    ) {
-        Ok(r) => r,
-        Err(e) => {
-            warn!("Failed to create BatchedGameRunner: {}", e);
-            return;
-        }
-    };
+    let runner =
+        match BatchedGameRunner::new(deck_pairs, player_codes, seed, 0, num_simulations as usize) {
+            Ok(r) => r,
+            Err(e) => {
+                warn!("Failed to create BatchedGameRunner: {}", e);
+                return;
+            }
+        };
 
     let outcomes = runner.run_all();
     let duration = start.elapsed();

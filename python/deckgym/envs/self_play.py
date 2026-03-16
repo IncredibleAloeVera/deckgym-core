@@ -55,8 +55,9 @@ class SelfPlayEnv(gym.Env):
         self.config = config
         self._episode_actions = 0
         self._current_decks = None  # (deck_a, deck_b) strings
-        
+
         from deckgym.diagnostic_logger import get_logger
+
         self.diagnostic_logger = get_logger()
 
         # Initialize with a dummy game to get space dimensions

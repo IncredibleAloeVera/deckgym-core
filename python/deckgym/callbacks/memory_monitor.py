@@ -3,7 +3,7 @@
 MemoryMonitorCallback - Logs process RAM usage to TensorBoard.
 
 Tracks RSS (Resident Set Size) of the current process at each rollout end.
-Useful to catch memory leaks during long training runs.
+Useful to catch memory leaks during very long training runs.
 """
 
 import os

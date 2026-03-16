@@ -331,7 +331,11 @@ fn apply_heal_and_discard_energy(
             .as_mut()
             .expect("Pokemon should be there if discarding energy from it");
         for energy_type in discard_energies {
-            if let Some(pos) = pokemon.attached_energy.iter().position(|e| e == energy_type) {
+            if let Some(pos) = pokemon
+                .attached_energy
+                .iter()
+                .position(|e| e == energy_type)
+            {
                 pokemon.attached_energy.remove(pos);
             }
         }

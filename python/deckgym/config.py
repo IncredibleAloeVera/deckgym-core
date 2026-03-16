@@ -20,7 +20,6 @@ import yaml
 import math
 import json
 
-
 # =============================================================================
 # OBSERVATION SPACE CONSTANTS (must match src/rl/observation.rs)
 # =============================================================================
@@ -142,7 +141,9 @@ class TrainingConfig:
     total_timesteps: int = 30_000_000
     checkpoint_freq: int = 10_000
     brutal_resume: bool = False  # Skip curriculum and jump to final stage
-    resume_subtract_steps: bool = False  # Subtract already-done steps from total_timesteps on resume
+    resume_subtract_steps: bool = (
+        False  # Subtract already-done steps from total_timesteps on resume
+    )
 
     # -------------------------------------------------------------------------
     # PPO Hyperparameters
@@ -614,8 +615,6 @@ environment:
 
 # Default configuration
 DEFAULT_CONFIG = TrainingConfig()
-
-
 
 
 # =============================================================================

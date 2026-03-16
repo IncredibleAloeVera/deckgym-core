@@ -15,7 +15,7 @@ from pathlib import Path
 def test_config():
     """Minimal TrainingConfig for testing."""
     from deckgym.config import TrainingConfig
-    
+
     return TrainingConfig(
         n_envs=1,
         n_steps=8,
@@ -29,7 +29,7 @@ def test_config():
 def attention_config():
     """TrainingConfig with attention enabled for testing models."""
     from deckgym.config import TrainingConfig
-    
+
     return TrainingConfig(
         n_envs=1,
         n_steps=8,
@@ -54,7 +54,7 @@ def sample_deck_pair(example_deck_dir):
     # Use real decks from example_decks
     mewtwo_path = example_deck_dir / "mewtwoex.txt"
     zerakoko_path = example_deck_dir / "zerakoko.txt"
-    
+
     if mewtwo_path.exists() and zerakoko_path.exists():
         deck_a = mewtwo_path.read_text()
         deck_b = zerakoko_path.read_text()
@@ -74,24 +74,24 @@ def sample_deck_pair(example_deck_dir):
 2 P-A 007
 """
         deck_b = deck_a  # Use same deck for both sides as fallback
-    
+
     return deck_a, deck_b
 
 
 @pytest.fixture
 def mock_deck_loader(sample_deck_pair):
     """Mock deck loader for testing environments."""
-    
+
     class MockDeckLoader:
         def __init__(self, deck_pair):
             self._deck_pair = deck_pair
-        
+
         def sample_pair(self):
             return self._deck_pair
-        
+
         def sample_deck(self):
             return self._deck_pair[0]
-    
+
     return MockDeckLoader(sample_deck_pair)
 
 
@@ -99,7 +99,7 @@ def mock_deck_loader(sample_deck_pair):
 def mock_observation():
     """Mock observation tensor for testing."""
     from deckgym.config import OBSERVATION_SIZE
-    
+
     obs = np.random.rand(OBSERVATION_SIZE).astype(np.float32)
     # Clamp to valid range
     return np.clip(obs, 0.0, 1.0)
@@ -109,11 +109,13 @@ def mock_observation():
 def mock_action_mask():
     """Mock action mask for testing."""
     from deckgym.config import ACTION_SPACE_SIZE
-    
+
     mask = np.zeros(ACTION_SPACE_SIZE, dtype=bool)
     mask[0] = True  # At least EndTurn valid
     # Add some random valid actions
-    random_actions = np.random.choice(range(1, ACTION_SPACE_SIZE), size=5, replace=False)
+    random_actions = np.random.choice(
+        range(1, ACTION_SPACE_SIZE), size=5, replace=False
+    )
     mask[random_actions] = True
     return mask
 

@@ -29,8 +29,12 @@ class InteractiveControlCallback(BaseCallback):
         super().__init__(verbose)
         self.checkpoint_dir = checkpoint_dir
         self._paused = threading.Event()
-        self._clean_exit = threading.Event()  # set when 'e' pressed: finish rollout+PPO then save
-        self._stop_now = threading.Event()    # set after saving: abort next rollout to exit loop
+        self._clean_exit = (
+            threading.Event()
+        )  # set when 'e' pressed: finish rollout+PPO then save
+        self._stop_now = (
+            threading.Event()
+        )  # set after saving: abort next rollout to exit loop
         self._stop_listener = threading.Event()
         self._listener_thread = None
 
@@ -40,7 +44,9 @@ class InteractiveControlCallback(BaseCallback):
         )
         self._listener_thread.start()
         if self.verbose > 0:
-            print("[InteractiveControl] Press 'p' to pause/resume, 'e' for clean exit, 'q' to quit immediately.")
+            print(
+                "[InteractiveControl] Press 'p' to pause/resume, 'e' for clean exit, 'q' to quit immediately."
+            )
 
     def _listen_for_key(self) -> None:
         """Background thread: read raw keypresses from stdin."""
@@ -83,7 +89,9 @@ class InteractiveControlCallback(BaseCallback):
         except Exception:
             # If stdin is not a terminal (e.g. piped input), disable the feature
             if self.verbose > 0:
-                print("[InteractiveControl] stdin is not a terminal, pause/exit disabled.")
+                print(
+                    "[InteractiveControl] stdin is not a terminal, pause/exit disabled."
+                )
 
     def _on_step(self) -> bool:
         # Handle pause
@@ -112,7 +120,7 @@ class InteractiveControlCallback(BaseCallback):
         """Called at the start of each new rollout, i.e. AFTER the previous PPO optimisation.
 
         SB3 learn() loop:
-            collect_rollouts()  ← _on_rollout_start / _on_step×N / _on_rollout_end
+            collect_rollouts()  ← _on_rollout_start / _on_stepxN / _on_rollout_end
             self.train()        ← PPO optimisation
             collect_rollouts()  ← _on_rollout_start fires HERE (post-optimisation)
 
@@ -129,9 +137,7 @@ class InteractiveControlCallback(BaseCallback):
         if self.model is None:
             return
         os.makedirs(self.checkpoint_dir, exist_ok=True)
-        path = os.path.join(
-            self.checkpoint_dir, f"rl_bot_{self.num_timesteps}_steps"
-        )
+        path = os.path.join(self.checkpoint_dir, f"rl_bot_{self.num_timesteps}_steps")
         self.model.save(path)
         if self.verbose > 0:
             print(f"\n[InteractiveControl] ✓ Model saved to {path}.zip")

@@ -272,15 +272,10 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
         }
 
         // Hand Resolution Actions (Select Hand Card)
-        SimpleAction::DiscardOwnCards { cards } => {
-            maps.card_index.get(&cards.first().unwrap().get_id()).and_then(|&idx| {
-                if idx < 20 {
-                    Some(138 + idx)
-                } else {
-                    None
-                }
-            })
-        }
+        SimpleAction::DiscardOwnCards { cards } => maps
+            .card_index
+            .get(&cards.first().unwrap().get_id())
+            .and_then(|&idx| if idx < 20 { Some(138 + idx) } else { None }),
         SimpleAction::CommunicatePokemon { hand_pokemon: card } => maps
             .card_index
             .get(&card.get_id())

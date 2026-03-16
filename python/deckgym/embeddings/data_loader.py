@@ -15,7 +15,7 @@ class TCGDataLoader:
     def __init__(self, raw_data_path: Path = None):
         """
         Initialize loader with path to raw TCG data.
-        
+
         Args:
             raw_data_path: Path to directory containing TCG JSON files
         """
@@ -27,20 +27,20 @@ class TCGDataLoader:
     def load(self) -> "TCGDataLoader":
         """
         Load all TCG data from JSON files.
-        
+
         Returns:
             Self for chaining
         """
         self._cards = []
-        
+
         for json_file in sorted(self.raw_data_path.glob("*.json")):
             with open(json_file, "r", encoding="utf-8") as f:
                 cards = json.load(f)
                 self._cards.extend(cards)
-        
+
         # Extract names and texts
         self._extract_metadata()
-        
+
         return self
 
     def _extract_metadata(self):
@@ -50,7 +50,7 @@ class TCGDataLoader:
             supertype = card.get("supertype", "")
             if supertype not in ("Pokémon", "Trainer"):
                 continue
-            
+
             # Collect names
             name = card.get("name", "")
             if name:
@@ -60,19 +60,19 @@ class TCGDataLoader:
                     self._names.add(name.replace(" ex", ""))
                 if name.startswith("Mega "):
                     self._names.add(name.replace("Mega ", ""))
-            
+
             # Collect ability texts
             for ability in card.get("abilities", []) or []:
                 text = ability.get("text", "")
                 if text:
                     self._texts.add(text)
-            
+
             # Collect attack texts
             for attack in card.get("attacks", []) or []:
                 text = attack.get("text", "")
                 if text:
                     self._texts.add(text)
-            
+
             # Collect trainer rule texts (for Supporters/Items)
             for rule in card.get("rules", []) or []:
                 if rule:

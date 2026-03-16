@@ -7,7 +7,7 @@ to the Pocket subset, generating card_features.json for the Rust observation.
 
 Usage:
     python scripts/generate_embeddings.py
-    
+
 Or as a module:
     python -m deckgym.embeddings.generator
 """

@@ -332,11 +332,12 @@ impl BatchedOnnxInference {
                     "cuda" | "auto" => {
                         if let Err(e) = CUDAExecutionProvider::default()
                             .with_device_id(0)
-                            .register(&mut builder) {
-                                eprintln!("  [ONNX] Warning: Failed to register CUDA provider: {}. Falling back to CPU.", e);
-                            } else {
-                                eprintln!("  [ONNX] CUDA provider registered successfully.");
-                            }
+                            .register(&mut builder)
+                        {
+                            eprintln!("  [ONNX] Warning: Failed to register CUDA provider: {}. Falling back to CPU.", e);
+                        } else {
+                            eprintln!("  [ONNX] CUDA provider registered successfully.");
+                        }
                     }
                     _ => {}
                 }

@@ -14,11 +14,11 @@ def get_action_masks(env):
     """Get action masks from wrapped environment."""
     # Navigate through wrappers to find action_masks
     current = env
-    while hasattr(current, 'env'):
-        if hasattr(current, 'action_masks'):
+    while hasattr(current, "env"):
+        if hasattr(current, "action_masks"):
             return current.action_masks()
         current = current.env
-    if hasattr(current, 'action_masks'):
+    if hasattr(current, "action_masks"):
         return current.action_masks()
     raise AttributeError("Could not find action_masks in environment chain")
 
@@ -33,21 +33,23 @@ class TestMockTraining:
         from sb3_contrib import MaskablePPO
         from sb3_contrib.common.wrappers import ActionMasker
         from stable_baselines3.common.monitor import Monitor
-        
+
         from deckgym.envs import SelfPlayEnv
         from deckgym.callbacks import EpisodeMetricsCallback
-        
+
         # Create mock deck loader
         class MockDeckLoader:
             def __init__(self, deck_pair):
                 self._deck_pair = deck_pair
+
             def sample_pair(self):
                 return self._deck_pair
-        
+
         deck_loader = MockDeckLoader(sample_deck_pair)
-        
+
         # Create minimal config for fast test
         from deckgym.config import TrainingConfig
+
         config = TrainingConfig(
             n_envs=1,
             n_steps=16,
@@ -56,15 +58,15 @@ class TestMockTraining:
             total_timesteps=32,
             use_attention=False,  # MLP is faster
         )
-        
+
         # Create environment
         def mask_fn(env):
             return env.action_masks()
-        
+
         base_env = SelfPlayEnv(deck_loader, opponent_type="self", config=config)
         env = ActionMasker(base_env, mask_fn)
         env = Monitor(env)
-        
+
         # Create model
         model = MaskablePPO(
             "MlpPolicy",
@@ -74,15 +76,15 @@ class TestMockTraining:
             n_epochs=config.n_epochs,
             verbose=0,
         )
-        
+
         # Train for a few steps
         model.learn(total_timesteps=32, progress_bar=False)
-        
+
         # Verify model can predict
         obs, _ = env.reset()
         mask = get_action_masks(env)
         action, _ = model.predict(obs, action_masks=mask, deterministic=True)
-        
+
         assert action is not None
         assert 0 <= action < base_env.action_space.n
 
@@ -93,21 +95,23 @@ class TestMockTraining:
         from sb3_contrib import MaskablePPO
         from sb3_contrib.common.wrappers import ActionMasker
         from stable_baselines3.common.monitor import Monitor
-        
+
         from deckgym.envs import SelfPlayEnv
         from deckgym.models.extractors import create_attention_policy_kwargs
-        
+
         # Create mock deck loader
         class MockDeckLoader:
             def __init__(self, deck_pair):
                 self._deck_pair = deck_pair
+
             def sample_pair(self):
                 return self._deck_pair
-        
+
         deck_loader = MockDeckLoader(sample_deck_pair)
-        
+
         # Create minimal config
         from deckgym.config import TrainingConfig
+
         config = TrainingConfig(
             n_envs=1,
             n_steps=8,
@@ -119,18 +123,18 @@ class TestMockTraining:
             attention_num_heads=2,
             attention_num_layers=1,
         )
-        
+
         # Create environment
         def mask_fn(env):
             return env.action_masks()
-        
+
         base_env = SelfPlayEnv(deck_loader, opponent_type="self", config=config)
         env = ActionMasker(base_env, mask_fn)
         env = Monitor(env)
-        
+
         # Create model with attention policy
         policy_kwargs = create_attention_policy_kwargs(config)
-        
+
         model = MaskablePPO(
             "MlpPolicy",
             env,
@@ -140,15 +144,15 @@ class TestMockTraining:
             policy_kwargs=policy_kwargs,
             verbose=0,
         )
-        
+
         # Train for a few steps
         model.learn(total_timesteps=16, progress_bar=False)
-        
+
         # Verify model can predict
         obs, _ = env.reset()
         mask = get_action_masks(env)
         action, _ = model.predict(obs, action_masks=mask, deterministic=True)
-        
+
         assert action is not None
         assert 0 <= action < base_env.action_space.n
 
@@ -157,27 +161,28 @@ class TestMockTraining:
         from sb3_contrib import MaskablePPO
         from sb3_contrib.common.wrappers import ActionMasker
         from stable_baselines3.common.monitor import Monitor
-        
+
         from deckgym.envs import SelfPlayEnv
         from deckgym.callbacks import EpisodeMetricsCallback, FrozenOpponentCallback
-        
+
         # Create mock deck loader
         class MockDeckLoader:
             def __init__(self, deck_pair):
                 self._deck_pair = deck_pair
+
             def sample_pair(self):
                 return self._deck_pair
-        
+
         deck_loader = MockDeckLoader(sample_deck_pair)
-        
+
         # Create environment
         def mask_fn(env):
             return env.action_masks()
-        
+
         base_env = SelfPlayEnv(deck_loader, opponent_type="self", config=test_config)
         env = ActionMasker(base_env, mask_fn)
         env = Monitor(env)
-        
+
         # Create callbacks
         metrics_cb = EpisodeMetricsCallback(verbose=0)
         frozen_cb = FrozenOpponentCallback(
@@ -186,7 +191,7 @@ class TestMockTraining:
             update_every_n_rollouts=1,
             verbose=0,
         )
-        
+
         # Verify callbacks have expected methods
         assert hasattr(metrics_cb, "_on_step")
         assert hasattr(metrics_cb, "_on_rollout_end")
@@ -199,39 +204,40 @@ class TestMockTraining:
         from sb3_contrib import MaskablePPO
         from sb3_contrib.common.wrappers import ActionMasker
         from stable_baselines3.common.monitor import Monitor
-        
+
         from deckgym.envs import SelfPlayEnv
-        
+
         # Create mock deck loader
         class MockDeckLoader:
             def __init__(self, deck_pair):
                 self._deck_pair = deck_pair
+
             def sample_pair(self):
                 return self._deck_pair
-        
+
         deck_loader = MockDeckLoader(sample_deck_pair)
-        
+
         # Create environment
         def mask_fn(env):
             return env.action_masks()
-        
+
         base_env = SelfPlayEnv(deck_loader, opponent_type="self", config=test_config)
         env = ActionMasker(base_env, mask_fn)
         env = Monitor(env)
-        
+
         # Create and save model
         model = MaskablePPO("MlpPolicy", env, verbose=0)
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             save_path = Path(tmpdir) / "test_model"
             model.save(str(save_path))
-            
+
             # Load model
             loaded_model = MaskablePPO.load(str(save_path), env=env)
-            
+
             # Verify loaded model works
             obs, _ = env.reset()
             mask = get_action_masks(env)
             action, _ = loaded_model.predict(obs, action_masks=mask)
-            
+
             assert action is not None

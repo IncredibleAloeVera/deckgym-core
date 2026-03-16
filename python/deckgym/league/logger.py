@@ -147,7 +147,7 @@ class LeagueLogger:
     def get_pool_winrate(
         self, rollout_results: Optional[Dict[str, Dict[str, int]]] = None
     ) -> float:
-        """ Backward compatibility: average agent winrate against non-baseline opponents (the PFSP pool). """
+        """Backward compatibility: average agent winrate against non-baseline opponents (the PFSP pool)."""
         names = [n for n, d in self.pool.opponents.items() if not d.get("is_baseline")]
         if not names:
             return 0.5
@@ -176,7 +176,6 @@ class LeagueLogger:
             if wr is not None:
                 return wr
         return self._get_winrate("baseline_e2")
-
 
     def log_metrics(
         self,

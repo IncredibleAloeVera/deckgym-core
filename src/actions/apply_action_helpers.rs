@@ -31,10 +31,7 @@ pub(crate) type Mutations = Vec<Mutation>;
 /// Forecast start-of-turn ability outcomes for a given player.
 /// Returns a single deterministic outcome that applies the ability at mutation time.
 /// The actual randomness (e.g. picking a card) is handled inside apply_start_turn_ability via rng.
-fn start_turn_ability_outcomes(
-    _state: &State,
-    player: usize,
-) -> (Probabilities, Mutations) {
+fn start_turn_ability_outcomes(_state: &State, player: usize) -> (Probabilities, Mutations) {
     let mutation: Mutation = Box::new(move |rng, state, _action| {
         apply_start_turn_ability(rng, state, player);
     });

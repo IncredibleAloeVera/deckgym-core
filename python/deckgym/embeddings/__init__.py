@@ -13,7 +13,7 @@ from .generator import generate_all
 
 __all__ = [
     "EMBEDDING_DIM",
-    "SENTENCE_MODEL", 
+    "SENTENCE_MODEL",
     "PATHS",
     "TextCleaner",
     "TCGDataLoader",

@@ -112,10 +112,23 @@ def prompt_result() -> str:
 
 def main(
     games: int = typer.Option(50, "--games", "-n", help="Number of games to play"),
-    opponent: str = typer.Option("e2", "--opponent", "-o", help="Opponent bot code: e1, e2, e3, e4, r, w, er, aa, v"),
-    mirror: bool = typer.Option(False, "--mirror", help="Both players use the same deck (mirror match)"),
-    deck_path: Optional[str] = typer.Option(None, "--deck-path", help="Path to deck JSON directory (default: archetypes_by_era)"),
-    human_first: bool = typer.Option(False, "--human-first", help="Human always plays first (default: alternates)"),
+    opponent: str = typer.Option(
+        "e2",
+        "--opponent",
+        "-o",
+        help="Opponent bot code: e1, e2, e3, e4, r, w, er, aa, v",
+    ),
+    mirror: bool = typer.Option(
+        False, "--mirror", help="Both players use the same deck (mirror match)"
+    ),
+    deck_path: Optional[str] = typer.Option(
+        None,
+        "--deck-path",
+        help="Path to deck JSON directory (default: archetypes_by_era)",
+    ),
+    human_first: bool = typer.Option(
+        False, "--human-first", help="Human always plays first (default: alternates)"
+    ),
 ):
     """Evaluate human skill against Expectiminimax bots."""
     # Load deck loader
@@ -153,12 +166,8 @@ def main(
             else:
                 deck_b_info = loader.sample_deck_info(mode="hierarchical")
 
-            print(
-                f"Deck A: {deck_a_info.archetype}"
-            )
-            print(
-                f"Deck B: {deck_b_info.archetype}"
-            )
+            print(f"Deck A: {deck_a_info.archetype}")
+            print(f"Deck B: {deck_b_info.archetype}")
 
             # Create temp deck files
             deck_a_path = create_temp_deck_file(deck_a_info.deck_string)
