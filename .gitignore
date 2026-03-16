@@ -9,7 +9,7 @@ __pycache__/
 checkpoints/
 models/arena/
 eval_reports/*.json
-logs/
+models/*.zip
 
 # Raw data
 src/rl/generated/embeddings.json

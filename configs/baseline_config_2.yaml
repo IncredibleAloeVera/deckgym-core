@@ -1,11 +1,11 @@
 # DeckGym Training Configuration
-# Generated template - customize as needed
+# baseline_config_2: double batch size, 1e-4 -> 1e-5 LR, enriched curriculum
 
 paths:
   meta_decks_dir: "archetypes_by_era"
-  save_path: "models/baseline_1"
-  checkpoint_dir: "./checkpoints/baseline_1"
-  tensorboard_dir: "./logs/baseline_1"
+  save_path: "models/baseline_2"
+  checkpoint_dir: "./checkpoints/baseline_2"
+  tensorboard_dir: "./logs/baseline_2"
   resume_path: null
 
 model:
@@ -31,12 +31,12 @@ model:
     vf: [512, 256]
 
 ppo:
-  learning_rate: 1e-05
-  min_learning_rate: 5e-06
+  learning_rate: 1e-04
+  min_learning_rate: 1e-05
   warmup_ratio: 0.02
 
   n_steps: 256
-  batch_size: 512
+  batch_size: 1024
   n_epochs: 8
 
   gamma: 0.98
@@ -67,8 +67,14 @@ training:
   pfsp_add_every_n_rollouts: 8
   pfsp_select_every_n_rollouts: 2
   pfsp_priority_exponent: 2.0
-  pfsp_checkpoint_dir: "./checkpoints/baseline_1/pfsp_pool/"
-  pfsp_baseline_curriculum: [[0, ["v", "w"]], [500000, ["aa", "er"]], [2000000, ["er"]], [5000000, ["e2"]]]
+  pfsp_checkpoint_dir: "./checkpoints/baseline_2/pfsp_pool/"
+  pfsp_baseline_curriculum: [
+    [0, ["v", "w"]],
+    [500000, ["aa", "er"]],
+    [1000000, ["er", "o2"]],
+    [3000000, ["o1", "er", "o2"]],
+    [5000000, ["e2", "o1"]],
+  ]
 
 environment:
   max_turns: 99
