@@ -177,7 +177,7 @@ fn discard_energy_to_increase_type_damage(
     amount: u32,
 ) -> Outcomes {
     Outcomes::single_fn(move |_rng, state, action| {
-        let SimpleAction::UseAbility { in_play_idx } = action.action else {
+        let SimpleAction::UseAbility { in_play_idx: _ } = action.action else {
             panic!("Ability should be triggered by UseAbility action");
         };
         state.discard_from_active(action.actor, &[discard_energy]);
