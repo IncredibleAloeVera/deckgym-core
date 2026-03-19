@@ -77,6 +77,7 @@ pub fn get_ability_effect_categories(ability_id: AbilityId) -> &'static [Ability
         AbilityId::A3a062CelesteelaUltraThrusters => &[Switch, Activated],
 
         // === PROTECT ===
+        AbilityId::A2a022GlaceonExSnowyTerrain => &[Protect, Passive],
         AbilityId::A3066OricoricSafeguard => &[Protect, Passive],
         AbilityId::A3141KomalaComatose => &[Protect, Passive],
         AbilityId::A3b057SnorlaxExFullMouthManner => &[Protect, Passive],

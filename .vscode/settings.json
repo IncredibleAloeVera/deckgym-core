@@ -1,7 +1,8 @@
 {
   "rust-analyzer.cargo.features": [
     "tui",
-    "python"
+    "python",
+    "test-utils"
   ],
   "python.testing.pytestArgs": [
     "tests"

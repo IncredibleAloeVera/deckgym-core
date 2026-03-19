@@ -144,6 +144,30 @@ pub fn get_attack_effect_categories(mechanic: &Mechanic) -> &'static [AttackEffe
         Mechanic::ExtraDamagePerSupporterInDiscard { .. } => &[ConditionalDamage],
         Mechanic::DrawCard { .. } => &[CardAdvantage],
         Mechanic::DiscardHandCards { .. } => &[EnergyDiscard, Disruption],
+        Mechanic::SearchToBenchBasic => &[CardAdvantage, BoardDevelopment],
+        Mechanic::SearchRandomPokemonToHand => &[CardAdvantage, Variance],
+        Mechanic::RandomDamageToOpponentPokemonPerSelfEnergy { .. } => {
+            &[SpreadDamage, Variance, EnergyDiscard]
+        }
+        Mechanic::CoinFlipDiscardEnergyFromOpponentActive => &[EnergyDiscard, Disruption, Variance],
+        Mechanic::ExtraDamageIfOpponentHasSpecialCondition { .. } => &[ConditionalDamage],
+        Mechanic::ExtraDamageIfSupportPlayedThisTurn { .. } => &[ConditionalDamage],
+        Mechanic::ExtraDamageIfTypeEnergyInPlay { .. } => &[ConditionalDamage],
+        Mechanic::DelayedSpotDamage { .. } => &[SpreadDamage],
+        Mechanic::SelfDiscardAllTypeEnergy { .. } => &[EnergyDiscard],
+        Mechanic::SelfDiscardAllTypeEnergyAndDamageAnyOpponentPokemon { .. } => {
+            &[EnergyDiscard, SpreadDamage]
+        }
+        Mechanic::KnockBackOpponentActive => &[Movement],
+        Mechanic::RandomSpreadDamage { .. } => &[SpreadDamage, Variance],
+        Mechanic::FlipUntilTailsDamage { .. } => &[Variance],
+        Mechanic::DirectDamageIfDamaged { .. } => &[ConditionalDamage],
+        Mechanic::AttachEnergyToBenchedBasic { .. } => &[EnergyGeneration],
+        Mechanic::DamageAndDiscardOpponentDeck { .. } => &[Disruption],
+        Mechanic::MegaAmpharosExLightningLancer => &[SpreadDamage],
+        Mechanic::OminousClaw => &[ConditionalDamage],
+        Mechanic::DarknessClaw => &[ConditionalDamage],
+        Mechanic::CopyAttack { .. } => &[Variance],
     }
 }
 

@@ -46,7 +46,9 @@ fn can_use_ability(state: &State, (in_play_index, card): (usize, &PlayedCard)) -
         )
     });
     match ability {
-        AbilityId::A1020VictreebelFragranceTrap => is_active && !card.ability_used,
+        AbilityId::A1020VictreebelFragranceTrap => {
+            is_active && can_use_victreebel_fragrance_trap(state, card)
+        }
         AbilityId::A1089GreninjaWaterShuriken => unreachable!("Handled by AbilityMechanic"),
         AbilityId::A1098MagnetonVoltCharge => !card.ability_used,
         AbilityId::A1123GengarExShadowySpellbind => false,
@@ -57,6 +59,7 @@ fn can_use_ability(state: &State, (in_play_index, card): (usize, &PlayedCard)) -
         AbilityId::A1a046AerodactylExPrimevalLaw => false, // Passive
         AbilityId::A1a019VaporeonWashOut => can_use_vaporeon_wash_out(state),
         AbilityId::A2a010LeafeonExForestBreath => is_active && !card.ability_used,
+        AbilityId::A2a022GlaceonExSnowyTerrain => unreachable!("Handled by AbilityMechanic"),
         AbilityId::A2a069ShayminSkySupport => false, // Passive ability
         AbilityId::A2a071Arceus => false,
         AbilityId::A2072DusknoirShadowVoid => can_use_dusknoir_shadow_void(state, in_play_index),
@@ -80,7 +83,9 @@ fn can_use_ability(state: &State, (in_play_index, card): (usize, &PlayedCard)) -
         AbilityId::A3b034SylveonExHappyRibbon => false,
         AbilityId::A3b056EeveeExVeeveeVolve => false,
         AbilityId::A3b057SnorlaxExFullMouthManner => false,
-        AbilityId::A4083EspeonExPsychicHealing => is_active && !card.ability_used,
+        AbilityId::A4083EspeonExPsychicHealing => {
+            is_active && can_use_espeon_ex_psychic_healing(state, card)
+        }
         AbilityId::A4a010EnteiExLegendaryPulse => false,
         AbilityId::A4a020SuicuneExLegendaryPulse => false,
         AbilityId::A4a022MiloticHealingRipples => false,
@@ -119,11 +124,18 @@ fn can_use_ability_by_mechanic(
 ) -> bool {
     match mechanic {
         AbilityMechanic::HealAllYourPokemon { .. } => !card.ability_used,
+        AbilityMechanic::HealOneYourPokemonExAndDiscardRandomEnergy { .. } => {
+            can_use_heal_one_your_pokemon_ex_and_discard_random_energy(state, card)
+        }
         AbilityMechanic::DamageOneOpponentPokemon { .. } => !card.ability_used,
         AbilityMechanic::SwitchActiveTypedWithBench { energy_type } => {
             can_use_switch_active_typed_with_bench(state, card, *energy_type)
         }
+        AbilityMechanic::AttachEnergyFromZoneToActiveTypedPokemon { energy_type } => {
+            can_use_attach_energy_from_zone_to_active_typed(state, card, *energy_type)
+        }
         AbilityMechanic::ReduceDamageFromAttacks { .. } => false,
+        AbilityMechanic::IncreaseDamageWhenRemainingHpAtMost { .. } => false,
         AbilityMechanic::StartTurnRandomPokemonToHand { .. } => false,
         AbilityMechanic::PreventFirstAttack => false,
         AbilityMechanic::ElectromagneticWall => false,
@@ -132,6 +144,10 @@ fn can_use_ability_by_mechanic(
             !card.ability_used && !state.decks[(state.current_player + 1) % 2].cards.is_empty()
         }
         AbilityMechanic::CoinFlipToPreventDamage => false, // Passive ability
+        AbilityMechanic::CheckupDamageToOpponentActive { .. } => false, // Passive ability
+        AbilityMechanic::DiscardEnergyToIncreaseTypeDamage { discard_energy, .. } => {
+            !card.ability_used && card.attached_energy.contains(discard_energy)
+        }
     }
 }
 
@@ -167,6 +183,33 @@ fn can_use_switch_active_typed_with_bench(
         .next()
         .is_some()
 }
+
+fn can_use_heal_one_your_pokemon_ex_and_discard_random_energy(
+    state: &State,
+    card: &PlayedCard,
+) -> bool {
+    if card.ability_used {
+        return false;
+    }
+    state
+        .enumerate_in_play_pokemon(state.current_player)
+        .any(|(_, pokemon)| {
+            pokemon.card.is_ex() && pokemon.is_damaged() && !pokemon.attached_energy.is_empty()
+        })
+}
+
+fn can_use_attach_energy_from_zone_to_active_typed(
+    state: &State,
+    card: &PlayedCard,
+    energy_type: EnergyType,
+) -> bool {
+    if card.ability_used || !state.can_attach_energy_from_zone(0) {
+        return false;
+    }
+    let active = state.get_active(state.current_player);
+    active.get_energy_type() == Some(energy_type)
+}
+
 fn can_use_pidgeot_drive_off(state: &State, card: &PlayedCard) -> bool {
     if card.ability_used {
         return false;
@@ -222,4 +265,23 @@ fn can_use_vaporeon_wash_out(state: &State) -> bool {
             pokemon.card.get_type() == Some(EnergyType::Water)
                 && pokemon.attached_energy.contains(&EnergyType::Water)
         })
+}
+
+fn can_use_victreebel_fragrance_trap(state: &State, card: &PlayedCard) -> bool {
+    if card.ability_used {
+        return false;
+    }
+    let opponent = (state.current_player + 1) % 2;
+    state
+        .enumerate_bench_pokemon(opponent)
+        .any(|(_, pokemon)| pokemon.card.is_basic())
+}
+
+fn can_use_espeon_ex_psychic_healing(state: &State, card: &PlayedCard) -> bool {
+    if card.ability_used {
+        return false;
+    }
+    state
+        .enumerate_in_play_pokemon(state.current_player)
+        .any(|(_, pokemon)| pokemon.is_damaged())
 }

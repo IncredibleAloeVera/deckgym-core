@@ -2,7 +2,7 @@
 
 # deckgym-core: Deep RL for Pokémon TCG Pocket
 
-![Card Implemented](https://img.shields.io/badge/Cards_Implemented-1709_%2F_2408_%2871.0%25%29-yellow)
+![Card Implemented](https://img.shields.io/badge/Cards_Implemented-2263_%2F_2900_%2878.0%25%29-yellow)
 
 > Fork of deckgym-core focused on **training a Deep Reinforcement Learning agent** to play Pokémon TCG Pocket at a competitive level.
 
@@ -104,6 +104,59 @@ See [RL_ARCHITECTURE.md](./RL_ARCHITECTURE.md) for the full technical reference.
 
 ---
 
+## Data Export
+
+The simulator can export (state, action) pairs during gameplay for machine learning and data analysis applications. This feature outputs portable JSON files that are easy to consume from any programming language.
+
+### Usage
+
+Use the `--data-output` flag to specify an output folder:
+
+```bash
+cargo run -- simulate example_decks/fire.txt example_decks/flareon.txt \
+  -n 1000 \
+  --players r,r \
+  --data-output ./exported_data
+```
+
+### Output Structure
+
+The data is organized as:
+```
+exported_data/
+├── <game_id_1>/
+│   ├── ply_0000.json
+│   ├── ply_0001.json
+│   └── ...
+├── <game_id_2>/
+│   ├── ply_0000.json
+│   └── ...
+└── ...
+```
+
+Each JSON file contains:
+- `game_id`: UUID of the game
+- `ply`: Sequential decision point number
+- `actor`: Which player (0 or 1) made the decision
+- `state`: Complete game state (hands, decks, in-play Pokemon, etc.)
+- `playable_actions`: All available actions at this decision point
+- `chosen_action`: The action that was actually taken
+
+### Processing the Data
+
+A Python example is included to demonstrate data loading and feature extraction:
+
+```bash
+python examples/load_exported_data.py ./exported_data
+```
+
+The JSON format makes it easy to:
+- Train policy networks (predict actions from states)
+- Train value networks (estimate win probability)
+- Perform imitation learning
+- Build custom machine learning models
+- Analyze gameplay patterns and statistics
+
 ## Contributing
 
 New to Open Source? See [CONTRIBUTING.md](./CONTRIBUTING.md).
@@ -121,13 +174,13 @@ Once you have Rust installed (see https://www.rust-lang.org/tools/install) you s
 **Running Automated Test Suite**
 
 ```bash
-cargo test
+cargo test --features "tui test-utils"
 ```
 
 **Running Benchmarks**
 
 ```bash
-cargo bench
+cargo bench --features test-utils
 ```
 
 **Running Main Script**
@@ -223,7 +276,7 @@ The pre-commit hook runs:
 1. `cargo clippy --fix --allow-dirty --features tui -- -D warnings` - Auto-fixes linting issues
 2. `cargo fmt` - Auto-formats code
 3. `git add -u` - Adds clippy and formatting fixes to the commit
-4. `cargo test --features tui` - Runs the full test suite (fails commit if tests fail)
+4. `cargo test --features "tui test-utils"` - Runs the full test suite (fails commit if tests fail)
 
 This helps maintain code quality and prevents broken commits, but it's optional and each developer can choose whether to enable it.
 
@@ -245,11 +298,19 @@ cargo run --bin card_enum_generator -- --database > tmp.rs && mv tmp.rs src/data
 To generate attacks do (first time):
 ```bash
 cargo run --bin card_enum_generator -- --attack-map > tmp.rs && mv tmp.rs src/actions/effect_mechanic_map.rs && cargo fmt
+```
+
 then with each new set of new mechanics, use:
 ```bash
-cargo run --bin card_enum_generator -- --incremental-attack-ma
+cargo run --bin card_enum_generator -- --incremental-attack-map
 ```
 and manually copy-paste into the ever changing `src/actions/effect_mechanic_map.rs`.
+
+For abilities incremental updates, use:
+```bash
+cargo run --bin card_enum_generator -- --incremental-ability-map
+```
+and manually copy-paste into `src/actions/effect_ability_mechanic_map.rs`.
 
 **Profiling Main Script**
 ```bash

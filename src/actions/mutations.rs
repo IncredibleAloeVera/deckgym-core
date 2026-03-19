@@ -7,7 +7,8 @@ use crate::{
 };
 
 use super::{
-    apply_action_helpers::{FnMutation, Mutation, Mutations, Probabilities},
+    apply_action_helpers::{FnMutation, Mutation},
+    outcomes::Outcomes,
     Action, SimpleAction,
 };
 
@@ -15,41 +16,26 @@ use super::{
 // forcing the end of the turn, applying damage with calculations, forcing enemy
 // to promote pokemon after knockout, etc... apply to all attacks.
 
-// === Helper functions to build Outcomes = (Probabilities, Mutations)
-// Doutcome means deterministic outcome
-pub(crate) fn doutcome(
-    mutation: fn(&mut StdRng, &mut State, &Action),
-) -> (Probabilities, Mutations) {
-    doutcome_from_mutation(Box::new(mutation))
-}
-
-pub(crate) fn doutcome_from_mutation(mutation: Mutation) -> (Probabilities, Mutations) {
-    (vec![1.0], vec![mutation])
-}
-
 // Useful for deterministic attacks
-pub(crate) fn active_damage_doutcome(damage: u32) -> (Probabilities, Mutations) {
+pub(crate) fn active_damage_doutcome(damage: u32) -> Outcomes {
     active_damage_effect_doutcome(damage, |_, _, _| {})
 }
 
 pub(crate) fn active_damage_effect_doutcome(
     damage: u32,
     additional_effect: impl Fn(&mut StdRng, &mut State, &Action) + 'static,
-) -> (Probabilities, Mutations) {
+) -> Outcomes {
     damage_effect_doutcome(vec![(damage, 0)], additional_effect)
 }
 
 pub(crate) fn damage_effect_doutcome<F>(
     targets: Vec<(u32, usize)>,
     additional_effect: F,
-) -> (Probabilities, Mutations)
+) -> Outcomes
 where
     F: Fn(&mut StdRng, &mut State, &Action) + 'static,
 {
-    (
-        vec![1.0],
-        vec![damage_effect_mutation(targets, additional_effect)],
-    )
+    Outcomes::single(damage_effect_mutation(targets, additional_effect))
 }
 
 // ===== Helper functions for building Mutations
@@ -79,19 +65,39 @@ where
                 .map(|(damage, in_play_idx)| (*damage, opponent, *in_play_idx))
                 .collect();
 
-            // Extract attack name if this is an attack action
-            let SimpleAction::Attack(attack_index) = &action.action else {
-                panic!("This codepath should come from an attack.")
+            let attack_name: String = match &action.action {
+                SimpleAction::Attack(attack_index) => state.in_play_pokemon[action.actor][0]
+                    .as_ref()
+                    .expect("Attacking Pokemon must be there if attacking")
+                    .card
+                    .get_attacks()
+                    .get(*attack_index)
+                    .unwrap_or_else(|| {
+                        panic!("Index must exist if attacking with {}", attack_index)
+                    })
+                    .title
+                    .clone(),
+                SimpleAction::UseCopiedAttack {
+                    source_player,
+                    source_in_play_idx,
+                    attack_index,
+                    ..
+                } => state.in_play_pokemon[*source_player][*source_in_play_idx]
+                    .as_ref()
+                    .expect("Copied-attack source Pokemon must exist")
+                    .card
+                    .get_attacks()
+                    .get(*attack_index)
+                    .unwrap_or_else(|| {
+                        panic!(
+                            "Copied attack index must exist for source {}:{}",
+                            source_player, source_in_play_idx
+                        )
+                    })
+                    .title
+                    .clone(),
+                _ => panic!("This codepath should come from an attack."),
             };
-            let attack_name: String = state.in_play_pokemon[action.actor][0]
-                .as_ref()
-                .expect("Attacking Pokemon must be there if attacking")
-                .card
-                .get_attacks()
-                .get(*attack_index)
-                .unwrap_or_else(|| panic!("Index must exist if attacking with {}", attack_index))
-                .title
-                .clone();
 
             let attacking_ref = (action.actor, 0);
             let is_from_active_attack = true;

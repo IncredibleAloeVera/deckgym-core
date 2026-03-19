@@ -310,6 +310,9 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
         } => Some(166), // Non-turn attach
         SimpleAction::HealAndDiscardEnergy { .. } => Some(167),
         SimpleAction::ReturnPokemonToHand { .. } => Some(168),
+        SimpleAction::UseCopiedAttack { .. } => None,
+        SimpleAction::ScheduleDelayedSpotDamage { .. } => None,
+        SimpleAction::UseStadium => None,
     };
 
     if index.is_none() {

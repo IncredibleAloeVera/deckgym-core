@@ -32,6 +32,7 @@ ndarray = { version = "0.16", optional = true }  # Tensor operations for ONNX
 
 [features]
 default = ["onnx", "python"]
+test-utils = []
 python = ["pyo3"]
 tui = ["ratatui", "crossterm"]
 csv-export = ["csv"]

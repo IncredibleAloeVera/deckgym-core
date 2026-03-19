@@ -35,6 +35,14 @@ pub enum SimpleAction {
     // Its given it is with the active pokemon, to the other active.
     // usize is the index of the attack in the pokemon's attacks
     Attack(usize),
+    /// Use another Pokemon's attack definition as the current attack.
+    /// This is used as a stack sub-action after copy-attack effects.
+    UseCopiedAttack {
+        source_player: usize,
+        source_in_play_idx: usize,
+        attack_index: usize,
+        require_attacker_energy_match: bool,
+    },
     // usize is in_play_pokemon index to retreat to. Can't Retreat(0)
     Retreat(usize),
     EndTurn,
@@ -72,6 +80,11 @@ pub enum SimpleAction {
         attacking_ref: (usize, usize), // (attacking_player, attacking_pokemon_idx)
         targets: Vec<(u32, usize, usize)>, // Vec of (damage, target_player, in_play_idx)
         is_from_active_attack: bool,
+    },
+    ScheduleDelayedSpotDamage {
+        target_player: usize,
+        target_in_play_idx: usize,
+        amount: u32,
     },
     /// Switch the in_play_idx pokemon with the active pokemon.
     Activate {
@@ -112,6 +125,8 @@ pub enum SimpleAction {
     DiscardFossil {
         in_play_idx: usize,
     },
+    /// Use an activated stadium effect (once per turn per player)
+    UseStadium,
     /// Return a Pokemon in play to your hand (e.g., Ilima).
     ReturnPokemonToHand {
         in_play_idx: usize,
@@ -137,6 +152,15 @@ impl fmt::Display for SimpleAction {
             }
             SimpleAction::UseAbility { in_play_idx } => write!(f, "UseAbility({in_play_idx})"),
             SimpleAction::Attack(index) => write!(f, "Attack({index})"),
+            SimpleAction::UseCopiedAttack {
+                source_player,
+                source_in_play_idx,
+                attack_index,
+                require_attacker_energy_match,
+            } => write!(
+                f,
+                "UseCopiedAttack(source:{source_player}:{source_in_play_idx}, attack:{attack_index}, require_energy:{require_attacker_energy_match})"
+            ),
             SimpleAction::Retreat(index) => write!(f, "Retreat({index})"),
             SimpleAction::EndTurn => write!(f, "EndTurn"),
             SimpleAction::Attach {
@@ -203,6 +227,14 @@ impl fmt::Display for SimpleAction {
                     attacking_ref, targets_str, is_from_active_attack
                 )
             }
+            SimpleAction::ScheduleDelayedSpotDamage {
+                target_player,
+                target_in_play_idx,
+                amount,
+            } => write!(
+                f,
+                "ScheduleDelayedSpotDamage(target:{target_player}:{target_in_play_idx}, amount:{amount})"
+            ),
             SimpleAction::Activate {
                 player,
                 in_play_idx,
@@ -240,6 +272,7 @@ impl fmt::Display for SimpleAction {
             SimpleAction::ReturnPokemonToHand { in_play_idx } => {
                 write!(f, "ReturnPokemonToHand({in_play_idx})")
             }
+            SimpleAction::UseStadium => write!(f, "UseStadium"),
             SimpleAction::Noop => write!(f, "Noop"),
         }
     }

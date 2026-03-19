@@ -11,6 +11,13 @@ pub enum BenchSide {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub enum CopyAttackSource {
+    OpponentActive,
+    OpponentInPlay,
+    OwnBenchNonEx,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum Mechanic {
     SelfHeal {
         amount: u32,
@@ -21,6 +28,8 @@ pub enum Mechanic {
     SearchToBenchByName {
         name: String,
     },
+    SearchToBenchBasic,
+    SearchRandomPokemonToHand,
     SearchToHandSupporterCard,
     InflictStatusConditions {
         conditions: Vec<StatusCondition>,
@@ -35,8 +44,19 @@ pub enum Mechanic {
     DiscardRandomGlobalEnergy {
         count: usize,
     },
+    RandomDamageToOpponentPokemonPerSelfEnergy {
+        energy_type: EnergyType,
+        damage_per_hit: u32,
+    },
     DiscardEnergyFromOpponentActive,
+    CoinFlipDiscardEnergyFromOpponentActive,
     ExtraDamageIfEx {
+        extra_damage: u32,
+    },
+    ExtraDamageIfOpponentHasSpecialCondition {
+        extra_damage: u32,
+    },
+    ExtraDamageIfSupportPlayedThisTurn {
         extra_damage: u32,
     },
     SelfDamage {
@@ -60,6 +80,11 @@ pub enum Mechanic {
     },
     ExtraDamageIfExtraEnergy {
         required_extra_energy: Vec<EnergyType>,
+        extra_damage: u32,
+    },
+    ExtraDamageIfTypeEnergyInPlay {
+        energy_type: EnergyType,
+        minimum_count: usize,
         extra_damage: u32,
     },
     ExtraDamageIfBothHeads {
@@ -129,17 +154,27 @@ pub enum Mechanic {
         card_name: String,
         extra_damage: u32,
     },
+    DelayedSpotDamage {
+        amount: u32,
+    },
     // End Unique mechanics
     DamageAndCardEffect {
         opponent: bool,
         effect: CardEffect,
         duration: u8,
-        probability: Option<f32>, // None = 100%, Some(0.5) = coin flip
+        coin_flip: bool, // false = always apply, true = apply on heads
     },
     DrawCard {
         amount: u8,
     },
     SelfDiscardAllEnergy,
+    SelfDiscardAllTypeEnergy {
+        energy_type: EnergyType,
+    },
+    SelfDiscardAllTypeEnergyAndDamageAnyOpponentPokemon {
+        energy_type: EnergyType,
+        damage: u32,
+    },
     SelfDiscardRandomEnergy,
     AlsoBenchDamage {
         opponent: bool,
@@ -194,6 +229,34 @@ pub enum Mechanic {
         self_damage: u32,
     },
     ShuffleOpponentActiveIntoDeck,
+    KnockBackOpponentActive,
+    /// Random spread damage attack (e.g., Draco Meteor, Spurt Fire)
+    /// Always targets opponent's active + bench. Optionally includes own bench.
+    RandomSpreadDamage {
+        times: usize,
+        damage_per_hit: u32,
+        include_own_bench: bool,
+    },
+    FlipUntilTailsDamage {
+        damage_per_heads: u32,
+    },
+    DirectDamageIfDamaged {
+        damage: u32,
+    },
+    AttachEnergyToBenchedBasic {
+        energy_type: EnergyType,
+    },
+    DamageAndDiscardOpponentDeck {
+        damage: u32,
+        discard_count: usize,
+    },
+    MegaAmpharosExLightningLancer,
+    OminousClaw,
+    DarknessClaw,
     BlockBasicAttack,
     SwitchSelfWithBench,
+    CopyAttack {
+        source: CopyAttackSource,
+        require_attacker_energy_match: bool,
+    },
 }

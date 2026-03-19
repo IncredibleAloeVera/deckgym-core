@@ -49,6 +49,10 @@ enum Commands {
         /// Increase verbosity (-v, -vv, -vvv, etc.)
         #[arg(short, long, action = ArgAction::Count, default_value_t = 1)]
         verbose: u8,
+
+        /// Output folder for exporting (state, action) pairs in JSON format
+        #[arg(long)]
+        data_output: Option<String>,
     },
     /// Optimize an incomplete deck against enemy decks
     Optimize {
@@ -98,7 +102,7 @@ fn simulate_against_folder(
     parallel: bool,
     num_threads: Option<usize>,
 ) {
-    let player_codes = fill_code_array(players);
+    let player_codes = fill_code_array(players.clone());
     let has_onnx = player_codes.iter().any(|p| is_onnx_player(p));
 
     // Helper to get all decks in a path (file or folder)
@@ -283,11 +287,16 @@ fn simulate_against_folder(
                     simulate(
                         &decks_a_paths[i],
                         &decks_b_paths[j],
-                        Some(player_codes.clone()),
-                        count,
-                        seed,
-                        parallel,
-                        num_threads,
+                        SimulationConfig {
+                            num_games: count,
+                            players: players.clone(),
+                            seed,
+                            data_output: None,
+                        },
+                        ParallelConfig {
+                            enabled: parallel,
+                            num_threads,
+                        },
                     );
                 }
                 matchup_idx += 1;
@@ -314,6 +323,7 @@ fn main() {
             parallel,
             threads,
             verbose,
+            data_output,
         } => {
             initialize_logger(verbose);
 
@@ -322,7 +332,7 @@ fn main() {
             deckgym::players::print_available_providers();
 
             // Fill in default players if not specified
-            let player_codes = fill_code_array(players);
+            let player_codes = fill_code_array(players.clone());
 
             // Check if any player uses ONNX - use batched mode for GPU efficiency
             let has_onnx = player_codes.iter().any(|p| is_onnx_player(p));
@@ -348,11 +358,16 @@ fn main() {
                 simulate(
                     &deck_a,
                     &deck_b_or_folder,
-                    Some(player_codes),
-                    num,
-                    seed,
-                    parallel,
-                    threads,
+                    SimulationConfig {
+                        num_games: num,
+                        players,
+                        seed,
+                        data_output,
+                    },
+                    ParallelConfig {
+                        enabled: parallel,
+                        num_threads: threads,
+                    },
                 );
             }
         }
@@ -375,6 +390,7 @@ fn main() {
                 num_games: num,
                 players,
                 seed,
+                data_output: None,
             };
             let parallel_config = ParallelConfig {
                 enabled: parallel,

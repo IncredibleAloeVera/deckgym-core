@@ -38,6 +38,14 @@ fn start_turn_ability_outcomes(_state: &State, player: usize) -> (Probabilities,
     (vec![1.0], vec![mutation])
 }
 
+#[derive(Clone)]
+struct CheckupTargets {
+    sleeps: Vec<(usize, usize)>,
+    paralyzed: Vec<(usize, usize)>,
+    poisoned: Vec<(usize, usize)>,
+    burned: Vec<(usize, usize)>,
+}
+
 /// Advance state to the next turn (i.e. maintain current_player and turn_count)
 pub(crate) fn forecast_end_turn(state: &State) -> (Probabilities, Mutations) {
     let in_setup_phase = state.turn_count == 0;
@@ -80,57 +88,29 @@ pub(crate) fn forecast_end_turn(state: &State) -> (Probabilities, Mutations) {
 
 /// Handle Status Effects
 fn forecast_pokemon_checkup(state: &State) -> (Probabilities, Mutations) {
-    let mut sleeps_to_handle = vec![];
-    let mut paralyzed_to_handle = vec![];
-    let mut poisons_to_handle = vec![];
-    let mut burns_to_handle = vec![];
-    for player in 0..2 {
-        for (i, pokemon) in state.enumerate_in_play_pokemon(player) {
-            if pokemon.asleep {
-                sleeps_to_handle.push((player, i));
-            }
-            if pokemon.paralyzed {
-                paralyzed_to_handle.push((player, i));
-            }
-            if pokemon.poisoned {
-                poisons_to_handle.push((player, i));
-                debug!("{player}'s Pokemon {i} is poisoned");
-            }
-            if pokemon.burned {
-                burns_to_handle.push((player, i));
-                debug!("{player}'s Pokemon {i} is burned");
-            }
-        }
-    }
+    let next_player = (state.current_player + 1) % 2;
+    let mut preview_state = state.clone();
+    // Important for these to happen before Pokemon Checkup (Zeraora, Suicune, etc)
+    on_end_turn(state.current_player, &mut preview_state);
+    let checkup_targets = collect_checkup_targets(&preview_state);
 
     // Get all binary vectors representing the possible outcomes.
     // These are the "outcome_ids" for sleep and burn coin flips
     // (e.g. outcome [true, false] might represent waking up one pokemon and not healing another's burn).
-    let total_coin_flips = sleeps_to_handle.len() + burns_to_handle.len();
+    let total_coin_flips = checkup_targets.sleeps.len() + checkup_targets.burned.len();
     let outcome_ids = generate_boolean_vectors(total_coin_flips);
     let base_probability = 1.0 / outcome_ids.len() as f64;
 
-    let next_player = (state.current_player + 1) % 2;
     let mut probabilities = Vec::with_capacity(outcome_ids.len());
     let mut outcomes: Mutations = Vec::with_capacity(outcome_ids.len());
     for outcome in outcome_ids {
-        let sleeps_to_handle = sleeps_to_handle.clone();
-        let paralyzed_to_handle = paralyzed_to_handle.clone();
-        let poisons_to_handle = poisons_to_handle.clone();
-        let burns_to_handle = burns_to_handle.clone();
+        let outcome = outcome.clone();
         probabilities.push(base_probability);
         outcomes.push(Box::new(move |rng, state, action| {
             // Important for these to happen before Pokemon Checkup (Zeraora, Suicune, etc)
             on_end_turn(action.actor, state);
-
-            apply_pokemon_checkup(
-                state,
-                sleeps_to_handle.clone(),
-                paralyzed_to_handle.clone(),
-                poisons_to_handle.clone(),
-                burns_to_handle.clone(),
-                outcome.clone(),
-            );
+            let live_checkup_targets = collect_checkup_targets(state);
+            apply_pokemon_checkup(state, &live_checkup_targets, &outcome);
 
             // Start-of-turn abilities execute AFTER the turn advance and card draw,
             // so they search the actual current deck state.
@@ -210,40 +190,50 @@ fn get_poison_damage(state: &State, player: usize, in_play_idx: usize) -> u32 {
     total_damage
 }
 
-fn apply_pokemon_checkup(
-    mutated_state: &mut State,
-    sleeps_to_handle: Vec<(usize, usize)>,
-    paralyzed_to_handle: Vec<(usize, usize)>,
-    poisons_to_handle: Vec<(usize, usize)>,
-    burns_to_handle: Vec<(usize, usize)>,
-    outcome: Vec<bool>,
-) {
-    // First half of outcomes are for sleep, second half for burns
-    let num_sleeps = sleeps_to_handle.len();
+fn collect_checkup_targets(state: &State) -> CheckupTargets {
+    let mut targets = CheckupTargets {
+        sleeps: vec![],
+        paralyzed: vec![],
+        poisoned: vec![],
+        burned: vec![],
+    };
 
-    // Handle sleep coin flips
-    for (i, is_awake) in sleeps_to_handle.iter().zip(&outcome[0..num_sleeps]) {
-        if *is_awake {
-            let (player, in_play_idx) = i;
-            let pokemon = mutated_state.in_play_pokemon[*player][*in_play_idx]
-                .as_mut()
-                .expect("Pokemon should be there...");
-            pokemon.asleep = false;
-            debug!("{player}'s Pokemon {in_play_idx} woke up");
+    for player in 0..2 {
+        for (i, pokemon) in state.enumerate_in_play_pokemon(player) {
+            if pokemon.asleep {
+                targets.sleeps.push((player, i));
+            }
+            if pokemon.paralyzed {
+                targets.paralyzed.push((player, i));
+            }
+            if pokemon.poisoned {
+                targets.poisoned.push((player, i));
+                debug!("{player}'s Pokemon {i} is poisoned");
+            }
+            if pokemon.burned {
+                targets.burned.push((player, i));
+                debug!("{player}'s Pokemon {i} is burned");
+            }
         }
     }
 
-    // These always happen regardless of outcome_binary_vector
-    for (player, in_play_idx) in paralyzed_to_handle {
-        let pokemon = mutated_state.in_play_pokemon[player][in_play_idx]
-            .as_mut()
-            .expect("Pokemon should be there...");
-        pokemon.paralyzed = false;
-        debug!("{player}'s Pokemon {in_play_idx} is un-paralyzed");
-    }
+    targets
+}
 
-    // Poison always deals 10 damage (+10 for each Nihilego with More Poison ability opponent has in play)
-    for (player, in_play_idx) in poisons_to_handle {
+fn apply_pokemon_checkup(
+    mutated_state: &mut State,
+    checkup_targets: &CheckupTargets,
+    outcome: &[bool],
+) {
+    // First half of outcomes are for sleep, second half for burns
+    let num_sleeps = checkup_targets.sleeps.len();
+    debug_assert!(outcome.len() >= num_sleeps + checkup_targets.burned.len());
+
+    // Official Pokemon Checkup order: Poisoned -> Burned -> Asleep -> Paralyzed.
+    for (player, in_play_idx) in checkup_targets.poisoned.iter().copied() {
+        if mutated_state.in_play_pokemon[player][in_play_idx].is_none() {
+            continue;
+        }
         let attacking_ref = (player, in_play_idx); // present it as self-damage
         let poison_damage = get_poison_damage(mutated_state, player, in_play_idx);
 
@@ -257,33 +247,103 @@ fn apply_pokemon_checkup(
     }
 
     // Burn always deals 20 damage, then coin flip for healing
-    for (i, (player, in_play_idx)) in burns_to_handle.iter().enumerate() {
-        // Check if pokemon heals from burn (coin flip result)
-        let heals_from_burn = outcome[num_sleeps + i];
-        if heals_from_burn {
-            let pokemon = mutated_state.in_play_pokemon[*player][*in_play_idx]
-                .as_mut()
-                .expect("Pokemon should be there...");
-            pokemon.burned = false;
-            debug!("{player}'s Pokemon {in_play_idx} healed from burn");
+    for (i, (player, in_play_idx)) in checkup_targets.burned.iter().copied().enumerate() {
+        if mutated_state.in_play_pokemon[player][in_play_idx].is_none() {
+            continue;
         }
 
-        // Deal burn damage
-        let attacking_ref = (*player, *in_play_idx); // present it as self-damage
+        let attacking_ref = (player, in_play_idx); // present it as self-damage
         handle_damage(
             mutated_state,
             attacking_ref,
-            &[(20, *player, *in_play_idx)],
+            &[(20, player, in_play_idx)],
             false,
             None,
         );
+
+        let heals_from_burn = outcome[num_sleeps + i];
+        if !heals_from_burn {
+            continue;
+        }
+        let Some(pokemon) = mutated_state.in_play_pokemon[player][in_play_idx].as_mut() else {
+            continue;
+        };
+        pokemon.burned = false;
+        debug!("{player}'s Pokemon {in_play_idx} healed from burn");
     }
+
+    // Handle sleep coin flips after poison/burn damage has resolved.
+    for ((player, in_play_idx), is_awake) in checkup_targets
+        .sleeps
+        .iter()
+        .copied()
+        .zip(&outcome[0..num_sleeps])
+    {
+        if !*is_awake {
+            continue;
+        }
+        let Some(pokemon) = mutated_state.in_play_pokemon[player][in_play_idx].as_mut() else {
+            continue;
+        };
+        pokemon.asleep = false;
+        debug!("{player}'s Pokemon {in_play_idx} woke up");
+    }
+
+    for (player, in_play_idx) in checkup_targets.paralyzed.iter().copied() {
+        let Some(pokemon) = mutated_state.in_play_pokemon[player][in_play_idx].as_mut() else {
+            continue;
+        };
+        pokemon.paralyzed = false;
+        debug!("{player}'s Pokemon {in_play_idx} is un-paralyzed");
+    }
+
+    apply_snowy_terrain_checkup_damage(mutated_state);
 
     // Advance turn
     mutated_state.knocked_out_by_opponent_attack_last_turn =
         mutated_state.knocked_out_by_opponent_attack_this_turn;
     mutated_state.knocked_out_by_opponent_attack_this_turn = false;
     mutated_state.advance_turn();
+}
+
+fn apply_snowy_terrain_checkup_damage(state: &mut State) {
+    let mut source_players_with_damage: Vec<(usize, u32)> = vec![];
+
+    for player in 0..2 {
+        let Some(active) = state.in_play_pokemon[player][0].as_ref() else {
+            continue;
+        };
+
+        let checkup_damage = get_ability_mechanic(&active.card)
+            .and_then(|m| match m {
+                AbilityMechanic::CheckupDamageToOpponentActive { amount } => Some(*amount),
+                _ => None,
+            })
+            .unwrap_or(0);
+
+        if checkup_damage > 0 && !active.is_knocked_out() {
+            source_players_with_damage.push((player, checkup_damage));
+        }
+    }
+
+    for (source_player, checkup_damage) in source_players_with_damage {
+        let target_player = (source_player + 1) % 2;
+
+        if state.in_play_pokemon[target_player][0].is_some() {
+            debug!(
+                "Snowy Terrain: Player {} active Pokémon deals {} checkup damage to opponent active",
+                source_player,
+                checkup_damage
+            );
+            handle_damage(
+                state,
+                (source_player, 0),
+                &[(checkup_damage, target_player, 0)],
+                false,
+                None,
+            );
+        }
+    }
 }
 
 fn generate_boolean_vectors(n: usize) -> Vec<Vec<bool>> {
