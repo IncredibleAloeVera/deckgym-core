@@ -58,7 +58,10 @@
 //   166     : Attach (non-turn energy, e.g. from ability)
 //   167     : HealAndDiscardEnergy
 //   168     : ReturnPokemonToHand
-//   169-178 : (reserved for future expansion)
+//   169     : UseStadium (activated stadiums like Mesagoza)
+//   170-171 : UseCopiedAttack (attack_index 0, 1)
+//   172-175 : ScheduleDelayedSpotDamage to opponent slot (0-3)
+//   176-178 : (reserved for future expansion)
 //
 // =============================================================================
 
@@ -310,9 +313,23 @@ fn action_to_index(action: &SimpleAction, maps: &HandMaps) -> Option<usize> {
         } => Some(166), // Non-turn attach
         SimpleAction::HealAndDiscardEnergy { .. } => Some(167),
         SimpleAction::ReturnPokemonToHand { .. } => Some(168),
-        SimpleAction::UseCopiedAttack { .. } => None,
-        SimpleAction::ScheduleDelayedSpotDamage { .. } => None,
-        SimpleAction::UseStadium => None,
+        SimpleAction::UseStadium => Some(169),
+        SimpleAction::UseCopiedAttack { attack_index, .. } => {
+            if *attack_index <= 1 {
+                Some(170 + attack_index)
+            } else {
+                None
+            }
+        }
+        SimpleAction::ScheduleDelayedSpotDamage {
+            target_in_play_idx, ..
+        } => {
+            if *target_in_play_idx <= 3 {
+                Some(172 + target_in_play_idx)
+            } else {
+                None
+            }
+        }
     };
 
     if index.is_none() {
