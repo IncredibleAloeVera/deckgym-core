@@ -1,11 +1,11 @@
 # DeckGym Training Configuration
-# baseline_config_2: double batch size, 5e-5 -> 1e-5 LR, enriched curriculum
+# baseline_config_3: increase critic importance
 
 paths:
   meta_decks_dir: "archetypes_by_era"
-  save_path: "models/baseline_2"
-  checkpoint_dir: "./checkpoints/baseline_2"
-  tensorboard_dir: "./logs/baseline_2"
+  save_path: "models/baseline_3"
+  checkpoint_dir: "./checkpoints/baseline_3"
+  tensorboard_dir: "./logs/baseline_3"
   resume_path: null
 
 model:
@@ -31,18 +31,18 @@ model:
     vf: [512, 256, 128]
 
 ppo:
-  learning_rate: 5e-05
-  min_learning_rate: 1e-05
+  learning_rate: 1e-05
+  min_learning_rate: 5e-06
   warmup_ratio: 0.01
 
   n_steps: 256
-  batch_size: 1024
+  batch_size: 512
   n_epochs: 8
 
   gamma: 0.98
   gae_lambda: 0.95
-  ent_coef: 0.03
-  vf_coef: 0.5
+  ent_coef: 0.02
+  vf_coef: 1.0
   clip_range: 0.2
   draw_reward: -0.5
   max_grad_norm: 1.0
@@ -63,11 +63,11 @@ training:
 
   # PFSP settings
   use_pfsp: true
-  pfsp_pool_size: 12
+  pfsp_pool_size: 8
   pfsp_add_every_n_rollouts: 4
   pfsp_select_every_n_rollouts: 2
-  pfsp_priority_exponent: 1.5
-  pfsp_checkpoint_dir: "./checkpoints/baseline_2/pfsp_pool/"
+  pfsp_priority_exponent: 2.0
+  pfsp_checkpoint_dir: "./checkpoints/baseline_3/pfsp_pool/"
   pfsp_baseline_curriculum: [
     [0, ["v", "w"]],
     [500000, ["aa", "er", "o2"]],
