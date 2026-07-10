@@ -483,7 +483,7 @@ impl State {
             return;
         }
         self.end_turn_maintenance();
-        self.queue_draw_action(self.current_player, 1);
+        self.maybe_draw_card(self.current_player);
         self.rotate_energy_zone(self.current_player, rng);
     }
 

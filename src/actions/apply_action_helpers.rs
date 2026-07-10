@@ -68,7 +68,7 @@ pub(crate) fn forecast_end_turn(state: &State) -> (Probabilities, Mutations) {
                 state.turn_count = 1;
                 state.end_turn_maintenance();
                 start_mutation(rng, state, action);
-                state.queue_draw_action(state.current_player, 1);
+                state.maybe_draw_card(state.current_player);
             }));
         }
 
@@ -107,9 +107,8 @@ fn forecast_pokemon_checkup(state: &State) -> (Probabilities, Mutations) {
                 on_end_turn(action.actor, state);
                 let live_checkup_targets = collect_checkup_targets(state);
                 apply_pokemon_checkup(state, &live_checkup_targets, &outcome);
-                finish_turn_after_checkup(state, rng);
-
                 start_mutation(rng, state, action);
+                finish_turn_after_checkup(state, rng);
             }));
         }
     }

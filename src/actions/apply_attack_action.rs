@@ -1824,9 +1824,9 @@ fn damage_and_both_active_multiple_status_attack(
 /// Draw cards and deal damage in the same attack.
 fn draw_and_damage_outcome(damage: u32, amount: u8) -> AttackOutcomes {
     active_damage_effect_doutcome(damage, move |_, state, action| {
-        state
-            .move_generation_stack
-            .push((action.actor, vec![SimpleAction::DrawCard { amount }]));
+        for _ in 0..amount {
+            state.maybe_draw_card(action.actor);
+        }
     })
 }
 
