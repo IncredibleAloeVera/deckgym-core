@@ -3,6 +3,8 @@
 .DS_Store
 
 TODO.md
+NOTES.md
+/auxiliaries
 
 __pycache__/
 *.so
