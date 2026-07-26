@@ -16,6 +16,7 @@ use crate::{
         effect_mechanic_map::EFFECT_MECHANIC_MAP,
         Action,
     },
+    belief::{RevealEvent, Zone},
     combinatorics::generate_combinations,
     effects::{CardEffect, TurnEffect},
     hooks::{
@@ -1085,7 +1086,7 @@ fn waterfall_evolution(state: &State) -> AttackOutcomes {
     if evolution_cards.is_empty() {
         // No evolution cards in deck, just shuffle
         return AttackOutcomes::single_effect(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -1099,7 +1100,7 @@ fn waterfall_evolution(state: &State) -> AttackOutcomes {
             apply_evolve(action.actor, state, &evolution_card, 0, true);
 
             // Shuffle the deck
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         }));
     }
 
@@ -1839,6 +1840,13 @@ fn discard_opponent_active_tools_before_damage(damage: u32) -> AttackOutcomes {
 fn discard_top_self_deck(damage: u32) -> AttackOutcomes {
     active_damage_effect_doutcome(damage, |_, state, action| {
         if let Some(card) = state.decks[action.actor].draw() {
+            // Milled to the public discard pile: drop this card's deck position (it is now visible).
+            state.emit_reveal(RevealEvent::KnownCardMoved {
+                owner: action.actor,
+                card: card.get_card_id(),
+                from: Zone::Deck,
+                to: Zone::Public,
+            });
             state.discard_piles[action.actor].push(card);
         }
     })
@@ -1862,6 +1870,13 @@ fn damage_and_discard_opponent_deck(damage: u32, discard_count: usize) -> Attack
 
         for _ in 0..discard_count {
             if let Some(card) = state.decks[opponent].draw() {
+                // Milled to the public discard pile: drop this card's deck position.
+                state.emit_reveal(RevealEvent::KnownCardMoved {
+                    owner: opponent,
+                    card: card.get_card_id(),
+                    from: Zone::Deck,
+                    to: Zone::Public,
+                });
                 state.discard_piles[opponent].push(card);
             } else {
                 break; // No more cards to discard
@@ -2835,6 +2850,15 @@ fn ominous_claw_attack(acting_player: usize, fixed_damage: u32) -> AttackOutcome
     AttackOutcomes::binary_coin(
         active_damage_effect_outcome(fixed_damage, move |_, state, _action| {
             let opponent = (acting_player + 1) % 2;
+            // "Your opponent reveals their hand" — presence + position over the whole hand.
+            let revealed: Vec<_> = state.hands[opponent]
+                .iter()
+                .map(|card| card.get_card_id())
+                .collect();
+            state.emit_reveal(RevealEvent::HandRevealed {
+                owner: opponent,
+                cards: revealed,
+            });
             let possible_discards: Vec<SimpleAction> = state
                 .iter_hand_supporters(opponent)
                 .map(|card| SimpleAction::DiscardOpponentSupporter {
@@ -2857,6 +2881,15 @@ fn ominous_claw_attack(acting_player: usize, fixed_damage: u32) -> AttackOutcome
 fn darkness_claw_attack(acting_player: usize, fixed_damage: u32) -> AttackOutcomes {
     active_damage_effect_doutcome(fixed_damage, move |_, state, _action| {
         let opponent = (acting_player + 1) % 2;
+        // "Your opponent reveals their hand" — presence + position over the whole hand.
+        let revealed: Vec<_> = state.hands[opponent]
+            .iter()
+            .map(|card| card.get_card_id())
+            .collect();
+        state.emit_reveal(RevealEvent::HandRevealed {
+            owner: opponent,
+            cards: revealed,
+        });
         let possible_discards: Vec<SimpleAction> = state
             .iter_hand_supporters(opponent)
             .map(|card| SimpleAction::DiscardOpponentSupporter {
@@ -2925,6 +2958,18 @@ fn shuffle_opponent_active_into_deck() -> AttackOutcomes {
             let mut cards_to_shuffle = active_pokemon.cards_behind.clone();
             cards_to_shuffle.push(active_pokemon.card.clone());
 
+            // These cards were public (the Active in play); the attacker now knows each is
+            // somewhere in the opponent's deck (position → Deck), and the shuffle only randomises
+            // order, not zone membership.
+            for card in &cards_to_shuffle {
+                state.emit_reveal(RevealEvent::KnownCardMoved {
+                    owner: opponent,
+                    card: card.get_card_id(),
+                    from: Zone::Public,
+                    to: Zone::Deck,
+                });
+            }
+
             // Add cards to deck
             state.decks[opponent].cards.extend(cards_to_shuffle);
 
@@ -2932,7 +2977,7 @@ fn shuffle_opponent_active_into_deck() -> AttackOutcomes {
             state.discard_energies[opponent].extend(active_pokemon.attached_energy.iter().cloned());
 
             // Shuffle the deck
-            state.decks[opponent].shuffle(false, rng);
+            state.shuffle_deck(opponent, rng);
 
             // Trigger promotion from bench (or declare winner if no bench)
             state.trigger_promotion_or_declare_winner(opponent);
@@ -2952,8 +2997,17 @@ fn coin_flip_shuffle_random_opponent_hand_card_into_deck() -> AttackOutcomes {
             }
             let idx = rng.gen_range(0..state.hands[opponent].len());
             let card = state.hands[opponent].remove(idx);
+            let card_id = card.get_card_id();
             state.decks[opponent].cards.push(card);
-            state.decks[opponent].shuffle(false, rng);
+            state.shuffle_deck(opponent, rng);
+            // The card is revealed as it moves, so the observer knows *which* one went hand → deck.
+            // Position mutates to the deck (the shuffle only randomises order, not zone membership).
+            state.emit_reveal(RevealEvent::KnownCardMoved {
+                owner: opponent,
+                card: card_id,
+                from: Zone::Hand,
+                to: Zone::Deck,
+            });
         }),
         // Tails: do nothing
         active_damage_outcome(0),

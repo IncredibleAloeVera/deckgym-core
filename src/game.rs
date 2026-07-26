@@ -5,6 +5,7 @@ use uuid::Uuid;
 
 use crate::{
     actions::{apply_action, Action},
+    belief::BeliefTracker,
     models::EnergyType,
     players::Player,
     simulation_event_handler::{CompositeSimulationEventHandler, SimulationEventHandler},
@@ -23,6 +24,10 @@ pub struct Game<'a> {
 
     debug: bool,
     event_handler: Option<&'a mut CompositeSimulationEventHandler>,
+    // Player-mode belief overlay (see `NOTES.md`). `None` = spectator mode (engine identity,
+    // fully observable — the belief is bypassed). `Some` = maintain per-player belief from the
+    // reveal events emitted during effect resolution.
+    belief: Option<BeliefTracker>,
 }
 
 impl<'a> Game<'a> {
@@ -36,6 +41,7 @@ impl<'a> Game<'a> {
             state,
             debug: false,
             event_handler: None,
+            belief: None,
         }
     }
 
@@ -52,6 +58,7 @@ impl<'a> Game<'a> {
             state,
             debug: true,
             event_handler: None,
+            belief: None,
         }
     }
 
@@ -126,6 +133,25 @@ impl<'a> Game<'a> {
     // TODO: Maybe make these only available for testing?
     pub fn apply_action(&mut self, action: &Action) {
         apply_action(&mut self.rng, &mut self.state, action);
+        // Drain the reveal events this action produced so the transient log can't grow, feeding
+        // them to the belief overlay when in player mode (a no-op in spectator mode).
+        let events = self.state.take_reveals();
+        if let Some(belief) = &mut self.belief {
+            belief.observe(&events);
+        }
+    }
+
+    /// Switch this game into *player mode*: start maintaining the per-player belief overlay from
+    /// reveal events. Spectator mode (the default) leaves it disabled and sees the full state.
+    pub fn enable_belief(&mut self) {
+        if self.belief.is_none() {
+            self.belief = Some(BeliefTracker::new());
+        }
+    }
+
+    /// The belief overlay, if player mode is enabled (`None` in spectator mode).
+    pub fn belief(&self) -> Option<&BeliefTracker> {
+        self.belief.as_ref()
     }
 
     pub fn set_state(&mut self, state: State) {

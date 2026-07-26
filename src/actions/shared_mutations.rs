@@ -118,7 +118,7 @@ where
     if num_eligible == 0 {
         // No eligible Pokemon in deck, just shuffle
         return Outcomes::single_fn(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -137,7 +137,7 @@ where
                 state.transfer_card_from_deck_to_hand(acting_player, pokemon);
             }
 
-            state.decks[acting_player].shuffle(false, rng);
+            state.shuffle_deck(acting_player, rng);
         }));
     }
 
@@ -158,7 +158,7 @@ pub(crate) fn quick_growth_evolution_outcomes_for_player(player: usize, state: &
 
     if evolution_cards.is_empty() {
         return Outcomes::single_fn(move |rng, state, _action| {
-            state.decks[player].shuffle(false, rng);
+            state.shuffle_deck(player, rng);
         });
     }
 
@@ -170,7 +170,7 @@ pub(crate) fn quick_growth_evolution_outcomes_for_player(player: usize, state: &
             |evo_card| -> crate::actions::apply_action_helpers::Mutation {
                 Box::new(move |rng, state, _action| {
                     apply_evolve(player, state, &evo_card, 0, true);
-                    state.decks[player].shuffle(false, rng);
+                    state.shuffle_deck(player, rng);
                 })
             },
         )
@@ -213,7 +213,7 @@ where
         Outcomes::single_fn({
             |rng, state, action| {
                 // If there are no matching cards in the deck, just shuffle it
-                state.decks[action.actor].shuffle(false, rng);
+                state.shuffle_deck(action.actor, rng);
             }
         })
     } else {
@@ -228,7 +228,7 @@ where
                     .position(|x| x.is_none());
                 if bench_space.is_none() {
                     debug!("No bench space available, shuffling deck without placing card");
-                    state.decks[action.actor].shuffle(false, rng);
+                    state.shuffle_deck(action.actor, rng);
                     return;
                 }
 
@@ -248,7 +248,7 @@ where
                 let bench_idx = bench_space.unwrap();
                 apply_place_card(state, action.actor, &card, bench_idx, true);
 
-                state.decks[action.actor].shuffle(false, rng);
+                state.shuffle_deck(action.actor, rng);
             }));
         }
         Outcomes::from_parts(probabilities, outcomes)

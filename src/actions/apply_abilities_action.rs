@@ -12,6 +12,7 @@ use crate::{
         shared_mutations::pokemon_search_outcomes,
         Action, SimpleAction,
     },
+    belief::{RevealEvent, Zone},
     effects::TurnEffect,
     hooks::is_ultra_beast,
     models::{Card, EnergyType, PlayedCard, StatusCondition},
@@ -507,6 +508,14 @@ fn discard_top_card_opponent_deck() -> Outcomes {
     Outcomes::single_fn(move |_rng, state, action| {
         let opponent = (action.actor + 1) % 2;
         if let Some(card) = state.decks[opponent].draw() {
+            // Milled to the public discard pile: the observer sees which card, so drop its deck
+            // position (this specific card, not the whole deck).
+            state.emit_reveal(RevealEvent::KnownCardMoved {
+                owner: opponent,
+                card: card.get_card_id(),
+                from: Zone::Deck,
+                to: Zone::Public,
+            });
             state.discard_piles[opponent].push(card);
         }
     })

@@ -12,6 +12,7 @@ use crate::{
             item_search_outcomes, pokemon_search_outcomes, tool_search_outcomes,
         },
     },
+    belief::{RevealEvent, Zone},
     card_ids::CardId,
     card_logic::{
         can_rare_candy_evolve, diantha_targets, ilima_targets, quick_grow_extract_candidates,
@@ -659,14 +660,18 @@ fn mars_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
     state.decks[opponent_player]
         .cards
         .append(&mut state.hands[opponent_player]);
-    state.decks[opponent_player].shuffle(false, rng);
+    state.shuffle_deck(opponent_player, rng);
 
-    // Draw cards
+    // Draw cards (via maybe_draw_card so each blind draw clears deck-position certainty).
     for _ in 0..cards_to_draw {
-        if let Some(card) = state.decks[opponent_player].draw() {
-            state.hands[opponent_player].push(card);
-        }
+        state.maybe_draw_card(opponent_player);
     }
+
+    // Hand was shuffled away and redrawn: any known position of the opponent's hand is now stale.
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: opponent_player,
+        zone: Zone::Hand,
+    });
 }
 
 fn giovanni_effect(_: &mut StdRng, state: &mut State, _: &Action) {
@@ -932,6 +937,12 @@ fn mythical_slab_effect(_: &mut StdRng, state: &mut State, action: &Action) {
             let card = state.decks[action.actor].cards.remove(0);
             state.decks[action.actor].cards.push(card);
         }
+        // The observer can't tell whether the top card was drawn to hand or sent to the bottom;
+        // either way it may have left the deck, so clear deck-position certainty.
+        state.emit_reveal(RevealEvent::ZoneCleared {
+            owner: action.actor,
+            zone: Zone::Deck,
+        });
     } // else do nothing
 }
 
@@ -941,13 +952,18 @@ fn red_card_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
     // Your opponent shuffles their hand into their deck and draws 3 cards.
     let acting_player = action.actor;
     let opponent = (acting_player + 1) % 2;
-    let opponent_hand = &mut state.hands[opponent];
-    let opponent_deck = &mut state.decks[opponent];
-    opponent_deck.cards.append(opponent_hand);
-    opponent_deck.shuffle(false, rng);
+    let opponent_hand = std::mem::take(&mut state.hands[opponent]);
+    state.decks[opponent].cards.extend(opponent_hand);
+    state.shuffle_deck(opponent, rng);
     for _ in 0..3 {
         state.maybe_draw_card(opponent);
     }
+
+    // Hand shuffled away and redrawn: stale any known position of the opponent's hand.
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: opponent,
+        zone: Zone::Hand,
+    });
 }
 
 // Give the choice to the player to attach a tool to one of their pokemon.
@@ -1072,6 +1088,16 @@ fn elemental_switch_effect(_: &mut StdRng, state: &mut State, action: &Action) {
 fn silver_effect(_: &mut StdRng, state: &mut State, action: &Action) {
     let player = action.actor;
     let opponent = (player + 1) % 2;
+    // "Your opponent reveals their hand" — presence + position over the whole hand, emitted
+    // whether or not a Supporter is present to shuffle.
+    let revealed: Vec<_> = state.hands[opponent]
+        .iter()
+        .map(|card| card.get_card_id())
+        .collect();
+    state.emit_reveal(RevealEvent::HandRevealed {
+        owner: opponent,
+        cards: revealed,
+    });
     let possible_shuffles: Vec<SimpleAction> = state.hands[opponent]
         .iter()
         .filter(|card| card.is_support())
@@ -1198,12 +1224,19 @@ fn copycat_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
 
     // Shuffle player's hand into their deck
     state.decks[player].cards.append(&mut state.hands[player]);
-    state.decks[player].shuffle(false, rng);
+    state.shuffle_deck(player, rng);
 
     // Draw cards equal to opponent's hand size
     for _ in 0..opponent_hand_size {
         state.maybe_draw_card(player);
     }
+
+    // The acting player's own hand was shuffled away and redrawn: stale the opponent's knowledge
+    // of it (belief is directional — this wipes what the opponent knows about `player`).
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: player,
+        zone: Zone::Hand,
+    });
 }
 
 fn iono_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
@@ -1222,13 +1255,13 @@ fn iono_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
 
     // Shuffle player's hand into their deck
     state.decks[player].cards.append(&mut state.hands[player]);
-    state.decks[player].shuffle(false, rng);
+    state.shuffle_deck(player, rng);
 
     // Shuffle opponent's hand into their deck
     state.decks[opponent]
         .cards
         .append(&mut state.hands[opponent]);
-    state.decks[opponent].shuffle(false, rng);
+    state.shuffle_deck(opponent, rng);
 
     // Each player draws the same number of cards they had
     for _ in 0..player_hand_size {
@@ -1237,6 +1270,16 @@ fn iono_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
     for _ in 0..opponent_hand_size {
         state.maybe_draw_card(opponent);
     }
+
+    // Both hands were shuffled away and redrawn: stale both position overlays.
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: player,
+        zone: Zone::Hand,
+    });
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: opponent,
+        zone: Zone::Hand,
+    });
 }
 
 pub fn may_effect(acting_player: usize, state: &State) -> Outcomes {
@@ -1247,7 +1290,7 @@ pub fn may_effect(acting_player: usize, state: &State) -> Outcomes {
     if num_pokemon == 0 {
         // No Pokemon in deck, just shuffle
         return Outcomes::single_fn(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -1409,7 +1452,7 @@ fn sightseer_effect(acting_player: usize, state: &State) -> Outcomes {
                     state.transfer_card_from_deck_to_hand(acting_player, card);
                 }
             }
-            state.decks[acting_player].shuffle(false, rng);
+            state.shuffle_deck(acting_player, rng);
         }));
     }
 
@@ -1469,7 +1512,7 @@ fn quick_grow_extract_effect(acting_player: usize, state: &State) -> Outcomes {
     if evolution_choices.is_empty() {
         // No valid evolution targets
         return Outcomes::single_fn(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -1481,7 +1524,7 @@ fn quick_grow_extract_effect(acting_player: usize, state: &State) -> Outcomes {
     for (in_play_idx, evolution_card) in evolution_choices {
         outcomes.push(Box::new(move |rng, state, action| {
             apply_evolve(action.actor, state, &evolution_card, in_play_idx, true);
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         }));
     }
 
