@@ -77,6 +77,9 @@ fn can_use_ability_by_mechanic(
         AbilityMechanic::MoveTypedEnergyFromBenchToActive { .. } => {
             can_use_vaporeon_wash_out(state)
         }
+        AbilityMechanic::MoveAllTypedEnergyFromBenchToActive { energy_type } => {
+            !card.ability_used && has_benched_typed_pokemon_with_typed_energy(state, *energy_type)
+        }
         AbilityMechanic::AttachEnergyFromZoneToActiveTypedPokemon { energy_type } => {
             can_use_attach_energy_from_zone_to_active_typed(state, card, *energy_type)
         }
@@ -116,9 +119,12 @@ fn can_use_ability_by_mechanic(
             !card.ability_used && !state.decks[(state.current_player + 1) % 2].cards.is_empty()
         }
         AbilityMechanic::CoinFlipToPreventDamage => false, // Passive ability
-        AbilityMechanic::CheckupDamageToOpponentActive { .. } => false, // Passive ability
-        AbilityMechanic::CheckupDamageToAllOpponentPokemon { .. } => false, // Passive ability
-        AbilityMechanic::BadDreamsEndOfTurn { .. } => false, // Passive ability
+        AbilityMechanic::CoinFlipToReduceDamage { .. } => false, // Passive ability
+        AbilityMechanic::CoinFlipToSurviveKnockOut => false, // Passive ability
+        AbilityMechanic::MoveAllTypedEnergyToBenchOnKnockout { .. } => false, // Passive (on_knockout)
+        AbilityMechanic::CheckupDamageToOpponentActive { .. } => false,       // Passive ability
+        AbilityMechanic::CheckupDamageToAllOpponentPokemon { .. } => false,   // Passive ability
+        AbilityMechanic::BadDreamsEndOfTurn { .. } => false,                  // Passive ability
         AbilityMechanic::CoinFlipSleepOpponentActive => !card.ability_used,
         AbilityMechanic::DiscardEnergyToIncreaseTypeDamage { discard_energy, .. } => {
             !card.ability_used && card.attached_energy.contains(discard_energy)
@@ -142,6 +148,7 @@ fn can_use_ability_by_mechanic(
         AbilityMechanic::ImmuneToStatusConditions => false, // Passive ability
         AbilityMechanic::SoothingWind { .. } => false,      // Passive ability
         AbilityMechanic::NoOpponentSupportInActive => false,
+        AbilityMechanic::NoOpponentStadiumInActive => false, // Passive ability
         AbilityMechanic::DoubleGrassEnergy => false,
         AbilityMechanic::PreventOpponentActiveEvolution => false,
         AbilityMechanic::ReduceRetreatCostOfYourActiveBasicFromBench { .. } => false,
@@ -315,6 +322,17 @@ fn can_use_vaporeon_wash_out(state: &State) -> bool {
         .any(|(_, pokemon)| {
             pokemon.card.get_type() == Some(EnergyType::Water)
                 && pokemon.attached_energy.contains(&EnergyType::Water)
+        })
+}
+
+/// True if the current player has a benched Pokémon of `energy_type` that has at least one
+/// `energy_type` Energy attached (a valid source for Lunala ex's Psychic Connect).
+fn has_benched_typed_pokemon_with_typed_energy(state: &State, energy_type: EnergyType) -> bool {
+    state
+        .enumerate_bench_pokemon(state.current_player)
+        .any(|(_, pokemon)| {
+            pokemon.card.get_type() == Some(energy_type)
+                && pokemon.attached_energy.contains(&energy_type)
         })
 }
 

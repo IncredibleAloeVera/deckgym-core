@@ -492,7 +492,10 @@ fn get_metal_core_barrier_reduction(
     let defending_pokemon = &state.in_play_pokemon[target_player][target_idx]
         .as_ref()
         .expect("Defending Pokemon should be there when checking Metal Core Barrier");
-    if has_tool(defending_pokemon, CardId::B2148MetalCoreBarrier) {
+    // Metal Core Barrier: "The [M] Pokémon this card is attached to takes -50 damage..."
+    if has_tool(defending_pokemon, CardId::B2148MetalCoreBarrier)
+        && defending_pokemon.get_energy_type() == Some(EnergyType::Metal)
+    {
         debug!("Metal Core Barrier: Reducing damage by 50");
         return 50;
     }
@@ -512,7 +515,10 @@ fn get_steel_apron_reduction(
     let defending_pokemon = &state.in_play_pokemon[target_player][target_idx]
         .as_ref()
         .expect("Defending Pokemon should be there when checking Steel Apron");
-    if has_tool(defending_pokemon, CardId::A4153SteelApron) {
+    // Steel Apron: "The [M] Pokémon this card is attached to takes -10 damage..."
+    if has_tool(defending_pokemon, CardId::A4153SteelApron)
+        && defending_pokemon.get_energy_type() == Some(EnergyType::Metal)
+    {
         debug!("Steel Apron: Reducing damage by 10");
         return 10;
     }
@@ -540,31 +546,35 @@ fn get_intimidating_fang_reduction(
     let defenders_active = state.in_play_pokemon[target_player][0]
         .as_ref()
         .expect("Defending Pokemon should be there when checking Intimidating Fang");
-    if matches!(
-        get_ability_mechanic(&defenders_active.card),
-        Some(AbilityMechanic::ReduceOpponentActiveDamage { amount: 20 })
-    ) {
-        debug!("Intimidating Fang: Reducing opponent's attack damage by 20");
-        return 20;
-    }
-    0
+    // Reads the unified effect list: Intimidating Fang (a passive ability) presents as a
+    // `ReduceOpponentActiveDamage` effect on the Active defender.
+    defenders_active
+        .get_effective_card_effects()
+        .iter()
+        .filter_map(|effect| match effect {
+            CardEffect::ReduceOpponentActiveDamage { amount } => Some(*amount),
+            _ => None,
+        })
+        .sum()
 }
 
 fn get_ability_damage_reduction(
     receiving_pokemon: &crate::models::PlayedCard,
     is_from_active_attack: bool,
 ) -> u32 {
-    if let Some(ability) = receiving_pokemon.card.get_ability() {
-        if let Some(AbilityMechanic::ReduceDamageFromAttacks { amount }) =
-            ability_mechanic_from_effect(&ability.effect)
-        {
-            if is_from_active_attack {
-                debug!("ReduceDamageFromAttacks: Reducing damage by {}", amount);
-                return *amount;
-            }
-        }
+    if !is_from_active_attack {
+        return 0;
     }
-    0
+    // Reads the unified effect list, so Cloyster's Shell Armor (a passive ability) is handled the
+    // same way as any stored effect.
+    receiving_pokemon
+        .get_effective_card_effects()
+        .iter()
+        .filter_map(|effect| match effect {
+            CardEffect::ReduceDamageFromAttacks { amount } => Some(*amount),
+            _ => None,
+        })
+        .sum()
 }
 
 fn get_ability_damage_increase(
@@ -787,6 +797,20 @@ enum WeaknessApplication {
 const DAMAGE_UNAFFECTED_BY_WEAKNESS_EFFECT: &str =
     "This attack's damage isn't affected by Weakness.";
 
+/// Sawk's Brick Break (and any card sharing this clause): the attack's damage ignores every effect
+/// on the opponent's Active Pokémon — ability-derived reductions/preventions, stored CardEffects,
+/// and damage-reducing Tools alike. See `attack_ignores_opponent_active_effects`.
+pub(crate) const DAMAGE_UNAFFECTED_BY_OPPONENT_ACTIVE_EFFECTS_EFFECT: &str =
+    "This attack's damage isn't affected by any effects on your opponent's Active Pokémon.";
+
+/// Whether an attack's effect text carries the "isn't affected by any effects on your opponent's
+/// Active Pokémon" clause. This is a substring match (not equality) so attacks that combine it with
+/// another clause — e.g. Mega Medicham ex's "Chakra Fist" (the [P]-Energy damage bonus plus this
+/// clause) — share Sawk's bypass behavior.
+pub(crate) fn attack_effect_ignores_opponent_active_effects(effect: Option<&str>) -> bool {
+    effect.is_some_and(|e| e.contains(DAMAGE_UNAFFECTED_BY_OPPONENT_ACTIVE_EFFECTS_EFFECT))
+}
+
 #[derive(Clone, Copy, Default)]
 pub(crate) struct DamageModifierContext<'a> {
     pub(crate) attack_name: Option<&'a str>,
@@ -797,6 +821,10 @@ fn attack_effect_ignores_weakness(context: DamageModifierContext<'_>) -> bool {
     // TODO: If more attack text needs to alter damage-modifier stages, replace this
     // effect-string check with a typed attack metadata/damage-modifier capability.
     context.attack_effect == Some(DAMAGE_UNAFFECTED_BY_WEAKNESS_EFFECT)
+}
+
+fn attack_ignores_opponent_active_effects(context: DamageModifierContext<'_>) -> bool {
+    attack_effect_ignores_opponent_active_effects(context.attack_effect)
 }
 
 fn get_weakness_application(
@@ -873,20 +901,38 @@ pub(crate) fn modify_damage(
         .as_ref()
         .expect("Receiving Pokemon should be there when modifying damage");
 
-    // Check for Safeguard ability (prevents all damage from opponent's Pokémon ex)
-    if matches!(
-        get_ability_mechanic(&receiving_pokemon.card),
-        Some(AbilityMechanic::PreventAllDamageFromEx)
-    ) && is_from_active_attack
+    // "Effects on the opponent's Active Pokémon" (Sawk's Brick Break) — when this attack ignores
+    // them, treat the receiver's effect list as empty for every defensive stage below, and also
+    // bypass its damage-reducing Tools. Only the opponent's Active is targeted by such attacks.
+    let skip_target_effects = attack_ignores_opponent_active_effects(context)
+        && is_from_active_attack
+        && target_idx == 0
+        && attacking_player != target_player;
+
+    // The unified "effects on this Pokémon" list: stored CardEffects plus any derived from the
+    // receiver's passive ability (Cloyster's Shell Armor, Oricorio's Safeguard, Meowth's Carefree
+    // Steps, ...). Damage code checks this single list instead of scanning the board for abilities.
+    let target_effects: Vec<CardEffect> = if skip_target_effects {
+        Vec::new()
+    } else {
+        receiving_pokemon.get_effective_card_effects()
+    };
+
+    // Safeguard (Oricorio): prevent all damage from the opponent's Pokémon ex.
+    if target_effects
+        .iter()
+        .any(|e| matches!(e, CardEffect::PreventAllDamageFromEx))
+        && is_from_active_attack
         && attacking_pokemon.card.is_ex()
     {
         debug!("Safeguard: Preventing all damage from opponent's Pokémon ex");
         return 0;
     }
-    if matches!(
-        get_ability_mechanic(&receiving_pokemon.card),
-        Some(AbilityMechanic::PreventDamageWhileBenched)
-    ) && is_from_active_attack
+    // Shell Shield (Wartortle): prevent all damage while benched.
+    if target_effects
+        .iter()
+        .any(|e| matches!(e, CardEffect::PreventDamageWhileBenched))
+        && is_from_active_attack
         && target_idx != 0
     {
         debug!("Shell Shield: Preventing all damage to benched Wartortle");
@@ -894,14 +940,16 @@ pub(crate) fn modify_damage(
     }
 
     // Protective Poncho: prevent all damage to benched Pokémon with this tool attached
-    if target_idx != 0 && has_tool(receiving_pokemon, CardId::B2147ProtectivePoncho) {
+    if target_idx != 0
+        && !skip_target_effects
+        && has_tool(receiving_pokemon, CardId::B2147ProtectivePoncho)
+    {
         debug!("Protective Poncho: Preventing all damage to benched Pokémon");
         return 0;
     }
 
     // Check for PreventAllDamageAndEffects (Shinx's Hide)
-    if receiving_pokemon
-        .get_active_effects()
+    if target_effects
         .iter()
         .any(|effect| matches!(effect, CardEffect::PreventAllDamageAndEffects))
     {
@@ -911,8 +959,7 @@ pub(crate) fn modify_damage(
 
     // Check for PreventDamageFromBasic (Carracosta's Blocking Shell)
     if attacking_pokemon.card.is_basic()
-        && receiving_pokemon
-            .get_active_effects()
+        && target_effects
             .iter()
             .any(|effect| matches!(effect, CardEffect::PreventDamageFromBasic))
     {
@@ -925,19 +972,38 @@ pub(crate) fn modify_damage(
     let target_is_ex = receiving_pokemon.card.is_ex();
     let attacker_is_eevee_evolution = attacking_pokemon.evolved_from("Eevee");
 
-    let intimidating_fang_reduction =
-        get_intimidating_fang_reduction(state, attacking_ref, target_ref, is_from_active_attack);
-    let heavy_helmet_reduction = get_heavy_helmet_reduction(state, (target_player, target_idx));
-    let metal_core_barrier_reduction =
-        get_metal_core_barrier_reduction(state, (target_player, target_idx), is_from_active_attack);
-    let steel_apron_reduction = get_steel_apron_reduction(
-        state,
-        attacking_player,
-        (target_player, target_idx),
-        is_from_active_attack,
-    );
-    let ability_damage_reduction =
-        get_ability_damage_reduction(receiving_pokemon, is_from_active_attack);
+    // Every damage-reducing effect/tool below sits on the *target*, so an attack that ignores
+    // effects on the opponent's Active Pokémon (Sawk) zeroes all of them.
+    let intimidating_fang_reduction = if skip_target_effects {
+        0
+    } else {
+        get_intimidating_fang_reduction(state, attacking_ref, target_ref, is_from_active_attack)
+    };
+    let heavy_helmet_reduction = if skip_target_effects {
+        0
+    } else {
+        get_heavy_helmet_reduction(state, (target_player, target_idx))
+    };
+    let metal_core_barrier_reduction = if skip_target_effects {
+        0
+    } else {
+        get_metal_core_barrier_reduction(state, (target_player, target_idx), is_from_active_attack)
+    };
+    let steel_apron_reduction = if skip_target_effects {
+        0
+    } else {
+        get_steel_apron_reduction(
+            state,
+            attacking_player,
+            (target_player, target_idx),
+            is_from_active_attack,
+        )
+    };
+    let ability_damage_reduction = if skip_target_effects {
+        0
+    } else {
+        get_ability_damage_reduction(receiving_pokemon, is_from_active_attack)
+    };
     let ability_damage_increase = get_ability_damage_increase(
         state,
         attacking_player,
@@ -956,17 +1022,29 @@ pub(crate) fn modify_damage(
         is_active_to_active,
         context.attack_name,
     );
-    let reduced_card_effect_modifiers =
-        get_reduced_card_effect_modifiers(state, is_active_to_active, target_player);
-    let increased_vulnerability_modifiers =
-        get_increased_vulnerability_modifiers(state, is_active_to_active, target_player);
-    let reduced_turn_effect_modifiers = get_turn_effect_damage_reduction(
-        state,
-        target_player,
-        receiving_pokemon,
-        attacking_player,
-        is_from_active_attack,
-    );
+    // Reductions and vulnerability are both "effects on the target"; ignore *any* of them (whether
+    // they help or hurt the attacker) when the attack bypasses opponent-active effects.
+    let reduced_card_effect_modifiers = if skip_target_effects {
+        0
+    } else {
+        get_reduced_card_effect_modifiers(state, is_active_to_active, target_player)
+    };
+    let increased_vulnerability_modifiers = if skip_target_effects {
+        0
+    } else {
+        get_increased_vulnerability_modifiers(state, is_active_to_active, target_player)
+    };
+    let reduced_turn_effect_modifiers = if skip_target_effects {
+        0
+    } else {
+        get_turn_effect_damage_reduction(
+            state,
+            target_player,
+            receiving_pokemon,
+            attacking_player,
+            is_from_active_attack,
+        )
+    };
     let weakness_application = get_weakness_application(
         state,
         is_active_to_active,
@@ -1048,8 +1126,7 @@ pub(crate) fn modify_damage(
     };
 
     // Threshold-based prevention (e.g. Cascoon's Harden): prevent all damage if it is low enough.
-    let prevented_by_threshold = receiving_pokemon
-        .get_active_effects()
+    let prevented_by_threshold = target_effects
         .iter()
         .any(|effect| matches!(effect, CardEffect::PreventDamageIfLessOrEqual { threshold } if final_damage <= *threshold));
     if prevented_by_threshold {
@@ -1240,79 +1317,192 @@ pub(crate) fn on_knockout(
     attacking_ref: (usize, usize),
     is_from_active_attack: bool,
 ) {
-    // Handle Lucky Egg: draw until hand has 5 when KO'd by opponent's active attack
+    // A genuine opponent KO: an active attack that knocked out a Pokémon belonging to a
+    // different player than the attacker (not a self/recoil KO).
     let is_opponent_attack = is_from_active_attack && attacking_ref.0 != knocked_out_player;
+    apply_lucky_egg(
+        state,
+        knocked_out_player,
+        knocked_out_idx,
+        is_opponent_attack,
+    );
+    apply_electrical_cord(
+        state,
+        knocked_out_player,
+        knocked_out_idx,
+        is_from_active_attack,
+    );
+    apply_offload_pass(
+        state,
+        knocked_out_player,
+        knocked_out_idx,
+        is_opponent_attack,
+    );
+}
+
+/// Lucky Egg: when the holder is Knocked Out by an opponent's attack, draw until hand has 5.
+/// Position-agnostic — triggers whether the holder was KO'd in the Active Spot or on the Bench.
+fn apply_lucky_egg(
+    state: &mut State,
+    knocked_out_player: usize,
+    knocked_out_idx: usize,
+    is_opponent_attack: bool,
+) {
     let has_lucky_egg = {
         let knocked_out_pokemon = state.in_play_pokemon[knocked_out_player][knocked_out_idx]
             .as_ref()
             .expect("Pokemon should be there if knocked out");
         has_tool(knocked_out_pokemon, CardId::B3148LuckyEgg)
     };
-    if has_lucky_egg && is_opponent_attack {
-        debug!("Lucky Egg: Drawing cards until hand has 5");
-        let draws_needed = 5usize.saturating_sub(state.hands[knocked_out_player].len());
-        for _ in 0..draws_needed {
-            if state.decks[knocked_out_player].cards.is_empty() {
-                break;
-            }
-            state.maybe_draw_card(knocked_out_player);
-        }
+    if !has_lucky_egg || !is_opponent_attack {
+        return;
     }
 
-    let knocked_out_pokemon = state.in_play_pokemon[knocked_out_player][knocked_out_idx]
-        .as_ref()
-        .expect("Pokemon should be there if knocked out");
-
-    // Handle Electrical Cord
-    if has_tool(knocked_out_pokemon, CardId::A3a065ElectricalCord) {
-        // Only triggers if knocked out in active spot from an active attack
-        if knocked_out_idx != 0 || !is_from_active_attack {
-            return;
+    debug!("Lucky Egg: Drawing cards until hand has 5");
+    let draws_needed = 5usize.saturating_sub(state.hands[knocked_out_player].len());
+    for _ in 0..draws_needed {
+        if state.decks[knocked_out_player].cards.is_empty() {
+            break;
         }
+        state.maybe_draw_card(knocked_out_player);
+    }
+}
 
-        // Collect up to 2 Lightning energies from the knocked out Pokemon
-        let mut lightning_energies = vec![];
-        let knocked_out_pokemon_mut = state.in_play_pokemon[knocked_out_player][knocked_out_idx]
+/// Electrical Cord: "If the [L] Pokémon this card is attached to is in the Active Spot and is
+/// Knocked Out by damage from an attack..." move up to 2 of its Lightning Energy to Benched
+/// Pokémon (1 each to the two lowest-index Benched Pokémon). Note this uses the raw
+/// `is_from_active_attack` flag, so it fires even on a self-KO from one's own active attack.
+///
+/// The early returns below only exit this helper (not `on_knockout`), letting control fall
+/// through to `apply_offload_pass`. That is behavior-preserving because every return path here
+/// is gated on the holder being a Lightning Pokémon, and no Lightning Pokémon carries the
+/// `MoveAllTypedEnergyToBenchOnKnockout` ability that Offload Pass requires — so Offload Pass
+/// would be a no-op in these cases regardless.
+fn apply_electrical_cord(
+    state: &mut State,
+    knocked_out_player: usize,
+    knocked_out_idx: usize,
+    is_from_active_attack: bool,
+) {
+    let has_electrical_cord = {
+        let knocked_out_pokemon = state.in_play_pokemon[knocked_out_player][knocked_out_idx]
+            .as_ref()
+            .expect("Pokemon should be there if knocked out");
+        has_tool(knocked_out_pokemon, CardId::A3a065ElectricalCord)
+            && knocked_out_pokemon.get_energy_type() == Some(EnergyType::Lightning)
+    };
+    if !has_electrical_cord {
+        return;
+    }
+    // Only triggers if knocked out in active spot from an active attack
+    if knocked_out_idx != 0 || !is_from_active_attack {
+        return;
+    }
+
+    // Collect up to 2 Lightning energies from the knocked out Pokemon
+    let mut lightning_energies = vec![];
+    let knocked_out_pokemon_mut = state.in_play_pokemon[knocked_out_player][knocked_out_idx]
+        .as_mut()
+        .expect("Pokemon should be there if knocked out");
+    for _ in 0..2 {
+        if let Some(pos) = knocked_out_pokemon_mut
+            .attached_energy
+            .iter()
+            .position(|e| *e == EnergyType::Lightning)
+        {
+            // Remove from pokemon so it doesn't end up in discard pile
+            lightning_energies.push(knocked_out_pokemon_mut.attached_energy.swap_remove(pos));
+        }
+    }
+    if lightning_energies.is_empty() {
+        return;
+    }
+
+    // Distribute energies to benched Pokemon (1 each to up to 2 Pokemon)
+    debug!(
+        "Electrical Cord: Moving {} Lightning Energy from knocked out Pokemon",
+        lightning_energies.len()
+    );
+    // Collect just the indices to avoid borrow checker issues
+    let bench_indices: Vec<_> = state
+        .enumerate_bench_pokemon(knocked_out_player)
+        .map(|(idx, _)| idx)
+        .collect();
+    for (i, energy) in lightning_energies.into_iter().enumerate() {
+        if i < bench_indices.len() {
+            let bench_idx = bench_indices[i];
+            if let Some(pokemon) = state.in_play_pokemon[knocked_out_player][bench_idx].as_mut() {
+                pokemon.attached_energy.push(energy);
+                debug!(
+                    "Electrical Cord: Attached Lightning Energy to benched Pokemon at position {}",
+                    bench_idx
+                );
+            }
+        }
+    }
+}
+
+/// Passimian ex's Offload Pass: if this Pokémon is Knocked Out in the Active Spot by an
+/// opponent's attack, move all of its typed Energy to 1 of your Benched Pokémon (your choice).
+fn apply_offload_pass(
+    state: &mut State,
+    knocked_out_player: usize,
+    knocked_out_idx: usize,
+    is_opponent_attack: bool,
+) {
+    if !is_opponent_attack || knocked_out_idx != 0 {
+        return;
+    }
+
+    let offload_energy = state.in_play_pokemon[knocked_out_player][knocked_out_idx]
+        .as_ref()
+        .and_then(|pokemon| match get_ability_mechanic(&pokemon.card) {
+            Some(AbilityMechanic::MoveAllTypedEnergyToBenchOnKnockout { energy_type }) => {
+                Some(*energy_type)
+            }
+            _ => None,
+        });
+    let Some(energy_type) = offload_energy else {
+        return;
+    };
+
+    let bench_indices: Vec<usize> = state
+        .enumerate_bench_pokemon(knocked_out_player)
+        .map(|(idx, _)| idx)
+        .collect();
+    // With no Benched Pokémon there is nowhere to move the Energy (and the game is about to
+    // end), so leave it to be discarded with this Pokémon.
+    if bench_indices.is_empty() {
+        return;
+    }
+
+    // Remove the Energy from the KO'd Pokémon first so it isn't sent to the discard
+    // pile; the chosen Attach below re-attaches it to a Benched Pokémon.
+    let moved = {
+        let ko_pokemon = state.in_play_pokemon[knocked_out_player][knocked_out_idx]
             .as_mut()
             .expect("Pokemon should be there if knocked out");
-        for _ in 0..2 {
-            if let Some(pos) = knocked_out_pokemon_mut
-                .attached_energy
-                .iter()
-                .position(|e| *e == EnergyType::Lightning)
-            {
-                // Remove from pokemon so it doesn't end up in discard pile
-                lightning_energies.push(knocked_out_pokemon_mut.attached_energy.swap_remove(pos));
-            }
-        }
-        if lightning_energies.is_empty() {
-            return;
-        }
-
-        // Distribute energies to benched Pokemon (1 each to up to 2 Pokemon)
-        debug!(
-            "Electrical Cord: Moving {} Lightning Energy from knocked out Pokemon",
-            lightning_energies.len()
-        );
-        // Collect just the indices to avoid borrow checker issues
-        let bench_indices: Vec<_> = state
-            .enumerate_bench_pokemon(knocked_out_player)
-            .map(|(idx, _)| idx)
-            .collect();
-        for (i, energy) in lightning_energies.into_iter().enumerate() {
-            if i < bench_indices.len() {
-                let bench_idx = bench_indices[i];
-                if let Some(pokemon) = state.in_play_pokemon[knocked_out_player][bench_idx].as_mut()
-                {
-                    pokemon.attached_energy.push(energy);
-                    debug!(
-                        "Electrical Cord: Attached Lightning Energy to benched Pokemon at position {}",
-                        bench_idx
-                    );
-                }
-            }
-        }
+        let before = ko_pokemon.attached_energy.len();
+        ko_pokemon.attached_energy.retain(|&e| e != energy_type);
+        (before - ko_pokemon.attached_energy.len()) as u32
+    };
+    if moved == 0 {
+        return;
     }
+
+    // One choice per Benched Pokémon; all of the Energy goes to the chosen one.
+    // Pushed here (before promotion, which is inserted at the bottom of the stack)
+    // so it resolves while the Bench is still intact.
+    let choices = bench_indices
+        .into_iter()
+        .map(|idx| SimpleAction::Attach {
+            attachments: vec![(moved, energy_type, idx)],
+            is_turn_energy: false,
+        })
+        .collect::<Vec<_>>();
+    state
+        .move_generation_stack
+        .push((knocked_out_player, choices));
 }
 
 pub(crate) fn on_attack_knockout(

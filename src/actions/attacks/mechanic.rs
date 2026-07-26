@@ -136,6 +136,14 @@ pub enum Mechanic {
         minimum_count: usize,
         extra_damage: u32,
     },
+    /// Medicham's "Psykick" / Mega Medicham ex's "Chakra Fist": extra damage if the attacking
+    /// Pokémon has any Energy of `energy_type` attached. (Chakra Fist additionally shares Sawk's
+    /// "isn't affected by any effects on your opponent's Active Pokémon" clause, which is detected
+    /// separately from the attack's effect text in `hooks::modify_damage`.)
+    ExtraDamageIfSelfHasTypeEnergy {
+        energy_type: EnergyType,
+        extra_damage: u32,
+    },
     ExtraDamageIfStadiumInPlay {
         extra_damage: u32,
     },
@@ -161,7 +169,11 @@ pub enum Mechanic {
         count: usize,
     },
     // Fairly unique mechanics
-    ManaphyOceanicGift,
+    /// Manaphy's Oceanic Gift / Carbink's Glittering Gift: choose 2 of your Benched Pokémon and
+    /// attach an Energy of the given type to each.
+    AttachEnergyFromZoneToTwoBenched {
+        energy_type: EnergyType,
+    },
     PalkiaExDimensionalStorm,
     MegaKangaskhanExDoublePunchingFamily,
     MoltresExInfernoDance,
@@ -183,6 +195,13 @@ pub enum Mechanic {
     ChargeBench {
         energies: Vec<EnergyType>,
         target_benched_type: Option<EnergyType>,
+    },
+    /// Ho-Oh ex's Phoenix Turbo: deal `fixed_damage`, then attach each of these Energies to your
+    /// Benched Basic Pokémon "in any way you like" (each Energy is placed independently, so all on
+    /// one Pokémon is allowed). Fossils count as Basic. If there is no Benched Basic Pokémon the
+    /// Energy simply fizzles; the damage is still dealt.
+    AttachEnergiesAnyWayToBenchedBasic {
+        energies: Vec<EnergyType>,
     },
     VaporeonHyperWhirlpool,
     ConditionalBenchDamage {
@@ -224,6 +243,11 @@ pub enum Mechanic {
         extra_damage: u32,
     },
     DamageUnaffectedByWeakness,
+    /// Sawk's Brick Break: fixed damage whose value "isn't affected by any effects on your
+    /// opponent's Active Pokémon." The bypass itself is handled in `hooks::modify_damage` and the
+    /// defender-prevention path via the attack's effect text; this variant just routes the attack
+    /// as ordinary active damage (like `DamageUnaffectedByWeakness`).
+    DamageUnaffectedByOpponentActiveEffects,
     DelayedSpotDamage {
         amount: u32,
     },
@@ -349,6 +373,11 @@ pub enum Mechanic {
         include_own_bench: bool,
     },
     FlipUntilTailsDamage {
+        damage_per_heads: u32,
+    },
+    /// Like `FlipUntilTailsDamage`, but the attack's `fixed_damage` is dealt as a base and each
+    /// heads adds `damage_per_heads` on top (e.g. "does 30 more damage for each heads").
+    FlipUntilTailsBonusDamage {
         damage_per_heads: u32,
     },
     DirectDamageIfDamaged {

@@ -1,8 +1,9 @@
 use crate::{
-    actions::SimpleAction,
+    actions::{abilities::AbilityMechanic, get_ability_mechanic, SimpleAction},
     card_ids::CardId,
     card_logic::{
         can_rare_candy_evolve, diantha_targets, ilima_targets, quick_grow_extract_candidates,
+        wallace_candidates,
     },
     effects::TurnEffect,
     hooks::{
@@ -240,6 +241,11 @@ pub fn trainer_move_generation_implementation(
         CardId::B3a073ProfessorTuro | CardId::B3a088ProfessorTuro => {
             can_play_professor_turo(state, trainer_card)
         }
+        CardId::B3b066Elesa | CardId::B3b083Elesa => can_play_trainer(state, trainer_card),
+        CardId::B3b067PuppyLovingGirl | CardId::B3b084PuppyLovingGirl => {
+            can_play_trainer(state, trainer_card)
+        }
+        CardId::B3b068Wallace | CardId::B3b085Wallace => can_play_wallace(state, trainer_card),
         _ => None,
     }
 }
@@ -285,6 +291,23 @@ fn can_play_stadium(state: &State, trainer_card: &TrainerCard) -> Option<Vec<Sim
             return cannot_play_trainer();
         }
     }
+
+    // Snorlax's Massive Body: as long as it is in the opponent's Active Spot, this player
+    // can't play any Stadium cards from their hand.
+    let opponent = (state.current_player + 1) % 2;
+    let blocked_by_massive_body =
+        state.in_play_pokemon[opponent][0]
+            .as_ref()
+            .is_some_and(|opponent_active| {
+                matches!(
+                    get_ability_mechanic(&opponent_active.card),
+                    Some(AbilityMechanic::NoOpponentStadiumInActive)
+                )
+            });
+    if blocked_by_massive_body {
+        return cannot_play_trainer();
+    }
+
     can_play_trainer(state, trainer_card)
 }
 
@@ -811,6 +834,17 @@ fn can_play_quick_grow_extract(
 
     // Check if there are any valid evolution candidates
     if quick_grow_extract_candidates(state, state.current_player).is_empty() {
+        cannot_play_trainer()
+    } else {
+        can_play_trainer(state, trainer_card)
+    }
+}
+
+/// Check if Wallace can be played
+/// Requires at least 1 Water pokemon with 50 HP or less, that wasn't played this turn,
+/// with a valid Water evolution available in deck
+fn can_play_wallace(state: &State, trainer_card: &TrainerCard) -> Option<Vec<SimpleAction>> {
+    if wallace_candidates(state, state.current_player).is_empty() {
         cannot_play_trainer()
     } else {
         can_play_trainer(state, trainer_card)

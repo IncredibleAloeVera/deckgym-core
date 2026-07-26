@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::sync::LazyLock;
 
 use crate::actions::abilities::AbilityMechanic;
+use crate::effects::CardEffect;
 use crate::models::{Card, EnergyType};
 
 /// Map from ability effect text to its AbilityMechanic.
@@ -38,6 +39,10 @@ pub static EFFECT_ABILITY_MECHANIC_MAP: LazyLock<HashMap<&'static str, AbilityMe
         map.insert(
             "As long as this Pokémon is in the Active Spot, your opponent can't use any Supporter cards from their hand.",
             AbilityMechanic::NoOpponentSupportInActive,
+        );
+        map.insert(
+            "As long as this Pokémon is in the Active Spot, your opponent can't play any Stadium cards from their hand.",
+            AbilityMechanic::NoOpponentStadiumInActive,
         );
         // map.insert("As long as this Pokémon is on your Bench, attacks used by your Pokémon that evolve from Poliwhirl do +40 damage to your opponent's Active Pokémon.", todo_implementation);
         map.insert(
@@ -119,7 +124,14 @@ pub static EFFECT_ABILITY_MECHANIC_MAP: LazyLock<HashMap<&'static str, AbilityMe
             "If any damage is done to this Pokémon by attacks, flip a coin. If heads, prevent that damage.",
             AbilityMechanic::CoinFlipToPreventDamage,
         );
-        // map.insert("If any damage is done to this Pokémon by attacks, flip a coin. If heads, this Pokémon takes -100 damage from that attack.", todo_implementation);
+        map.insert(
+            "If any damage is done to this Pokémon by attacks, flip a coin. If heads, this Pokémon takes -100 damage from that attack.",
+            AbilityMechanic::CoinFlipToReduceDamage { amount: 100 },
+        );
+        map.insert(
+            "If any damage is done to this Pokémon by attacks, flip a coin. If heads, this Pokémon takes -80 damage from that attack.",
+            AbilityMechanic::CoinFlipToReduceDamage { amount: 80 },
+        );
         // map.insert("If this Pokémon has a Pokémon Tool attached, attacks used by this Pokémon cost 1 less [G] Energy.", todo_implementation);
         map.insert(
             "If this Pokémon has any Energy attached, it has no Retreat Cost.",
@@ -129,7 +141,12 @@ pub static EFFECT_ABILITY_MECHANIC_MAP: LazyLock<HashMap<&'static str, AbilityMe
         // map.insert("If this Pokémon is in the Active Spot and is Knocked Out by damage from an attack from your opponent's Pokémon, do 10 damage to each of your opponent's Pokémon.", todo_implementation);
         // map.insert("If this Pokémon is in the Active Spot and is Knocked Out by damage from an attack from your opponent's Pokémon, do 50 damage to the Attacking Pokémon.", todo_implementation);
         // map.insert("If this Pokémon is in the Active Spot and is Knocked Out by damage from an attack from your opponent's Pokémon, flip a coin. If heads, the Attacking Pokémon is Knocked Out.", todo_implementation);
-        // map.insert("If this Pokémon is in the Active Spot and is Knocked Out by damage from an attack from your opponent's Pokémon, move all [F] Energy from this Pokémon to 1 of your Benched Pokémon.", todo_implementation);
+        map.insert(
+            "If this Pokémon is in the Active Spot and is Knocked Out by damage from an attack from your opponent's Pokémon, move all [F] Energy from this Pokémon to 1 of your Benched Pokémon.",
+            AbilityMechanic::MoveAllTypedEnergyToBenchOnKnockout {
+                energy_type: EnergyType::Fighting,
+            },
+        );
         map.insert(
             "If this Pokémon is in the Active Spot and is damaged by an attack from your opponent's Pokémon, do 20 damage to the Attacking Pokémon.",
             AbilityMechanic::CounterattackDamage { amount: 20 },
@@ -143,7 +160,10 @@ pub static EFFECT_ABILITY_MECHANIC_MAP: LazyLock<HashMap<&'static str, AbilityMe
             "If this Pokémon is in the Active Spot, once during your turn, you may switch in 1 of your opponent's Benched Basic Pokémon to the Active Spot.",
             AbilityMechanic::VictreebelFragranceTrap,
         );
-        // map.insert("If this Pokémon would be Knocked Out by damage from an attack, flip a coin. If heads, this Pokémon is not Knocked Out, and its remaining HP becomes 10.", todo_implementation);
+        map.insert(
+            "If this Pokémon would be Knocked Out by damage from an attack, flip a coin. If heads, this Pokémon is not Knocked Out, and its remaining HP becomes 10.",
+            AbilityMechanic::CoinFlipToSurviveKnockOut,
+        );
         // map.insert("If you have Arceus or Arceus ex in play, attacks used by this Pokémon cost 1 less [C] Energy.", todo_implementation);
         map.insert(
             "If you have Arceus or Arceus ex in play, attacks used by this Pokémon do +30 damage to your opponent's Active Pokémon.",
@@ -251,7 +271,12 @@ pub static EFFECT_ABILITY_MECHANIC_MAP: LazyLock<HashMap<&'static str, AbilityMe
             AbilityMechanic::BurnOpponentActive,
         );
         // map.insert("Once during your turn, you may move all [D] Energy from each of your Pokémon to this Pokémon.", todo_implementation);
-        // map.insert("Once during your turn, you may move all [P] Energy from 1 of your Benched [P] Pokémon to your Active Pokémon.", todo_implementation);
+        map.insert(
+            "Once during your turn, you may move all [P] Energy from 1 of your Benched [P] Pokémon to your Active Pokémon.",
+            AbilityMechanic::MoveAllTypedEnergyFromBenchToActive {
+                energy_type: EnergyType::Psychic,
+            },
+        );
         // map.insert("Once during your turn, you may put a random Pokémon Tool card from your deck into your hand.", todo_implementation);
         map.insert(
             "Once during your turn, you may put a random Pokémon from your deck into your hand.",
@@ -333,7 +358,10 @@ pub static EFFECT_ABILITY_MECHANIC_MAP: LazyLock<HashMap<&'static str, AbilityMe
                 amount: 30,
             },
         );
-        // map.insert("This Pokémon takes -10 damage from attacks.", todo_implementation);
+        map.insert(
+            "This Pokémon takes -10 damage from attacks.",
+            AbilityMechanic::ReduceDamageFromAttacks { amount: 10 },
+        );
         // map.insert("This Pokémon takes -20 damage from attacks from [R] or [W] Pokémon.", todo_implementation);
         map.insert(
             "This Pokémon takes -20 damage from attacks.",
@@ -505,4 +533,30 @@ pub fn get_ability_mechanic(card: &Card) -> Option<&'static AbilityMechanic> {
 
 pub fn has_ability_mechanic(card: &Card, mechanic: &AbilityMechanic) -> bool {
     get_ability_mechanic(card) == Some(mechanic)
+}
+
+/// Translate a *self-scoped defensive* passive ability mechanic into the `CardEffect` it presents
+/// as while the holder is in play. This is the core of the "abilities-as-effects" model: rather
+/// than scanning the board for these abilities, damage code reads a Pokémon's effect list (see
+/// `PlayedCard::get_effective_card_effects`), which merges stored effects with the effects derived
+/// here. Returns `None` for mechanics that are not effects-on-this-Pokémon (activated abilities,
+/// opponent-restrictions like Gengar/Snorlax, auras like Serperior, lifecycle triggers, etc.).
+pub fn card_effect_from_ability_mechanic(mechanic: &AbilityMechanic) -> Option<CardEffect> {
+    match mechanic {
+        AbilityMechanic::ReduceDamageFromAttacks { amount } => {
+            Some(CardEffect::ReduceDamageFromAttacks { amount: *amount })
+        }
+        AbilityMechanic::ReduceOpponentActiveDamage { amount } => {
+            Some(CardEffect::ReduceOpponentActiveDamage { amount: *amount })
+        }
+        AbilityMechanic::PreventAllDamageFromEx => Some(CardEffect::PreventAllDamageFromEx),
+        AbilityMechanic::PreventDamageWhileBenched => Some(CardEffect::PreventDamageWhileBenched),
+        AbilityMechanic::CoinFlipToPreventDamage => {
+            Some(CardEffect::CoinFlipToPreventIncomingDamage)
+        }
+        AbilityMechanic::CoinFlipToReduceDamage { amount } => {
+            Some(CardEffect::CoinFlipToReduceIncomingDamage { amount: *amount })
+        }
+        _ => None,
+    }
 }

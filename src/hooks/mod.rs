@@ -5,6 +5,7 @@ mod core;
 mod counterattack;
 mod retreat;
 
+pub(crate) use core::attack_effect_ignores_opponent_active_effects;
 pub(crate) use core::can_evolve_into;
 pub(crate) use core::can_play_item;
 pub(crate) use core::can_play_support;

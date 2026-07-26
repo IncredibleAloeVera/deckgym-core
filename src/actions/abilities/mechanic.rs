@@ -30,6 +30,13 @@ pub enum AbilityMechanic {
     MoveTypedEnergyFromBenchToActive {
         energy_type: EnergyType,
     },
+    /// Lunala ex's Psychic Connect: "Once during your turn, you may move all [energy_type] Energy
+    /// from 1 of your Benched [energy_type] Pokémon to your Active Pokémon." Unlike
+    /// `MoveTypedEnergyFromBenchToActive`, all of the chosen Pokémon's matching Energy moves at
+    /// once, it is once per turn, and the Active Pokémon may be any type.
+    MoveAllTypedEnergyFromBenchToActive {
+        energy_type: EnergyType,
+    },
     AttachEnergyFromZoneToActiveTypedPokemon {
         energy_type: EnergyType,
     },
@@ -87,6 +94,22 @@ pub enum AbilityMechanic {
     InfiltratingInspection,
     DiscardTopCardOpponentDeck,
     CoinFlipToPreventDamage,
+    /// Bastiodon's Guarded Grill / Hisuian Goodra's Securely Sheltered: if any damage is done to
+    /// this Pokémon by attacks, flip a coin. If heads, this Pokémon takes `amount` less damage
+    /// from that attack. Passive; handled like `CoinFlipToPreventDamage` via the
+    /// abilities-as-effects pathway.
+    CoinFlipToReduceDamage {
+        amount: u32,
+    },
+    /// Ursaluna's Guts: if this Pokémon would be Knocked Out by damage from an attack, flip a
+    /// coin. If heads, it is not Knocked Out and its remaining HP becomes 10.
+    CoinFlipToSurviveKnockOut,
+    /// Passimian ex's Offload Pass: if this Pokémon is in the Active Spot and is Knocked Out by
+    /// damage from an opponent's attack, move all of its `energy_type` Energy to 1 of your Benched
+    /// Pokémon (your choice). Passive; handled in the `on_knockout` hook.
+    MoveAllTypedEnergyToBenchOnKnockout {
+        energy_type: EnergyType,
+    },
     CheckupDamageToOpponentActive {
         amount: u32,
     },
@@ -129,6 +152,9 @@ pub enum AbilityMechanic {
         energy_type: Option<EnergyType>,
     },
     NoOpponentSupportInActive,
+    /// Snorlax's Massive Body: as long as this Pokémon is in the Active Spot, the opponent
+    /// can't play any Stadium cards from their hand.
+    NoOpponentStadiumInActive,
     DoubleGrassEnergy,
     PreventOpponentActiveEvolution,
     ReduceRetreatCostOfYourActiveBasicFromBench {

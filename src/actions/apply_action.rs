@@ -8,22 +8,26 @@ use crate::{
     actions::{
         abilities::AbilityMechanic,
         apply_abilities_action::forecast_ability,
-        apply_action_helpers::{apply_activate, wrap_with_common_logic, Mutation},
-        shared_mutations::{pokemon_search_outcomes, pokemon_search_outcomes_by_type_for_player},
+        apply_action_helpers::{apply_activate, wrap_with_common_logic},
     },
     effects::TurnEffect,
-    hooks::{get_retreat_cost, on_bench_from_hand, on_evolve, to_playable_card},
+    hooks::{
+        get_retreat_cost, on_bench_from_hand, on_evolve, to_playable_card, DamageModifierContext,
+    },
     models::{Card, EnergyType},
-    stadiums::{is_area_zero_active, is_fragrant_forest_active, is_mesagoza_active},
     state::State,
     tools,
 };
 
 use super::{
-    apply_action_helpers::{forecast_end_turn, handle_damage, Mutations},
+    apply_action_helpers::{
+        forecast_end_turn, guts_would_flip, handle_damage, handle_damage_only, handle_knockouts,
+        Mutations,
+    },
     apply_attack_action::forecast_attack,
+    apply_stadium_action::{self, forecast_use_stadium},
     apply_trainer_action::forecast_trainer_action,
-    outcomes::{CoinSeq, Outcomes},
+    outcomes::Outcomes,
     Action, SimpleAction,
 };
 
@@ -54,7 +58,6 @@ pub fn forecast_action(state: &State, action: &Action) -> Outcomes {
         | SimpleAction::Evolve { .. }
         | SimpleAction::Activate { .. }
         | SimpleAction::Retreat(_)
-        | SimpleAction::ApplyDamage { .. }
         | SimpleAction::ScheduleDelayedSpotDamage { .. }
         | SimpleAction::Heal { .. }
         | SimpleAction::HealAndDiscardEnergy { .. }
@@ -70,6 +73,11 @@ pub fn forecast_action(state: &State, action: &Action) -> Outcomes {
         | SimpleAction::ApplyStatusToOpponentActive { .. }
         | SimpleAction::Noop => forecast_deterministic_action(),
         SimpleAction::UseAbility { in_play_idx } => forecast_ability(state, action, *in_play_idx),
+        SimpleAction::ApplyDamage {
+            attacking_ref,
+            targets,
+            is_from_active_attack,
+        } => forecast_apply_damage(state, *attacking_ref, targets, *is_from_active_attack),
         SimpleAction::Attack(attack) => {
             forecast_attack(action.actor, state, attack, action.is_stack)
         }
@@ -84,6 +92,13 @@ pub fn forecast_action(state: &State, action: &Action) -> Outcomes {
         }
         SimpleAction::ShuffleOwnCardsIntoDeck { cards } => {
             forecast_shuffle_own_cards_into_deck(action.actor, cards)
+        }
+        SimpleAction::SwitchHandCardForRandomTool { hand_card } => {
+            apply_stadium_action::forecast_switch_hand_card_for_random_tool(
+                state,
+                action.actor,
+                hand_card,
+            )
         }
         SimpleAction::ShuffleOpponentSupporter { supporter_card } => {
             forecast_shuffle_opponent_supporter(action.actor, supporter_card)
@@ -149,6 +164,81 @@ fn forecast_deterministic_action() -> Outcomes {
     })
 }
 
+/// ApplyDamage (damage queued through the move-generation stack, e.g. Mega Kangaskhan's second
+/// punch or Raikou ex's spot damage) is deterministic unless a target has the Guts ability and
+/// would be knocked out: each such target flips its own survival coin, independently of any
+/// Guts flip already resolved earlier in the same attack.
+fn forecast_apply_damage(
+    state: &State,
+    attacking_ref: (usize, usize),
+    targets: &[(u32, usize, usize)],
+    is_from_active_attack: bool,
+) -> Outcomes {
+    // Sum raw damage per target (mirroring handle_damage_only) to find the Guts coin flips.
+    let mut damage_map: HashMap<(usize, usize), u32> = HashMap::new();
+    for (damage, player, idx) in targets {
+        *damage_map.entry((*player, *idx)).or_insert(0) += damage;
+    }
+    let flipping: Vec<(usize, usize)> = damage_map
+        .into_iter()
+        .filter(|(target, raw_total)| {
+            guts_would_flip(
+                state,
+                attacking_ref,
+                *raw_total,
+                *target,
+                is_from_active_attack,
+                DamageModifierContext {
+                    attack_name: None,
+                    attack_effect: None,
+                },
+            )
+        })
+        .map(|(target, _)| target)
+        .collect();
+
+    if flipping.is_empty() {
+        let targets = targets.to_vec();
+        return Outcomes::single_fn(move |_, state, _| {
+            handle_damage(state, attacking_ref, &targets, is_from_active_attack, None);
+        });
+    }
+
+    // One branch per heads/tails combination; on heads the damage still applies (so on-damage
+    // triggers fire) and the survivor's remaining HP is set to 10 before knockouts resolve.
+    let combos = 1usize << flipping.len();
+    let probabilities = vec![1.0 / combos as f64; combos];
+    let mut mutations: Mutations = vec![];
+    for mask in 0..combos {
+        let survivors: Vec<(usize, usize)> = flipping
+            .iter()
+            .enumerate()
+            .filter(|(bit, _)| (mask >> bit) & 1 == 1)
+            .map(|(_, target)| *target)
+            .collect();
+        let targets = targets.to_vec();
+        mutations.push(Box::new(move |_, state, _| {
+            handle_damage_only(
+                state,
+                attacking_ref,
+                &targets,
+                is_from_active_attack,
+                DamageModifierContext {
+                    attack_name: None,
+                    attack_effect: None,
+                },
+            );
+            for (player, idx) in &survivors {
+                if let Some(pokemon) = state.in_play_pokemon[*player][*idx].as_mut() {
+                    pokemon.set_remaining_hp(10);
+                }
+            }
+            handle_knockouts(state, attacking_ref, is_from_active_attack);
+        }));
+    }
+    Outcomes::from_parts(probabilities, mutations)
+}
+
 fn apply_deterministic_action(state: &mut State, action: &Action) {
     match &action.action {
         SimpleAction::DrawCard { amount } => {
@@ -190,11 +280,6 @@ fn apply_deterministic_action(state: &mut State, action: &Action) {
             in_play_idx,
         } => apply_retreat(*player, state, *in_play_idx, true),
         SimpleAction::Retreat(position) => apply_retreat(action.actor, state, *position, false),
-        SimpleAction::ApplyDamage {
-            attacking_ref,
-            targets,
-            is_from_active_attack,
-        } => handle_damage(state, *attacking_ref, targets, *is_from_active_attack, None),
         SimpleAction::ScheduleDelayedSpotDamage {
             target_player,
             target_in_play_idx,
@@ -289,7 +374,10 @@ fn apply_attach_tool(state: &mut State, actor: usize, in_play_idx: usize, tool_c
         .expect("Pokemon should be there if attaching tool to it");
     pokemon.attached_tool = Some(tool_card.clone());
 
-    if tools::has_tool(pokemon, crate::card_ids::CardId::A4153SteelApron) {
+    // Steel Apron: "...recovers from all Special Conditions..." only for a [M] holder.
+    if tools::has_tool(pokemon, crate::card_ids::CardId::A4153SteelApron)
+        && pokemon.get_energy_type() == Some(crate::models::EnergyType::Metal)
+    {
         pokemon.cure_status_conditions();
     }
 }
@@ -785,79 +873,6 @@ fn apply_heal_all_eevee_evolutions(acting_player: usize, state: &mut State) {
             pokemon.heal(20);
         }
     }
-}
-
-/// Forecasts the UseStadium action for activated stadiums like Mesagoza, Fragrant Forest, and Area Zero.
-fn forecast_use_stadium(state: &State, acting_player: usize) -> Outcomes {
-    if is_mesagoza_active(state) {
-        return forecast_mesagoza_effect(state, acting_player);
-    }
-    if is_fragrant_forest_active(state) {
-        return forecast_fragrant_forest_effect(state, acting_player);
-    }
-    if is_area_zero_active(state) {
-        return forecast_area_zero_effect(state, acting_player);
-    }
-    Outcomes::single_fn(|_, _, _| {})
-}
-
-/// Area Zero: Once during each player's turn, that player may shuffle a Basic Pokémon from their
-/// hand into their deck. If they do, they draw a card.
-fn forecast_area_zero_effect(state: &State, acting_player: usize) -> Outcomes {
-    let choices: Vec<SimpleAction> = state.hands[acting_player]
-        .iter()
-        .filter(|card| card.is_basic())
-        .map(|card| SimpleAction::ShuffleOwnCardsIntoDeck {
-            cards: vec![card.clone()],
-        })
-        .collect();
-
-    Outcomes::single_fn(move |_, state, action| {
-        state.has_used_stadium[action.actor] = true;
-        if !choices.is_empty() {
-            state
-                .move_generation_stack
-                .push((action.actor, choices.clone()));
-        }
-    })
-}
-
-/// Mesagoza: Once during each player's turn, that player may flip a coin.
-/// If heads, that player puts a random Pokémon from their deck into their hand.
-fn forecast_mesagoza_effect(state: &State, acting_player: usize) -> Outcomes {
-    // Get the search outcomes for any Pokemon (reusing existing logic)
-    let (search_probs, search_mutations) =
-        pokemon_search_outcomes(acting_player, state, false).into_branches();
-
-    let mut branches: Vec<(f64, Mutation, Vec<CoinSeq>)> =
-        Vec::with_capacity(search_probs.len() + 1);
-    for (prob, mutation) in search_probs.into_iter().zip(search_mutations) {
-        let wrapped: Mutation = Box::new(move |rng, state, action| {
-            state.has_used_stadium[action.actor] = true;
-            mutation(rng, state, action);
-            debug!("Mesagoza: Flipped heads, searched for Pokemon");
-        });
-        branches.push((0.5 * prob, wrapped, vec![CoinSeq(vec![true])]));
-    }
-    let tails_mutation: Mutation = Box::new(move |_, state, action| {
-        state.has_used_stadium[action.actor] = true;
-        debug!("Mesagoza: Flipped tails, nothing happens");
-    });
-    branches.push((0.5, tails_mutation, vec![CoinSeq(vec![false])]));
-
-    // Not `binary_coin`: heads fans out into many weighted search outcomes, not one mutation.
-    Outcomes::from_coin_branches(branches).expect("Mesagoza coin branches should be valid")
-}
-
-/// Fragrant Forest: Once during each player's turn, that player may put a random Basic [G] Pokémon from their deck into their hand.
-fn forecast_fragrant_forest_effect(state: &State, acting_player: usize) -> Outcomes {
-    pokemon_search_outcomes_by_type_for_player(acting_player, state, true, EnergyType::Grass)
-        .map_mutations(|mutation| {
-            Box::new(move |rng, state, action| {
-                state.has_used_stadium[action.actor] = true;
-                mutation(rng, state, action);
-            })
-        })
 }
 
 // Test that when evolving a damanged pokemon, damage stays.

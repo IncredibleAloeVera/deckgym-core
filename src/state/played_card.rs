@@ -3,7 +3,10 @@ use serde::{Deserialize, Serialize};
 
 use super::State;
 use crate::{
-    actions::{abilities::AbilityMechanic, has_ability_mechanic},
+    actions::{
+        abilities::AbilityMechanic, card_effect_from_ability_mechanic, get_ability_mechanic,
+        has_ability_mechanic,
+    },
     card_ids::CardId,
     database::get_card_by_enum,
     effects::CardEffect,
@@ -105,10 +108,15 @@ impl PlayedCard {
     }
 
     pub fn with_remaining_hp(mut self, remaining_hp: u32) -> Self {
+        self.set_remaining_hp(remaining_hp);
+        self
+    }
+
+    /// Set the remaining HP to an exact value (e.g. Ursaluna's Guts leaves it at 10).
+    pub(crate) fn set_remaining_hp(&mut self, remaining_hp: u32) {
         let effective_hp = self.get_effective_total_hp();
         let clamped_remaining = remaining_hp.min(effective_hp);
         self.damage_counters = effective_hp.saturating_sub(clamped_remaining);
-        self
     }
 
     pub fn with_tool(mut self, tool: Card) -> Self {
@@ -204,10 +212,19 @@ impl PlayedCard {
     pub(crate) fn get_effective_total_hp(&self) -> u32 {
         let mut effective_hp = self.base_hp;
 
-        // Tool bonuses
+        // Tool bonuses. Type/stage-specific caps only apply to matching Pokémon (the tools are
+        // attachable to anything, but their HP bonus is gated by the holder).
         if has_tool(self, CardId::A2147GiantCape) {
             effective_hp += 20;
-        } else if has_tool(self, CardId::A3147LeafCape) {
+        } else if has_tool(self, CardId::A3147LeafCape)
+            && self.get_energy_type() == Some(EnergyType::Grass)
+        {
+            // Leaf Cape: "The [G] Pokémon this card is attached to gets +30 HP."
+            effective_hp += 30;
+        } else if has_tool(self, CardId::B3b065ElegantCape)
+            && matches!(&self.card, Card::Pokemon(p) if p.stage == 1)
+        {
+            // Elegant Cape: "The Stage 1 Pokémon this card is attached to gets +30 HP."
             effective_hp += 30;
         } else if has_tool(self, CardId::B3a069AncientBoosterEnergyCapsule)
             && is_ancient_pokemon(&self.get_name())
@@ -277,6 +294,22 @@ impl PlayedCard {
             .iter()
             .map(|(effect, _)| effect.clone())
             .collect()
+    }
+
+    /// All effects currently on this Pokémon: the stored (turn-duration) effects from
+    /// `add_effect`, plus effects *derived* from its passive ability (the "abilities-as-effects"
+    /// model — see `card_effect_from_ability_mechanic`). Damage code should query this instead of
+    /// separately scanning for defensive abilities, so a passive like Cloyster's Shell Armor and a
+    /// stored effect like Carracosta's Blocking Shell are handled through one list. Derived effects
+    /// are present exactly while the ability-holder is in play (no turn duration).
+    pub(crate) fn get_effective_card_effects(&self) -> Vec<CardEffect> {
+        let mut effects = self.get_active_effects();
+        if let Some(mechanic) = get_ability_mechanic(&self.card) {
+            if let Some(derived) = card_effect_from_ability_mechanic(mechanic) {
+                effects.push(derived);
+            }
+        }
+        effects
     }
 
     pub(crate) fn get_effects(&self) -> &Vec<(CardEffect, u8)> {
