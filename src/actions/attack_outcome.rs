@@ -524,6 +524,50 @@ impl AttackOutcomes {
             .sum()
     }
 
+    /// The **guaranteed floor**: the least modified damage this attack deals to a target across
+    /// every branch. Computed the same way as [`Self::expected_damage_to`] — by inspecting branch
+    /// data, without running closures or drawing RNG. A KO predicted from this floor is certain,
+    /// which is what the observation's `is_lethal` bit means.
+    pub fn min_damage_to(
+        &self,
+        state: &State,
+        attacking_ref: (usize, usize),
+        target_player: usize,
+        target_idx: usize,
+        attack_name: Option<&str>,
+        attack_effect: Option<&str>,
+    ) -> u32 {
+        let actor = attacking_ref.0;
+        let opponent = (actor + 1) % 2;
+        self.branches
+            .iter()
+            .map(|branch| {
+                branch
+                    .outcome
+                    .damage
+                    .iter()
+                    .filter(|(_, is_opponent, idx)| {
+                        let player = if *is_opponent { opponent } else { actor };
+                        player == target_player && *idx == target_idx
+                    })
+                    .map(|(amount, _, idx)| {
+                        modify_damage(
+                            state,
+                            attacking_ref,
+                            (*amount, target_player, *idx),
+                            true,
+                            DamageModifierContext {
+                                attack_name,
+                                attack_effect,
+                            },
+                        )
+                    })
+                    .sum::<u32>()
+            })
+            .min()
+            .unwrap_or(0)
+    }
+
     /// Convenience: expected modified damage dealt to the opponent's Active Pokémon.
     #[allow(dead_code)]
     pub fn expected_damage_to_opponent_active(

@@ -67,12 +67,21 @@ pub enum Mechanic {
     DiscardRandomGlobalEnergy {
         count: usize,
     },
+    /// Porygon-Z's Buggy Beam: replace the Energy queued up in the opponent's Energy Zone with a
+    /// uniformly random one of the 8 basic Energy types, regardless of their deck's Energy.
+    RandomizeOpponentNextEnergy,
     RandomDamageToOpponentPokemonPerSelfEnergy {
         energy_type: EnergyType,
         damage_per_hit: u32,
     },
     DiscardEnergyFromOpponentActive,
     CoinFlipDiscardEnergyFromOpponentActive,
+    /// Pidgeot's Twister / Mega Pidgeot ex's Giant Twister: flip `num_coins` coins and discard a
+    /// random Energy from the opponent's Active Pokémon for each heads. If every coin is tails
+    /// the attack does nothing at all — not even its `fixed_damage`.
+    CoinFlipsDiscardEnergyFromOpponentActiveOrNothing {
+        num_coins: usize,
+    },
     DiscardOpponentActiveToolsBeforeDamage,
     ExtraDamageIfEx {
         extra_damage: u32,
@@ -317,6 +326,13 @@ pub enum Mechanic {
     ExtraDamageIfEvolvedThisTurn {
         extra_damage: u32,
     },
+    /// Politoed's Raid: extra damage if this Pokémon evolved *from a specific Pokémon* during
+    /// this turn. Unlike `ExtraDamageIfEvolvedThisTurn` this also checks the card directly
+    /// underneath, so evolving via Rare Candy (which skips the named Stage 1) does not qualify.
+    ExtraDamageIfEvolvedFromThisTurn {
+        pokemon_name: String,
+        extra_damage: u32,
+    },
     BenchCountDamage {
         include_fixed_damage: bool,
         damage_per: u32,
@@ -389,6 +405,9 @@ pub enum Mechanic {
     DamageAndDiscardOpponentDeck {
         discard_count: usize,
     },
+    /// Coalossal's Mountain Crush: deal the attack's `fixed_damage`, then flip a coin until
+    /// tails, discarding the top card of the opponent's deck for each heads.
+    FlipUntilTailsDiscardOpponentDeck,
     MegaAmpharosExLightningLancer,
     OminousClaw,
     DarknessClaw,
@@ -461,7 +480,9 @@ pub enum Mechanic {
         extra_damage: u32,
     },
     /// Discard the top card of the attacker's own deck after dealing damage.
-    DiscardTopSelfDeck,
+    DiscardTopSelfDeck {
+        count: usize,
+    },
     /// Tiered coin flip damage: flip `num_coins` coins and deal fixed_damage +
     /// extra_damage_by_heads[heads_count] total damage.
     TieredCoinFlipDamage {

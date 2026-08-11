@@ -12,6 +12,7 @@ use crate::{
         shared_mutations::pokemon_search_outcomes,
         Action, SimpleAction,
     },
+    belief::{RevealEvent, Zone},
     effects::TurnEffect,
     hooks::is_ultra_beast,
     models::{Card, EnergyType, PlayedCard, StatusCondition},
@@ -41,7 +42,10 @@ fn forecast_ability_by_mechanic(
 ) -> Outcomes {
     match mechanic {
         AbilityMechanic::VictreebelFragranceTrap => Outcomes::single_fn(victreebel_ability),
-        AbilityMechanic::HealAllYourPokemon { amount } => heal_all_your_pokemon(*amount),
+        AbilityMechanic::HealAllYourPokemon {
+            amount,
+            energy_type,
+        } => heal_all_your_pokemon(*amount, *energy_type),
         AbilityMechanic::HealOneYourPokemon { amount } => heal_one_your_pokemon(*amount),
         AbilityMechanic::HealOneYourPokemonExAndDiscardRandomEnergy { amount } => {
             heal_one_your_pokemon_ex_and_discard_random_energy(*amount)
@@ -119,6 +123,9 @@ fn forecast_ability_by_mechanic(
         }),
         AbilityMechanic::ReduceDamageFromAttacks { .. } => {
             panic!("ReduceDamageFromAttacks is a passive ability")
+        }
+        AbilityMechanic::ReduceDamageFromAttacksIfArceusInPlay { .. } => {
+            panic!("ReduceDamageFromAttacksIfArceusInPlay is a passive ability")
         }
         AbilityMechanic::ReduceOpponentActiveDamage { .. } => {
             panic!("ReduceOpponentActiveDamage is a passive ability")
@@ -255,6 +262,9 @@ fn forecast_ability_by_mechanic(
         AbilityMechanic::PoisonAttackerOnDamaged => {
             panic!("PoisonAttackerOnDamaged is a passive ability")
         }
+        AbilityMechanic::AttachEnergyFromZoneToBenchedOnDamaged { .. } => {
+            panic!("AttachEnergyFromZoneToBenchedOnDamaged is a passive ability")
+        }
         AbilityMechanic::IncreaseAttackCostForOpponentActive { .. } => {
             panic!("IncreaseAttackCostForOpponentActive is a passive ability")
         }
@@ -309,10 +319,12 @@ fn discard_energy_to_increase_type_damage(
     })
 }
 
-fn heal_all_your_pokemon(amount: u32) -> Outcomes {
+fn heal_all_your_pokemon(amount: u32, energy_type: Option<EnergyType>) -> Outcomes {
     Outcomes::single_fn(move |_rng, state, action| {
         for pokemon in state.in_play_pokemon[action.actor].iter_mut().flatten() {
-            pokemon.heal(amount);
+            if energy_type.is_none_or(|t| pokemon.get_energy_type() == Some(t)) {
+                pokemon.heal(amount);
+            }
         }
     })
 }
@@ -437,9 +449,9 @@ fn attach_energy_from_zone_to_self_and_end_turn(
             state.attach_energy_from_zone(action.actor, in_play_idx, energy_type, 1, false);
         if let Some(pokemon) = &state.in_play_pokemon[action.actor][in_play_idx] {
             if attached && !pokemon.is_knocked_out() {
-                state
-                    .move_generation_stack
-                    .push((action.actor, vec![SimpleAction::EndTurn]));
+                // Via the flag rather than a stacked `EndTurn`, so a promotion queued afterwards
+                // still resolves first — see `kiawe_effect` for the full reasoning.
+                state.end_turn_pending = true;
             }
         }
     })
@@ -507,6 +519,14 @@ fn discard_top_card_opponent_deck() -> Outcomes {
     Outcomes::single_fn(move |_rng, state, action| {
         let opponent = (action.actor + 1) % 2;
         if let Some(card) = state.decks[opponent].draw() {
+            // Milled to the public discard pile: the observer sees which card, so drop its deck
+            // position (this specific card, not the whole deck).
+            state.emit_reveal(RevealEvent::KnownCardMoved {
+                owner: opponent,
+                card: card.get_card_id(),
+                from: Zone::Deck,
+                to: Zone::Public,
+            });
             state.discard_piles[opponent].push(card);
         }
     })

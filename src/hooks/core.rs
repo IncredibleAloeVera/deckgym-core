@@ -245,10 +245,7 @@ pub(crate) fn on_end_turn(player_ending_turn: usize, state: &mut State) {
             AbilityMechanic::EndTurnDrawCardIfActive { amount: 1 }
         ) {
             debug!("Legendary Pulse: Drawing a card");
-            state.move_generation_stack.push((
-                player_ending_turn,
-                vec![SimpleAction::DrawCard { amount: 1 }],
-            ));
+            state.maybe_draw_card(player_ending_turn);
         }
         if let AbilityMechanic::EndTurnHealSelfIfActive { amount } = mechanic {
             debug!("Full-Mouth Manner: Healing 20 damage from active");
@@ -389,7 +386,22 @@ pub(crate) fn on_end_turn(player_ending_turn: usize, state: &mut State) {
         }
     }
 
+    apply_leftovers_healing(player_ending_turn, state);
+
     apply_bad_dreams_damage(state);
+}
+
+/// Leftovers: At the end of your turn, if the Pokémon this card is attached to is in the Active
+/// Spot, heal 10 damage from that Pokémon.
+fn apply_leftovers_healing(player_ending_turn: usize, state: &mut State) {
+    let Some(active) = state.in_play_pokemon[player_ending_turn][0].as_mut() else {
+        return;
+    };
+    if !has_tool(active, CardId::A3b067Leftovers) {
+        return;
+    }
+    debug!("Leftovers: Healing 10 damage from the Active Pokémon");
+    active.heal(10);
 }
 
 /// Apply Bad Dreams ability damage: for each player's Darkrai in play, if that player's
@@ -562,6 +574,8 @@ fn get_intimidating_fang_reduction(
 }
 
 fn get_ability_damage_reduction(
+    state: &State,
+    target_player: usize,
     receiving_pokemon: &crate::models::PlayedCard,
     is_from_active_attack: bool,
 ) -> u32 {
@@ -570,14 +584,36 @@ fn get_ability_damage_reduction(
     }
     // Reads the unified effect list, so Cloyster's Shell Armor (a passive ability) is handled the
     // same way as any stored effect.
-    receiving_pokemon
+    let effect_reduction: u32 = receiving_pokemon
         .get_effective_card_effects()
         .iter()
         .filter_map(|effect| match effect {
             CardEffect::ReduceDamageFromAttacks { amount } => Some(*amount),
             _ => None,
         })
-        .sum()
+        .sum();
+
+    // Magnezone's Resilience Link depends on the rest of the board, so it can't be derived as a
+    // CardEffect from the card alone.
+    let arceus_reduction = match get_ability_mechanic(&receiving_pokemon.card) {
+        Some(AbilityMechanic::ReduceDamageFromAttacksIfArceusInPlay { amount })
+            if has_arceus_in_play(state, target_player) =>
+        {
+            debug!("Resilience Link: Reducing damage by {}", amount);
+            *amount
+        }
+        _ => 0,
+    };
+
+    effect_reduction + arceus_reduction
+}
+
+/// Whether `player` has Arceus or Arceus ex in play (Active or Benched).
+fn has_arceus_in_play(state: &State, player: usize) -> bool {
+    state.enumerate_in_play_pokemon(player).any(|(_, pokemon)| {
+        let name = pokemon.get_name();
+        name == "Arceus" || name == "Arceus ex"
+    })
 }
 
 fn get_ability_damage_increase(
@@ -611,13 +647,7 @@ fn get_ability_damage_increase(
     if let Some(AbilityMechanic::IncreaseDamageIfArceusInPlay { amount }) =
         ability_mechanic_from_effect(&ability.effect)
     {
-        let has_arceus = state
-            .enumerate_in_play_pokemon(attacking_player)
-            .any(|(_, pokemon)| {
-                let name = pokemon.get_name();
-                name == "Arceus" || name == "Arceus ex"
-            });
-        if has_arceus {
+        if has_arceus_in_play(state, attacking_player) {
             debug!(
                 "IncreaseDamageIfArceusInPlay: Increasing damage by {}",
                 amount
@@ -768,13 +798,16 @@ fn get_turn_effect_damage_reduction(
     state: &State,
     target_player: usize,
     target_pokemon: &crate::models::PlayedCard,
-    attacking_player: usize,
+    attacking_ref: (usize, &crate::models::PlayedCard),
     is_from_active_attack: bool,
 ) -> u32 {
+    let (attacking_player, attacking_pokemon) = attacking_ref;
     if !is_from_active_attack || attacking_player == target_player {
         return 0;
     }
+    let attacker_is_ex = attacking_pokemon.card.is_ex();
     let target_energy_type = target_pokemon.get_energy_type();
+    let target_name = target_pokemon.get_name();
     state
         .get_current_turn_effects()
         .iter()
@@ -784,6 +817,17 @@ fn get_turn_effect_damage_reduction(
                 energy_type,
                 player,
             } if *player == target_player && target_energy_type == Some(*energy_type) => {
+                Some(*amount)
+            }
+            TurnEffect::ReducedDamageForSpecificPokemon {
+                amount,
+                pokemon_names,
+                player,
+                attacker_must_be_ex,
+            } if *player == target_player
+                && pokemon_names.contains(&target_name)
+                && (!attacker_must_be_ex || attacker_is_ex) =>
+            {
                 Some(*amount)
             }
             _ => None,
@@ -1005,7 +1049,12 @@ pub(crate) fn modify_damage(
     let ability_damage_reduction = if skip_target_effects {
         0
     } else {
-        get_ability_damage_reduction(receiving_pokemon, is_from_active_attack)
+        get_ability_damage_reduction(
+            state,
+            target_player,
+            receiving_pokemon,
+            is_from_active_attack,
+        )
     };
     let ability_damage_increase = get_ability_damage_increase(
         state,
@@ -1044,7 +1093,7 @@ pub(crate) fn modify_damage(
             state,
             target_player,
             receiving_pokemon,
-            attacking_player,
+            (attacking_player, attacking_pokemon),
             is_from_active_attack,
         )
     };

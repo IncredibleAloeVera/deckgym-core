@@ -68,7 +68,7 @@ pub(crate) fn forecast_end_turn(state: &State) -> (Probabilities, Mutations) {
                 state.turn_count = 1;
                 state.end_turn_maintenance();
                 start_mutation(rng, state, action);
-                state.queue_draw_action(state.current_player, 1);
+                state.maybe_draw_card(state.current_player);
             }));
         }
 
@@ -107,9 +107,8 @@ fn forecast_pokemon_checkup(state: &State) -> (Probabilities, Mutations) {
                 on_end_turn(action.actor, state);
                 let live_checkup_targets = collect_checkup_targets(state);
                 apply_pokemon_checkup(state, &live_checkup_targets, &outcome);
-                finish_turn_after_checkup(state, rng);
-
                 start_mutation(rng, state, action);
+                finish_turn_after_checkup(state, rng);
             }));
         }
     }
@@ -322,9 +321,14 @@ fn apply_snowy_terrain_checkup_damage(state: &mut State) {
         }
     }
 
+    // Both sides' sources were collected up front, so an earlier source's damage may have knocked
+    // out a later one — a mirror match of two Sand Slammers is enough. A source that left the
+    // Active Spot deals nothing.
     for (source_player, checkup_damage) in active_only_damage {
         let target_player = (source_player + 1) % 2;
-        if state.in_play_pokemon[target_player][0].is_some() {
+        if state.in_play_pokemon[source_player][0].is_some()
+            && state.in_play_pokemon[target_player][0].is_some()
+        {
             debug!(
                 "Snowy Terrain: Player {} active Pokémon deals {} checkup damage to opponent active",
                 source_player, checkup_damage
@@ -340,6 +344,9 @@ fn apply_snowy_terrain_checkup_damage(state: &mut State) {
     }
 
     for (source_player, checkup_damage) in all_opponent_damage {
+        if state.in_play_pokemon[source_player][0].is_none() {
+            continue;
+        }
         let target_player = (source_player + 1) % 2;
         let targets: Vec<(u32, usize, usize)> = state
             .enumerate_in_play_pokemon(target_player)
@@ -544,7 +551,41 @@ pub(crate) fn handle_damage_only(
             state.apply_status_condition(attacking_player, 0, StatusCondition::Poisoned);
             debug!("Poison Barb: Poisoned the attacking Pokemon");
         }
+
+        if attacking_player != target_player {
+            apply_bouncy_body(state, target_player);
+        }
     }
+}
+
+/// Jellicent's Bouncy Body: the Active Pokémon was just damaged by an attack from the opponent's
+/// Pokémon, so its owner takes an Energy from their Energy Zone and attaches it to 1 of their
+/// Benched Pokémon (their choice).
+///
+/// Queued before knockouts resolve, so the choice is offered while the Bench is still intact
+/// (promotions are inserted at the bottom of the stack and therefore resolve afterwards).
+fn apply_bouncy_body(state: &mut State, target_player: usize) {
+    let Some(AbilityMechanic::AttachEnergyFromZoneToBenchedOnDamaged { energy_type }) = state
+        .in_play_pokemon[target_player][0]
+        .as_ref()
+        .and_then(|active| get_ability_mechanic(&active.card))
+    else {
+        return;
+    };
+
+    let choices = state
+        .enumerate_bench_pokemon(target_player)
+        .map(|(in_play_idx, _)| SimpleAction::Attach {
+            attachments: vec![(1, *energy_type, in_play_idx)],
+            is_turn_energy: false,
+        })
+        .collect::<Vec<_>>();
+    if choices.is_empty() {
+        return; // Nowhere to put the Energy.
+    }
+
+    debug!("Bouncy Body: Attaching a {energy_type:?} Energy to a Benched Pokemon");
+    state.move_generation_stack.push((target_player, choices));
 }
 
 fn is_iris_bonus_active(
@@ -692,6 +733,13 @@ fn get_knocked_out(state: &State) -> Vec<(usize, usize)> {
 /// Swap a bench pokemon into the active spot, clearing status/effects and setting turn flags.
 /// This is the swap portion of retreat without energy payment.
 pub(crate) fn apply_activate(player: usize, state: &mut State, bench_idx: usize) {
+    // A candidate list built before an intervening frame resolved can name a slot that is empty by
+    // the time it is applied, and the swap below would then void the active spot silently — the
+    // game keeps running and panics turns later, far from the frame that broke it.
+    debug_assert!(
+        state.in_play_pokemon[player][bench_idx].is_some(),
+        "Activate({player}, {bench_idx}) on an empty slot: stale promotion candidate"
+    );
     state.in_play_pokemon[player].swap(0, bench_idx);
 
     if let Some(pokemon) = state.in_play_pokemon[player][bench_idx].as_mut() {

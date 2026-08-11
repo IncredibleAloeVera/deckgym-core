@@ -3,7 +3,7 @@ use deckgym::{
     card_ids::CardId,
     database::get_card_by_enum,
     models::{EnergyType, PlayedCard},
-    test_support::{attack_action, get_initialized_game},
+    test_support::{attack_action, get_initialized_game, get_test_game_with_board},
 };
 
 #[test]
@@ -280,5 +280,90 @@ fn test_dialga_rocky_helmet_knockout_with_energy_attach() {
         total_metal_on_bench >= 2,
         "Expected at least 2 Metal energies on bench (from Metallic Turbo), found {}",
         total_metal_on_bench
+    );
+}
+
+#[test]
+fn test_knock_back_does_not_queue_a_switch_when_it_kos_the_defender() {
+    // Repro (runs/default/crashes, batch 137 & 156): Grapploct's Knock Back pushes the defender's
+    // switch choice after damage but before knockouts resolve, so a lethal Knock Back leaves the
+    // defender with *two* frames pointing at the same empty active slot — the knock-back one and
+    // the KO promotion. Whichever bench index the second frame lands on, `apply_activate` swaps a
+    // `None` into the active spot and `get_active` panics turns later.
+    let mut game = get_test_game_with_board(
+        vec![
+            PlayedCard::from_id(CardId::A1163Grapploct).with_energy(vec![
+                EnergyType::Fighting,
+                EnergyType::Fighting,
+                EnergyType::Fighting,
+            ]),
+        ],
+        vec![
+            PlayedCard::from_id(CardId::A1189Rattata),
+            PlayedCard::from_id(CardId::A1001Bulbasaur),
+            PlayedCard::from_id(CardId::A1001Bulbasaur),
+        ],
+    );
+
+    game.apply_action(&Action {
+        actor: 0,
+        action: attack_action(CardId::A1163Grapploct, 0),
+        is_stack: false,
+    });
+
+    let state = game.get_state_clone();
+    assert!(
+        state.in_play_pokemon[1][0].is_none(),
+        "40 HP Rattata should not survive 70 damage"
+    );
+    let switch_frames = state
+        .move_generation_stack
+        .iter()
+        .filter(|(_, actions)| {
+            actions
+                .iter()
+                .any(|a| matches!(a, SimpleAction::Activate { .. }))
+        })
+        .count();
+    assert_eq!(
+        switch_frames, 1,
+        "A lethal Knock Back should leave the KO promotion alone, not a second switch frame"
+    );
+}
+
+#[test]
+fn test_lethal_knock_back_leaves_the_defender_an_active_pokemon() {
+    // The consequence of the frame above, at the API level: resolve every queued frame by always
+    // taking the first legal choice, and the defender must still have an active Pokémon.
+    let mut game = get_test_game_with_board(
+        vec![
+            PlayedCard::from_id(CardId::A1163Grapploct).with_energy(vec![
+                EnergyType::Fighting,
+                EnergyType::Fighting,
+                EnergyType::Fighting,
+            ]),
+        ],
+        vec![
+            PlayedCard::from_id(CardId::A1189Rattata),
+            PlayedCard::from_id(CardId::A1001Bulbasaur),
+            PlayedCard::from_id(CardId::A1001Bulbasaur),
+        ],
+    );
+
+    game.apply_action(&Action {
+        actor: 0,
+        action: attack_action(CardId::A1163Grapploct, 0),
+        is_stack: false,
+    });
+
+    while !game.get_state_clone().move_generation_stack.is_empty() {
+        let (_, actions) = game.get_state_clone().generate_possible_actions();
+        game.apply_action(&actions[0]);
+    }
+
+    let state = game.get_state_clone();
+    assert!(
+        state.in_play_pokemon[1][0].is_some(),
+        "Defender lost its active spot to a stale promotion candidate"
     );
 }

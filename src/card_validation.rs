@@ -65,7 +65,7 @@ pub fn get_implementation_status(card_id: CardId) -> ImplementationStatus {
             }
 
             // Verify it can generate moves
-            let moves = trainer_move_generation_implementation(&State::default(), &trainer_card);
+            let moves = trainer_move_generation_implementation(&State::default(), 0, &trainer_card);
             if moves.is_none() {
                 return ImplementationStatus::MissingTrainer;
             };
