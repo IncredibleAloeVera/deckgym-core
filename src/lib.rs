@@ -1,4 +1,5 @@
 pub mod actions;
+pub mod belief;
 pub mod card_ids;
 pub mod card_logic;
 pub mod card_validation;
@@ -15,6 +16,7 @@ pub mod models;
 pub mod move_generation;
 pub mod optimize;
 pub mod players;
+pub mod rl;
 pub mod simulate;
 pub mod simulation_event_handler;
 pub mod stadiums;
@@ -24,6 +26,7 @@ pub mod tools;
 
 pub mod test_support;
 
+pub use belief::{BeliefTracker, CardCategory, PlayerBelief, RevealEvent, Zone};
 pub use deck::Deck;
 pub use game::Game;
 pub use hooks::to_playable_card;

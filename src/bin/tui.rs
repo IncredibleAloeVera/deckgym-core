@@ -6,7 +6,7 @@ use crossterm::{
 };
 use deckgym::{
     players::{fill_code_array, parse_player_code, PlayerCode},
-    tui::{ui, App},
+    tui::{ui, App, AppConfig},
 };
 use ratatui::{
     backend::{Backend, CrosstermBackend},
@@ -15,6 +15,7 @@ use ratatui::{
 use std::{
     error::Error,
     io,
+    path::PathBuf,
     time::{Duration, Instant},
 };
 
@@ -27,19 +28,39 @@ struct Cli {
     /// Path to the second deck file
     deck_b: String,
 
-    /// Players' strategies as a comma-separated list
+    /// Players' strategies as a comma-separated list. `h` takes the seat yourself; `rl:<model>`
+    /// gives it to a baked model (needs --features "tui,rl-model")
     #[arg(long, value_delimiter = ',', value_parser = parse_player_code)]
     players: Option<Vec<PlayerCode>>,
 
     /// Random seed for game simulation
     #[arg(long)]
     seed: Option<u64>,
+
+    /// Folder holding the baked models an rl: code names
+    #[arg(long, default_value = "models")]
+    models_root: PathBuf,
+
+    /// Run rl: seats on the GPU (needs --features rl-model-cuda)
+    #[arg(long, default_value_t = false)]
+    cuda: bool,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
     // Parse CLI arguments
     let cli = Cli::parse();
     let player_codes = fill_code_array(cli.players);
+    let config = AppConfig {
+        deck_a_path: cli.deck_a,
+        deck_b_path: cli.deck_b,
+        players: player_codes,
+        seed: cli.seed,
+        models_root: cli.models_root,
+        cuda: cli.cuda,
+    };
+    // Loading a model prints to the terminal the alternate screen is about to cover, and a missing
+    // one should read as a plain error rather than a flash of full-screen UI.
+    let app = App::new(&config)?;
 
     // Setup panic hook to restore terminal on panic
     let original_hook = std::panic::take_hook();
@@ -58,8 +79,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    // create app and run it
-    let app = App::new(&cli.deck_a, &cli.deck_b, player_codes, cli.seed)?;
+    // run it
     let res = run_app(&mut terminal, app);
 
     // restore terminal
@@ -117,7 +137,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>, mut app: App) -> io::Result<(
 
         if last_tick.elapsed() >= tick_rate {
             // Tick the game (advances game in interactive mode)
-            app.tick_game();
+            app.tick_game().map_err(io::Error::other)?;
 
             // Check if game is over
             if app.is_game_over() {
@@ -137,12 +157,11 @@ mod tests {
     #[test]
     fn test_ui_renders_without_panic() {
         // Create App using example decks
-        let app = App::new(
+        let app = App::new(&AppConfig::new(
             "example_decks/venusaur-exeggutor.txt",
             "example_decks/weezing-arbok.txt",
             vec![PlayerCode::R, PlayerCode::R],
-            None,
-        )
+        ))
         .expect("Failed to create app");
 
         // Create a test backend
@@ -150,6 +169,30 @@ mod tests {
         let mut terminal = Terminal::new(backend).expect("Failed to create terminal");
 
         // This should not panic
+        terminal.draw(|f| ui(f, &app)).expect("Failed to render UI");
+    }
+
+    /// The same, from the seat the mat is *not* drawn from by default — every zone is indexed by
+    /// the perspective there, and an off-by-one seat would show up as a panic or an empty board.
+    #[test]
+    #[cfg(feature = "rl-model")]
+    #[ignore = "no model under models/ is baked against the current schema"]
+    fn test_ui_renders_with_the_human_on_the_first_seat() {
+        let app = App::new(&AppConfig::new(
+            "example_decks/venusaur-exeggutor.txt",
+            "example_decks/weezing-arbok.txt",
+            vec![
+                PlayerCode::H,
+                PlayerCode::RL {
+                    name: "default_mmd_prot".to_string(),
+                },
+            ],
+        ))
+        .expect("Failed to create app");
+        assert_eq!(app.perspective(), 0);
+
+        let backend = TestBackend::new(120, 40);
+        let mut terminal = Terminal::new(backend).expect("Failed to create terminal");
         terminal.draw(|f| ui(f, &app)).expect("Failed to render UI");
     }
 }

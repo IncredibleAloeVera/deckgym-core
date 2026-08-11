@@ -285,7 +285,21 @@ pub fn simulate(
     sim_config: SimulationConfig,
     parallel_config: ParallelConfig,
 ) {
-    let player_codes = fill_code_array(sim_config.players);
+    let player_codes = fill_code_array(sim_config.players.clone());
+
+    if player_codes
+        .iter()
+        .any(|code| matches!(code, PlayerCode::RL { .. }))
+    {
+        simulate_with_models(
+            deck_a_path,
+            deck_b_path,
+            player_codes,
+            &sim_config,
+            &parallel_config,
+        );
+        return;
+    }
 
     warn!(
         "Running {} games with players{}:",
@@ -333,6 +347,121 @@ pub fn simulate(
         let stats = collector.compute_stats();
         print_stats(&stats);
     }
+}
+
+/// The `simulate` path for a matchup with at least one `rl:<model>` seat.
+///
+/// A separate runner rather than a player factory: a model cannot answer through
+/// `Player::decision_fn` at all (see [`crate::rl::play`]), so what changes is the loop, not the
+/// seat. `--parallel` and `--threads` have no meaning there — `--envs` is what widens the work.
+#[cfg(feature = "rl-model")]
+fn simulate_with_models(
+    deck_a_path: &str,
+    deck_b_path: &str,
+    player_codes: Vec<PlayerCode>,
+    sim_config: &SimulationConfig,
+    parallel_config: &ParallelConfig,
+) {
+    use crate::rl::play::PlayConfig;
+
+    if parallel_config.enabled {
+        warn!(
+            "--parallel is ignored with a model seat: --envs {} already advances that many games together",
+            sim_config.rl.envs
+        );
+    }
+
+    let deck_a = Deck::from_file(deck_a_path).expect("Failed to parse deck A");
+    let deck_b = Deck::from_file(deck_b_path).expect("Failed to parse deck B");
+
+    warn!(
+        "Running {} games with players (batched, {} envs on {}):",
+        sim_config.num_games.to_formatted_string(&Locale::en),
+        sim_config.rl.envs,
+        if sim_config.rl.cuda { "gpu" } else { "cpu" },
+    );
+    warn!("\tPlayer 0: {}({})", player_codes[0], deck_a_path);
+    warn!("\tPlayer 1: {}({})", player_codes[1], deck_b_path);
+
+    let data_output = sim_config.data_output.as_ref().map(PathBuf::from);
+    if let Some(output) = &data_output {
+        std::fs::create_dir_all(output)
+            .unwrap_or_else(|e| panic!("Failed to create data output folder {output:?}: {e}"));
+        warn!("Exporting simulation data to: {output:?}");
+    }
+
+    let config = PlayConfig {
+        decks: [deck_a, deck_b],
+        codes: [player_codes[0].clone(), player_codes[1].clone()],
+        games: sim_config.num_games as usize,
+        envs: sim_config.rl.envs,
+        seed: sim_config.seed.unwrap_or_else(rand::random::<u64>),
+        models_root: sim_config.rl.models_root.clone(),
+        data_output,
+        // The engine's per-frame log is what `-vv` and up asks for, and it is not free: it formats
+        // every action and reads the deck's declared energy on every frame.
+        debug: log::log_enabled!(log::Level::Info),
+    };
+
+    let pb = create_progress_bar(config.games as u64);
+    pb.tick();
+    let result = run_on_device(&config, sim_config.rl.cuda, &|| pb.inc(1));
+    pb.finish_with_message("Simulation complete!");
+
+    match result {
+        Ok(stats) => print_stats(&stats.compute_stats()),
+        Err(err) => {
+            warn!("{err}");
+            std::process::exit(1);
+        }
+    }
+}
+
+/// Picks the burn backend the models run on. Split out because the choice is two `cfg` arms and
+/// nothing else, and it reads badly inline.
+#[cfg(feature = "rl-model")]
+fn run_on_device(
+    config: &crate::rl::play::PlayConfig,
+    cuda: bool,
+    on_game: &dyn Fn(),
+) -> Result<StatsCollector, String> {
+    if cuda {
+        #[cfg(feature = "rl-model-cuda")]
+        {
+            return crate::rl::play::run::<burn::backend::Cuda>(
+                config,
+                &Default::default(),
+                on_game,
+            );
+        }
+        #[cfg(not(feature = "rl-model-cuda"))]
+        return Err(
+            "--cuda needs a build with --features rl-model-cuda (this one has none)".to_string(),
+        );
+    }
+    crate::rl::play::run::<burn::backend::NdArray>(config, &Default::default(), on_game)
+}
+
+/// The same entry point in a build without the deep-learning stack: the code parses, so the error
+/// can name what to rebuild instead of "invalid player code".
+#[cfg(not(feature = "rl-model"))]
+fn simulate_with_models(
+    _deck_a_path: &str,
+    _deck_b_path: &str,
+    player_codes: Vec<PlayerCode>,
+    _sim_config: &SimulationConfig,
+    _parallel_config: &ParallelConfig,
+) {
+    let models: Vec<String> = player_codes
+        .iter()
+        .filter(|code| matches!(code, PlayerCode::RL { .. }))
+        .map(|code| code.to_string())
+        .collect();
+    warn!(
+        "this build cannot play {}: rebuild with `--features rl-model` (or `rl-model-cuda` for the GPU)",
+        models.join(", ")
+    );
+    std::process::exit(2);
 }
 
 /// Creates a styled progress bar with consistent styling across the codebase

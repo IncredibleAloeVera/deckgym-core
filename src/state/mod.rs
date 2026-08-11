@@ -11,6 +11,7 @@ use std::hash::Hash;
 use crate::{
     actions::abilities::AbilityMechanic,
     actions::{has_ability_mechanic, SimpleAction},
+    belief::RevealEvent,
     deck::Deck,
     effects::TurnEffect,
     models::{Card, EnergyType, StatusCondition},
@@ -20,6 +21,24 @@ use crate::{
 };
 
 pub use played_card::{has_serperior_jungle_totem, PlayedCard};
+
+/// Transient, per-step log of reveal events emitted by effect resolution, drained by the belief
+/// maintainer (see [`crate::belief`]). It is *not* part of the game's identity:
+/// its `Hash`/`PartialEq`/`Eq` are deliberately no-ops so that adding reveal bookkeeping never
+/// perturbs `State` equality or hashing (relied on by the expectiminimax transposition table), and
+/// it is skipped during (de)serialization.
+#[derive(Debug, Clone, Default)]
+pub struct RevealLog(Vec<RevealEvent>);
+
+impl std::hash::Hash for RevealLog {
+    fn hash<H: std::hash::Hasher>(&self, _state: &mut H) {}
+}
+impl PartialEq for RevealLog {
+    fn eq(&self, _other: &Self) -> bool {
+        true
+    }
+}
+impl Eq for RevealLog {}
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub enum GameOutcome {
@@ -80,6 +99,10 @@ pub struct State {
     pub(crate) attack_name_used_count: [BTreeMap<String, u32>; 2],
     // Maps turn to a vector of effects (cards) for that turn. Using BTreeMap to keep State hashable.
     turn_effects: BTreeMap<u8, Vec<TurnEffect>>,
+    // Transient reveal events emitted by effect resolution this step; drained by the belief layer.
+    // Excluded from State identity and serialization (see RevealLog).
+    #[serde(skip)]
+    reveal_log: RevealLog,
 }
 
 impl State {
@@ -109,7 +132,19 @@ impl State {
             attack_name_used_last_turn: [None, None],
             attack_name_used_count: [BTreeMap::new(), BTreeMap::new()],
             turn_effects: BTreeMap::new(),
+            reveal_log: RevealLog::default(),
         }
+    }
+
+    /// Record a reveal event emitted during effect resolution. Consumed by the belief layer via
+    /// [`State::take_reveals`]; a no-op as far as the fully-observable engine is concerned.
+    pub(crate) fn emit_reveal(&mut self, event: RevealEvent) {
+        self.reveal_log.0.push(event);
+    }
+
+    /// Drain the reveal events accumulated since the last drain.
+    pub fn take_reveals(&mut self) -> Vec<RevealEvent> {
+        std::mem::take(&mut self.reveal_log.0)
     }
 
     pub fn get_active_stadium_name(&self) -> Option<String> {
@@ -182,8 +217,15 @@ impl State {
         // Pre-populate each player's `next` energy. On turn 1, neither player has rotated yet,
         // so both keep `current = None`. The player going second's queue will rotate at turn 2,
         // promoting `next` into `current`; the player going first's queue rotates at turn 3.
-        state.energy_zone[0].next = Some(roll_energy(&state.decks[0], rng));
-        state.energy_zone[1].next = Some(roll_energy(&state.decks[1], rng));
+        let first_energy = [
+            roll_energy(&state.decks[0], rng),
+            roll_energy(&state.decks[1], rng),
+        ];
+        state.energy_zone[0].next = Some(first_energy[0]);
+        state.energy_zone[1].next = Some(first_energy[1]);
+        for (owner, energy) in first_energy.into_iter().enumerate() {
+            state.emit_reveal(RevealEvent::EnergyRevealed { owner, energy });
+        }
 
         state
     }
@@ -201,6 +243,16 @@ impl State {
             .position(|x| x == card)
             .expect("Player hand should contain card to remove");
         self.hands[current_player].swap_remove(index);
+        // Every caller of this method plays or discards the card — it becomes public and the
+        // observer sees which one. This is the central choke point that mutates its belief position
+        // Hand → Public (dropping the hand marker), keeping the rendered opponent-hand leak-free.
+        // Secret hand → deck moves do NOT come through here (see transfer_card_from_hand_to_deck).
+        self.emit_reveal(RevealEvent::KnownCardMoved {
+            owner: current_player,
+            card: card.get_card_id(),
+            from: crate::belief::Zone::Hand,
+            to: crate::belief::Zone::Public,
+        });
     }
 
     pub(crate) fn remove_card_from_deck(&mut self, player: usize, card: &Card) {
@@ -210,6 +262,14 @@ impl State {
             .position(|c| c == card)
             .expect("Evolution card should be in deck");
         self.decks[player].cards.remove(pos);
+        // Callers move the card from the deck onto the board (evolve-from-deck, place-from-deck) —
+        // it becomes public and the observer sees which one, so drop its deck position.
+        self.emit_reveal(RevealEvent::KnownCardMoved {
+            owner: player,
+            card: card.get_card_id(),
+            from: crate::belief::Zone::Deck,
+            to: crate::belief::Zone::Public,
+        });
     }
 
     pub(crate) fn discard_card_from_hand(&mut self, current_player: usize, card: &Card) {
@@ -232,6 +292,12 @@ impl State {
         }
         if let Some(card) = self.decks[player].draw() {
             self.hands[player].push(card.clone());
+            // A drawn card is unknown to the observer and could be any card they believed was in
+            // this deck — so a draw destroys deck-position certainty. Presence (monotone) survives.
+            self.emit_reveal(RevealEvent::ZoneCleared {
+                owner: player,
+                zone: crate::belief::Zone::Deck,
+            });
             debug!(
                 "Player {} drew: {:?}, now hand is: {:?} and deck has {} cards",
                 player + 1,
@@ -253,6 +319,13 @@ impl State {
             .expect("Card must exist in deck to transfer to hand");
         self.decks[player].cards.remove(pos);
         self.hands[player].push(card.clone());
+        // A search draws a card of this category out of the deck, unknown to the observer → reset
+        // that category's deck positions. The card enters the hand unknown (no hand marker).
+        self.emit_reveal(RevealEvent::TypedZoneReset {
+            owner: player,
+            zone: crate::belief::Zone::Deck,
+            category: crate::belief::card_category(card),
+        });
     }
 
     pub(crate) fn transfer_card_from_hand_to_deck(&mut self, player: usize, card: &Card) {
@@ -263,6 +336,16 @@ impl State {
             .expect("Card must exist in hand to transfer to deck");
         self.hands[player].remove(pos);
         self.decks[player].cards.push(card.clone());
+        // No central belief event: whether the observer knows *which* card moved depends on the
+        // effect (Silver reveals the whole hand first → known; May's choice is secret → typed
+        // reset). Each caller emits the right event.
+    }
+
+    /// Shuffle a player's deck. A shuffle randomises order only, never zone membership, so it
+    /// carries **no** belief event: a card known to be in the deck stays known to be in the deck.
+    /// (Position invalidation on a *draw* out of the deck is handled by the deck-move events.)
+    pub(crate) fn shuffle_deck(&mut self, player: usize, rng: &mut impl Rng) {
+        self.decks[player].shuffle(false, rng);
     }
 
     pub(crate) fn iter_deck_pokemon(&self, player: usize) -> impl Iterator<Item = &Card> {
@@ -284,7 +367,12 @@ impl State {
     /// turn.
     pub(crate) fn rotate_energy_zone(&mut self, player: usize, rng: &mut impl Rng) {
         self.energy_zone[player].current = self.energy_zone[player].next.take();
-        self.energy_zone[player].next = Some(roll_energy(&self.decks[player], rng));
+        let energy = roll_energy(&self.decks[player], rng);
+        self.energy_zone[player].next = Some(energy);
+        self.emit_reveal(RevealEvent::EnergyRevealed {
+            owner: player,
+            energy,
+        });
     }
 
     pub(crate) fn end_turn_maintenance(&mut self) {
@@ -482,12 +570,12 @@ impl State {
             self.attack_name_used_this_turn[self.current_player].take();
         self.current_player = (self.current_player + 1) % 2;
         self.turn_count += 1;
-        if self.turn_count > 30 {
+        if self.turn_count > 99 {
             self.winner = Some(GameOutcome::Tie);
             return;
         }
         self.end_turn_maintenance();
-        self.queue_draw_action(self.current_player, 1);
+        self.maybe_draw_card(self.current_player);
         self.rotate_energy_zone(self.current_player, rng);
     }
 
@@ -841,16 +929,52 @@ mod tests {
     }
 
     #[test]
-    fn test_advance_turn_declares_tie_after_turn_30() {
+    fn test_advance_turn_declares_tie_after_turn_99() {
         use rand::SeedableRng;
         let (deck_a, deck_b) = load_test_decks();
         let mut rng = StdRng::seed_from_u64(42);
         let mut state = State::initialize(&deck_a, &deck_b, &mut rng);
 
-        state.turn_count = 30;
+        state.turn_count = 99;
         state.advance_turn(&mut rng);
 
         assert_eq!(state.winner, Some(GameOutcome::Tie));
         assert!(state.is_game_over());
+    }
+
+    /// A deck shuffle randomises order only, never zone membership, so it emits no belief event.
+    #[test]
+    fn test_shuffle_deck_emits_no_belief_event() {
+        use rand::SeedableRng;
+        let (deck_a, deck_b) = load_test_decks();
+        let mut rng = StdRng::seed_from_u64(1);
+        let mut state = State::initialize(&deck_a, &deck_b, &mut rng);
+        let _ = state.take_reveals(); // clear any setup events
+
+        state.shuffle_deck(1, &mut rng);
+
+        assert!(state.take_reveals().is_empty());
+    }
+
+    /// A blind draw (Deck → Hand, unknown card) destroys deck-position certainty: it emits a
+    /// `ZoneCleared { Deck }` belief event. Every draw path routes through `maybe_draw_card`.
+    #[test]
+    fn test_draw_emits_zone_cleared_deck() {
+        use crate::belief::{RevealEvent, Zone};
+        use rand::SeedableRng;
+        let (deck_a, deck_b) = load_test_decks();
+        let mut rng = StdRng::seed_from_u64(1);
+        let mut state = State::initialize(&deck_a, &deck_b, &mut rng);
+        let _ = state.take_reveals(); // clear any setup events
+
+        state.maybe_draw_card(0);
+
+        assert_eq!(
+            state.take_reveals(),
+            vec![RevealEvent::ZoneCleared {
+                owner: 0,
+                zone: Zone::Deck,
+            }]
+        );
     }
 }
