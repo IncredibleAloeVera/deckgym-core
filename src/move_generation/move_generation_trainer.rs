@@ -606,7 +606,6 @@ fn can_play_rare_candy(
         return cannot_play_trainer();
     }
 
-    let player = player;
     let hand = &state.hands[player];
 
     // Check if there's at least 1 basic pokemon in field with a corresponding stage2-rare-candy-evolvable in hand
@@ -626,7 +625,6 @@ fn can_play_pokemon_communication(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
     let has_pokemon_in_hand = state.hands[player]
         .iter()
         .any(|card| matches!(card, Card::Pokemon(_)));
@@ -647,8 +645,6 @@ fn can_play_gladion(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
-
     // Count Type: Null and Silvally in play and discard
     let mut type_null_count = 0;
     let mut silvally_count = 0;
@@ -695,8 +691,6 @@ fn can_play_professor_sada(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
-
     let has_ancient = state.in_play_pokemon[player]
         .iter()
         .flatten()
@@ -718,7 +712,6 @@ fn can_play_lusamine(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
     let opponent = (player + 1) % 2;
 
     // Check if opponent has at least 1 point
@@ -750,8 +743,6 @@ fn can_play_volkner(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
-
     let has_valid_target = state
         .enumerate_in_play_pokemon(player)
         .any(|(_, pokemon)| matches!(pokemon.get_name().as_str(), "Electivire" | "Luxray"));
@@ -789,7 +780,6 @@ fn can_play_lyra(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
     let active_pokemon = state.maybe_get_active(player);
     let bench_count = state.enumerate_bench_pokemon(player).count();
 
@@ -823,7 +813,6 @@ fn can_play_flame_patch(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
     let active_pokemon = state.maybe_get_active(player);
 
     // Check if active pokemon exists and is Fire type
@@ -907,7 +896,6 @@ fn can_play_celestic_town_elder(
     player: usize,
     trainer_card: &TrainerCard,
 ) -> Option<Vec<SimpleAction>> {
-    let player = player;
     let has_basic_pokemon_in_discard = state.discard_piles[player]
         .iter()
         .any(|card| card.is_basic());

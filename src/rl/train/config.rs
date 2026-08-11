@@ -19,7 +19,9 @@ use super::deck_db::DeckDb;
 use super::harvest::Sampling;
 use super::run_dir::RunDir;
 use super::sampler::{DeckSampler, DeckSource, SourceSpec};
-use super::schedule::{Schedule, ScheduleSpec};
+#[cfg(feature = "rl-model")]
+use super::schedule::Schedule;
+use super::schedule::ScheduleSpec;
 
 /// `deny_unknown_fields`, here and on every section below: a misspelled or misplaced key that
 /// silently falls back to its default is a run whose `.toml` no longer describes it — the §1.5.5
@@ -847,6 +849,7 @@ pub enum Coefficient {
 }
 
 impl Coefficient {
+    #[cfg(feature = "rl-model")]
     fn resolve(&self, batches: u64) -> Result<Schedule, String> {
         match self {
             Coefficient::Fixed(value) => Ok(Schedule::constant(*value)),
@@ -998,6 +1001,7 @@ impl TrainConfig {
         }
     }
 
+    #[cfg(feature = "rl-model")]
     fn eval_opponents(&self) -> Result<Vec<crate::players::PlayerCode>, String> {
         match self.held_out_opponents()? {
             Some(codes) => Ok(codes),
