@@ -378,7 +378,7 @@ impl GameplayStatsCollector {
                 .push(snapshot.clone());
         }
         for entries in grouped.values_mut() {
-            entries.sort_by(|a, b| b.damage.cmp(&a.damage));
+            entries.sort_by_key(|entry| std::cmp::Reverse(entry.damage));
         }
         grouped
     }
@@ -402,18 +402,21 @@ impl GameplayStatsCollector {
             }
         }
 
+        // The seat indexes five parallel arrays here — `state.in_play_pokemon`, `self.prev_board`,
+        // `self.prev_discard`, `discard` and `self.acc` — so none of them is the natural subject of
+        // an iterator and the range stays the honest form.
+        #[allow(clippy::needless_range_loop)]
         for player in 0..2 {
             let mut after_board: [Option<SlotSnapshot>; 4] = Default::default();
-            for slot in 0..4 {
-                after_board[slot] =
-                    state.in_play_pokemon[player][slot]
-                        .as_ref()
-                        .map(|played| SlotSnapshot {
-                            card_id: played.card.get_id(),
-                            damage: played.get_damage_counters(),
-                            remaining_hp: played.get_remaining_hp(),
-                            slot,
-                        });
+            for (slot, entry) in after_board.iter_mut().enumerate() {
+                *entry = state.in_play_pokemon[player][slot]
+                    .as_ref()
+                    .map(|played| SlotSnapshot {
+                        card_id: played.card.get_id(),
+                        damage: played.get_damage_counters(),
+                        remaining_hp: played.get_remaining_hp(),
+                        slot,
+                    });
             }
 
             let before = Self::group_by_card(&self.prev_board[player]);
@@ -619,11 +622,11 @@ impl GameplayStatsCollector {
         // Both ids are needed before either row is built — seat 0's key wants seat 1's id and
         // vice versa — so this is a pass of its own rather than folded into the loop below.
         let mut ids: [Option<DeckId>; 2] = [None, None];
-        for player in 0..2 {
+        for (player, slot) in ids.iter_mut().enumerate() {
             if let Some(deck) = self.acc[player].deck.clone() {
                 let id = deck_id(&deck);
                 self.deck_dictionary.entry(id).or_insert(deck);
-                ids[player] = Some(id);
+                *slot = Some(id);
             }
         }
 
