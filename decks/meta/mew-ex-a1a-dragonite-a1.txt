@@ -1,0 +1,13 @@
+# 2ca7dbcb
+Energy: Lightning, Water
+1 A1 084
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 032
+2 A1a 056
+2 A1a 060
+1 P-A 014

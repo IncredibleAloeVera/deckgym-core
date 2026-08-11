@@ -1,0 +1,15 @@
+# 455ddb4f
+Energy: Lightning
+1 A3 151
+1 A3a 064
+2 A4a 025
+1 A4b 132
+2 A4b 148
+2 A4b 150
+2 A4b 311
+2 A4b 319
+1 A4b 327
+1 A4b 345
+1 A4b 353
+2 P-A 005
+2 P-A 007

@@ -1,0 +1,175 @@
+# 04ed0c16
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 203
+2 A1 223
+1 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1922fc45
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 223
+1 A1 225
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2c9e7ada
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 484d49f8
+Energy: Darkness
+1 A1 115
+1 A1 116
+1 A1 117
+1 A1 164
+1 A1 165
+1 A1 174
+1 A1 175
+1 A1 176
+1 A1 177
+1 A1 222
+1 A1 223
+1 A1 225
+2 P-A 001
+2 P-A 002
+1 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 51bdb9e1
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+2 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 7e88ef3a
+Energy: Darkness, Psychic
+1 A1 115
+2 A1 116
+2 A1 117
+1 A1 128
+2 A1 164
+2 A1 165
+2 A1 223
+2 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# adf8bc94
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 203
+1 A1 223
+2 A1 225
+1 A1a 065
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# ca2c9296
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 203
+1 A1 223
+2 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d17a4548
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 223
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d55daae6
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+2 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# ea4e30a9
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 223
+2 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ff688d85
+Energy: Darkness, Psychic
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 164
+2 A1 165
+1 A1 223
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007

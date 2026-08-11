@@ -1,0 +1,393 @@
+# 03583c11
+Energy: Fighting
+1 A1 141
+1 A1 154
+1 A1 223
+2 A1 225
+1 A1a 032
+1 A1a 042
+1 A1a 047
+2 A1a 057
+2 A1a 058
+2 A1a 059
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 092a94b1
+Energy: Fire, Psychic
+2 A1 186
+2 A1 187
+2 A1 188
+2 A1 223
+2 A1a 032
+2 A1a 056
+1 A1a 059
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1be13e5e
+Energy: Fighting
+1 A1 154
+1 A1 186
+1 A1 187
+1 A1 198
+2 A1 223
+2 A1 225
+1 A1a 032
+2 A1a 047
+1 A1a 059
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1d1c8cf6
+Energy: Psychic
+2 A1 187
+2 A1 188
+2 A1 223
+2 A1a 032
+2 A1a 057
+2 A1a 059
+2 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# 213d9e3b
+Energy: Psychic
+1 A1 124
+1 A1 125
+2 A1 186
+2 A1 187
+1 A1 188
+1 A1 198
+1 A1 223
+1 A1 225
+2 A1a 032
+1 A1a 059
+1 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2554cb56
+Energy: Fire, Water
+1 A1 223
+1 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 058
+2 A1a 059
+1 A1a 060
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 33f8c79d
+Energy: Metal
+2 A1 186
+2 A1 187
+2 A1 223
+1 A1 225
+2 A1a 032
+2 A1a 059
+2 A2 119
+1 A2 146
+1 A2 147
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 52ebc873
+Energy: Fire, Water
+2 A1 187
+2 A1 223
+1 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+2 A1a 060
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 55529c26
+Energy: Psychic
+2 A1 127
+2 A1 186
+2 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 058
+2 A1a 059
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 5ce249a5
+Energy: Fire, Water
+2 A1 186
+2 A1 187
+1 A1 205
+2 A1 223
+2 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 059
+1 A1a 060
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 5eac5e99
+Energy: Fire, Water
+1 A1 186
+2 A1 223
+2 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 058
+2 A1a 059
+2 A1a 060
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 6c29a403
+Energy: Lightning, Psychic
+2 A1 102
+2 A1 187
+2 A1a 032
+2 A1a 057
+2 A1a 059
+2 A1a 061
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 74291f5d
+Energy: Fire, Water
+2 A1 187
+1 A1 223
+2 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 7830d475
+Energy: Psychic
+2 A1 186
+2 A1 187
+1 A1 223
+2 A1 225
+2 A1a 032
+1 A1a 056
+2 A1a 059
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 85a39fc6
+Energy: Water
+2 A1 186
+2 A1 225
+1 A1a 032
+2 A1a 058
+2 A1a 059
+2 A2 050
+1 A2 146
+2 A2 147
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 8fffa363
+Energy: Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 187
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+1 A2 146
+1 A2 150
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9651fd03
+Energy: Psychic
+2 A1 113
+2 A1 114
+2 A1 127
+2 A1 186
+2 A1 187
+2 A1 188
+2 A1a 032
+2 A1a 033
+2 A1a 059
+2 A1a 060
+
+# a38d1989
+Energy: Fire, Water
+2 A1 187
+1 A1 223
+1 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+1 A1a 060
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# a42d9ad5
+Energy: Fire, Water
+2 A1 187
+2 A1 203
+1 A1 223
+2 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# aa1e4be7
+Energy: Fire, Water
+2 A1 186
+2 A1 187
+2 A1 223
+2 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 059
+2 A1a 060
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# cd33a517
+Energy: Water
+1 A1a 032
+2 A1a 057
+2 A1a 058
+2 A1a 059
+2 A2 050
+2 A2 146
+1 A2 150
+1 A2 154
+1 A2a 023
+1 A2a 072
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# df321a60
+Energy: Fighting
+1 A1 154
+2 A1 186
+2 A1 187
+1 A1 198
+1 A1 203
+1 A1 223
+1 A1 225
+1 A1a 032
+2 A1a 047
+2 A1a 059
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e305fb3a
+Energy: Fire, Water
+2 A1 187
+2 A1 223
+2 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+2 A1a 060
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# e7e4db54
+Energy: Fire, Water
+2 A1 187
+2 A1 223
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+1 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ea47a93f
+Energy: Fire, Water
+2 A1 187
+2 A1 223
+1 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 059
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# efadd207
+Energy: Fire, Water
+2 A1 186
+2 A1 187
+2 A1 223
+1 A1 225
+1 A1a 032
+2 A1a 056
+2 A1a 059
+2 A1a 060
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# feb52e09
+Energy: Fire, Water
+2 A1 223
+1 A1a 032
+2 A1a 056
+2 A1a 057
+2 A1a 058
+2 A1a 059
+1 A1a 060
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007

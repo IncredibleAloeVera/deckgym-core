@@ -1,0 +1,14 @@
+# 9caa76cf
+Energy: Fighting, Water
+2 A1 149
+1 A1 220
+2 A1 224
+2 A1a 043
+2 A1a 044
+1 A1a 068
+1 A2 049
+2 A2 050
+1 A2 150
+2 A2a 072
+2 P-A 005
+2 P-A 007

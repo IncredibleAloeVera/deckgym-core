@@ -1,0 +1,14 @@
+# 3559e48b
+Energy: Fighting, Lightning
+2 A1 098
+1 A2 092
+2 A2 154
+1 A2b 042
+2 A2b 071
+2 A4 151
+2 B1a 024
+1 B1a 028
+1 B1a 029
+2 B1a 068
+2 B2 083
+2 P-B 029

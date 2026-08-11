@@ -1,0 +1,14 @@
+# 7eb87023
+Energy: Fire, Lightning, Water
+2 A1 098
+1 A1a 056
+2 A1a 068
+2 A2 051
+2 A2 053
+1 A2 155
+2 A4 034
+1 A4 149
+2 A4 151
+2 P-A 005
+1 P-A 006
+2 P-A 007

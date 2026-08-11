@@ -1,0 +1,12 @@
+# ca9ac8eb
+Energy: Fighting
+2 A1 098
+2 A1 154
+2 A1a 041
+2 A1a 042
+2 A2 051
+2 A2 053
+2 A2 150
+2 P-A 002
+2 P-A 005
+2 P-A 007

@@ -1,0 +1,14 @@
+# ea72f8ab
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 220
+1 A1a 017
+1 A1a 018
+1 A1a 068
+2 A2 050
+1 A2 146
+2 A2a 072
+2 P-A 005
+2 P-A 007

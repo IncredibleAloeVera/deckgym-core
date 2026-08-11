@@ -1,0 +1,30 @@
+# 4b680062
+Energy: Fighting, Metal
+1 A1 188
+1 A1a 057
+2 A3 144
+2 A4a 023
+1 B1 225
+1 B1a 065
+1 B2 145
+2 B2b 054
+1 B2b 055
+2 B2b 056
+2 B2b 067
+2 P-A 005
+2 P-A 007
+
+# d8b6931b
+Energy: Fighting, Metal
+1 A1 186
+1 A1 188
+2 A3 144
+2 A4a 023
+2 B1 225
+1 B1a 065
+2 B2b 054
+1 B2b 055
+2 B2b 056
+2 B2b 067
+2 P-A 005
+2 P-A 007

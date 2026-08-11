@@ -1,0 +1,58 @@
+# 4408d78a
+Energy: Water
+1 A2 150
+2 A4 156
+2 B1 225
+2 B2 155
+1 B3a 013
+2 B3a 027
+1 B3a 030
+2 B3a 070
+1 B3a 073
+2 B3b 020
+2 P-A 005
+2 P-A 007
+
+# 45a3adf0
+Energy: Psychic, Water
+1 A2 150
+2 A4 156
+2 B1 225
+2 B2 155
+1 B3a 013
+2 B3a 027
+2 B3a 070
+2 B3b 020
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a9171402
+Energy: Water
+1 A2 150
+2 A4 156
+2 B1 225
+1 B2 154
+1 B2 155
+1 B3a 013
+2 B3a 027
+2 B3a 070
+2 B3b 020
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d1c78acf
+Energy: Psychic, Water
+2 A4 156
+1 B2 154
+2 B2 155
+2 B3 150
+1 B3 152
+1 B3a 013
+2 B3a 027
+2 B3a 070
+1 B3a 073
+2 B3b 020
+2 P-A 005
+2 P-A 007

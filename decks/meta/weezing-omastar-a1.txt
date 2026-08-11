@@ -1,0 +1,83 @@
+# 20d4e8bc
+Energy: Darkness, Water
+2 A1 081
+2 A1 082
+2 A1 091
+2 A1 176
+2 A1 177
+2 A1 216
+2 A1 222
+1 A1 223
+1 A1 225
+2 P-A 005
+2 P-A 007
+
+# 286c5ddb
+Energy: Darkness, Water
+2 A1 081
+2 A1 082
+2 A1 176
+2 A1 177
+2 A1 216
+2 A1 222
+1 A1 225
+2 A2 150
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 48af85af
+Energy: Darkness, Water
+2 A1 081
+2 A1 082
+2 A1 176
+2 A1 177
+1 A1 203
+2 A1 216
+1 A1 220
+2 A1 222
+2 P-A 001
+2 P-A 002
+2 P-A 007
+
+# 5785438f
+Energy: Darkness, Water
+2 A1 081
+2 A1 082
+2 A1 176
+2 A1 177
+2 A1 216
+2 A1 222
+1 A1 223
+2 A1 225
+2 P-A 001
+1 P-A 005
+2 P-A 007
+
+# 614e7a5c
+Energy: Darkness, Water
+2 A1 081
+2 A1 082
+2 A1 176
+2 A1 177
+1 A1 201
+2 A1 216
+1 A1 220
+2 A1 222
+2 P-A 001
+2 P-A 002
+2 P-A 007
+
+# 84e6c3e1
+Energy: Darkness, Water
+2 A1 081
+2 A1 082
+2 A1 176
+2 A1 177
+1 A1 203
+2 A1 216
+2 A1 222
+2 A1 225
+1 P-A 001
+2 P-A 005
+2 P-A 007

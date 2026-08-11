@@ -1,0 +1,67 @@
+# 22e98a57
+Energy: Psychic
+2 A1a 033
+2 A1a 036
+2 A1a 037
+2 A1a 038
+2 A1a 039
+2 A1a 040
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2355b64a
+Energy: Psychic
+1 A1a 033
+2 A1a 036
+2 A1a 037
+2 A1a 038
+2 A1a 039
+2 A1a 040
+2 A1a 065
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3f83c66a
+Energy: Psychic
+2 A1a 036
+2 A1a 037
+2 A1a 038
+2 A1a 039
+2 A1a 040
+2 A1a 065
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9a2383ee
+Energy: Psychic
+2 A1a 036
+2 A1a 037
+2 A1a 038
+2 A1a 039
+2 A1a 040
+2 A1a 065
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# f4e2374b
+Energy: Psychic
+1 A1a 033
+2 A1a 036
+2 A1a 037
+2 A1a 038
+2 A1a 039
+2 A1a 040
+2 A1a 065
+1 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007

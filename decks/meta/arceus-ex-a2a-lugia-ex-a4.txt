@@ -1,0 +1,49 @@
+# 3d50689e
+Energy: Fire, Lightning, Water
+1 A1 225
+2 A1a 068
+1 A2 147
+1 A2 155
+1 A2a 070
+2 A2a 071
+2 A2a 072
+1 A3 149
+1 A4 034
+2 A4 066
+1 A4 149
+1 A4 151
+2 P-A 005
+2 P-A 007
+
+# 4aea0e46
+Energy: Fire, Lightning, Water
+2 A1a 068
+1 A2 148
+1 A2 155
+1 A2a 070
+2 A2a 071
+2 A2a 072
+1 A3 149
+1 A3a 064
+1 A4 034
+2 A4 066
+1 A4 149
+1 A4 151
+2 P-A 005
+2 P-A 007
+
+# f1e74dcb
+Energy: Fire, Lightning, Water
+1 A1a 068
+2 A2 146
+1 A2 147
+2 A2a 071
+1 A2b 071
+1 A3 141
+2 A4 032
+2 A4 066
+1 A4 149
+2 A4 158
+2 P-A 005
+1 P-A 006
+2 P-A 007

@@ -1,0 +1,14 @@
+# d1cd20df
+Energy: Psychic, Water
+1 A2 150
+1 A2a 072
+2 A2b 060
+2 A2b 061
+2 A3 144
+2 B1 177
+2 B1 179
+2 B1 219
+1 B1 225
+1 P-A 002
+2 P-A 005
+2 P-A 007

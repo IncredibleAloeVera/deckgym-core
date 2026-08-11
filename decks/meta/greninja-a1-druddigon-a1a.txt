@@ -1,0 +1,2008 @@
+# 00f7b2e3
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1a 015
+1 A1a 016
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 A2 148
+1 A2 150
+2 P-A 005
+2 P-A 007
+
+# 01d26331
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A1a 068
+1 A2 147
+2 A2 148
+2 A2 150
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 025f2dc6
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+1 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 05467c4c
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A2 146
+2 A2 148
+2 A2 150
+2 A2a 072
+1 A2b 069
+2 P-A 005
+2 P-A 007
+
+# 0a490652
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 223
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 0a80132d
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 0bb24cba
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 220
+1 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 0ea19fb3
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 0f1ebb07
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 17406bf8
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 220
+2 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1806253f
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 186a4228
+Energy: Fire, Water
+2 A1 087
+2 A1 089
+2 A1a 056
+1 A1a 068
+1 A2 147
+1 A2 150
+2 A3 037
+2 A3 144
+2 A3 150
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 1c75ee41
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1c90a99a
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 220
+1 A1 225
+2 A1a 056
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1e22cb7f
+Energy: Fighting, Water
+2 A1 087
+2 A1 089
+1 A1a 047
+2 A1a 056
+1 A2 146
+1 A2 147
+2 A2 148
+1 A2 150
+2 A2b 072
+2 A3 144
+2 P-A 005
+2 P-A 007
+
+# 214c61d9
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 198
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 233b3b48
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+2 A1a 056
+1 A1a 068
+1 A2 146
+2 A2 148
+2 A2 150
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 25352882
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+2 A1a 056
+2 A2 148
+2 A2 150
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 25618321
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 29b15381
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2a49579e
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+2 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 2b6e6099
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+2 A2 146
+2 A2 148
+1 A2 150
+2 A2a 072
+2 P-A 005
+2 P-A 007
+
+# 2e5fe399
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+1 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2ea4d6f8
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 068
+1 A2 146
+2 A2 148
+2 A2 150
+1 A2a 072
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3023de96
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 368679c2
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 A2 146
+2 A2 148
+2 P-A 005
+2 P-A 007
+
+# 37994761
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 A2 022
+1 A2 104
+2 A2 148
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 39bf5351
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3b9fa1f2
+Energy: Fire, Water
+1 A1 051
+1 A1 052
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+2 A2 146
+2 A2 147
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# 3c3c0592
+Energy: Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 091
+2 A1 220
+2 A1 223
+2 A1 225
+2 A1a 056
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3cbeb075
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+2 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 3cc980f3
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 220
+1 A1 225
+2 A1a 056
+1 A1a 068
+1 A2 146
+1 A2 147
+2 A2 150
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 3e86bcc4
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A1a 060
+1 A2 146
+1 A2 147
+1 A2 148
+1 A2 150
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3f84c6ed
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 060
+1 A1a 068
+2 A2 146
+2 A2 148
+1 A2 150
+1 A2 155
+2 P-A 005
+2 P-A 007
+
+# 40f23947
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 068
+2 A2 146
+1 A2 147
+1 A2 148
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4158916c
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 060
+1 A1a 068
+2 A2 146
+2 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# 438cf519
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 A2 146
+1 A2 147
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# 4408c0ca
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+2 A1a 056
+1 A2 146
+1 A2 147
+2 A2 148
+1 A2 150
+2 A2a 072
+2 P-A 005
+2 P-A 007
+
+# 44ba172e
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 471f933f
+Energy: Fire, Water
+1 A1 051
+1 A1 052
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A2 146
+2 A2 148
+1 A2 150
+1 A2 154
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 47317bba
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 068
+1 A2 146
+2 A2 148
+2 A2 150
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 4766f16a
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 482ab7d5
+Energy: Fighting, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+1 A1 223
+1 A1 225
+1 A1a 047
+2 A1a 056
+1 A1a 068
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 4aa4d0ba
+Energy: Fire, Water
+2 A1 087
+1 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 068
+1 A2 022
+2 A2 148
+2 A2 150
+1 A2b 070
+2 A3 144
+2 P-A 005
+2 P-A 007
+
+# 4c82f61b
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+2 A1 225
+2 A1a 056
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4e5eff8e
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 4ea809fb
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 220
+1 A1 223
+2 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4f7e949d
+Energy: Fire, Lightning, Water
+2 A1 087
+1 A1 088
+2 A1 089
+2 A1a 056
+2 A2 148
+1 A2 150
+1 A2a 072
+1 A3 066
+2 A3 144
+2 A3 146
+2 P-A 005
+2 P-A 007
+
+# 58ec36c5
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 592b3353
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+2 A1a 056
+2 A2 146
+1 A2 147
+2 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# 59aa9474
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 A2 146
+2 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# 5a764541
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 220
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 5df2502b
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+1 A1 204
+2 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 620ed661
+Energy: Fire, Water
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 091
+1 A1 225
+2 A1a 056
+1 A1a 068
+1 A2 146
+1 A2 147
+2 A2 148
+1 A2a 072
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 67062c13
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 225
+2 A1a 056
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 674a0e98
+Energy: Fire, Water
+2 A1 087
+1 A1 088
+2 A1 089
+2 A1a 056
+1 A2 022
+1 A2 148
+1 A2 150
+2 A2a 072
+1 A2b 072
+1 A3 144
+1 A3 146
+1 A3 151
+2 P-A 005
+2 P-A 007
+
+# 6aabc166
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 211
+2 A1a 056
+2 A1a 068
+1 A2 147
+1 A2 148
+1 A2 150
+2 A2a 074
+2 P-A 005
+2 P-A 007
+
+# 6ec8e64d
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 A2 146
+2 A2 148
+1 A2 150
+2 P-A 005
+2 P-A 007
+
+# 752e7800
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# 77db6fe8
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 783b7a88
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 7b2b0afe
+Energy: Water
+2 A1 087
+1 A1 088
+2 A1 089
+2 A1a 056
+1 A2 146
+1 A2 147
+1 A2 150
+1 A2a 069
+1 A2a 072
+1 A2b 069
+2 A3 144
+1 A3 151
+2 P-A 005
+2 P-A 007
+
+# 7bf99f56
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 A2 146
+2 A2 150
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 7f0bbec8
+Energy: Fighting
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 154
+1 A1 223
+1 A1 225
+2 A1a 047
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 7f9e0924
+Energy: Fighting, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 223
+1 A1 225
+1 A1a 047
+2 A1a 056
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 820b37da
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 83834f44
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+2 A1a 056
+2 A2 150
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 86062732
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 87bd856e
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 220
+2 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 88fef756
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 060
+1 A1a 068
+2 A2 146
+1 A2 148
+1 A2 150
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 89b81dc8
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 89d87835
+Energy: Fire, Water
+2 A1 087
+1 A1 088
+2 A1 089
+1 A1 198
+2 A1a 056
+2 A2 148
+1 A2 150
+1 A2b 069
+2 A3 144
+1 A3 146
+1 A3 151
+2 P-A 005
+2 P-A 007
+
+# 8c5f8687
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 927d994a
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1a 056
+1 A1a 068
+1 A2 022
+2 A2 148
+1 A2 150
+1 A2a 072
+2 P-A 005
+2 P-A 007
+
+# 955765f7
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A2 050
+1 A2 146
+2 A2 147
+2 A2 148
+1 A2 150
+2 P-A 005
+2 P-A 007
+
+# 968a29f1
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+2 A2 148
+1 A2 150
+2 A2a 072
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 96a265cd
+Energy: Fire, Water
+2 A1 048
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 975c015b
+Energy: Fire, Water
+2 A1 087
+2 A1 089
+2 A1a 056
+1 A2 022
+1 A2 148
+2 A2 150
+2 A3 144
+1 A3 146
+1 A3 151
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# 98cab9fc
+Energy: Fire, Water
+2 A1 087
+1 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 068
+2 A2 148
+2 A2 150
+1 A2 155
+2 A3 144
+1 A4a 023
+2 P-A 005
+2 P-A 007
+
+# 997ec72c
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+2 A1a 056
+1 A1a 060
+1 A1a 068
+2 A2 146
+1 A2 147
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# 9a7e12e9
+Energy: Fire, Lightning, Water
+2 A1 087
+2 A1 089
+2 A1a 056
+1 A2 150
+2 A2a 072
+1 A2b 069
+1 A3 066
+2 A3 144
+2 A3 146
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 9a9b9c5b
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9ad5b4d3
+Energy: Fighting, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 154
+1 A1 203
+2 A1 223
+1 A1 225
+1 A1a 047
+2 A1a 056
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9ccd878d
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9f75b874
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# 9fc10ddd
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+2 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# a0a61699
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 220
+1 A1 223
+2 A1a 056
+2 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# a255795c
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# a313ad8b
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 220
+2 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# a3300c56
+Energy: Fire, Water
+2 A1 087
+2 A1 089
+2 A1a 056
+1 A1a 068
+2 A2 148
+1 A2 150
+1 A2b 070
+2 A3 144
+1 A4a 067
+1 B1 225
+1 B2b 069
+2 P-A 005
+2 P-A 007
+
+# a6d573d0
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 223
+2 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# a89b7380
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 A2 146
+1 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# aa8adf7c
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A1a 060
+1 A1a 068
+1 A2 146
+1 A2 147
+1 A2 148
+1 A2 150
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# ad326979
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+2 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# af8f2ff3
+Energy: Fighting, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 047
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# b0af680b
+Energy: Fire, Water
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 091
+2 A1a 056
+1 A1a 068
+2 A2 146
+1 A2 147
+2 A2 148
+1 A2a 072
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# b0cb1972
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 198
+1 A1 220
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# b3d17caa
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# b5da88ed
+Energy: Fire, Water
+1 A1 083
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 220
+2 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# b7e1e5b7
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+2 A1a 068
+2 A2 146
+2 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# b88c6ef1
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 225
+2 A1a 056
+1 A1a 068
+1 A2 146
+2 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# befdec70
+Energy: Fire, Water
+2 A1 089
+2 A1a 056
+1 A1a 068
+2 A2 148
+1 A2 150
+1 A2b 070
+2 A3 144
+1 A4a 067
+2 B1 071
+1 B1 225
+1 B2b 069
+2 P-A 005
+2 P-A 007
+
+# bf3b2f28
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+2 A2 148
+2 A2 150
+2 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# c1c46879
+Energy: Fighting, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A2 087
+1 A2 146
+2 A2 148
+2 A2 150
+1 A2 154
+2 P-A 005
+2 P-A 007
+
+# c3cb56e2
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# c50850de
+Energy: Fighting, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 225
+1 A1a 047
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# c5f75b42
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+2 A1 225
+2 A1a 056
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ca814754
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1a 056
+1 A1a 068
+1 A2 147
+2 A2 148
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# ca8591c6
+Energy: Fire, Water
+1 A1 046
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# cb8e2206
+Energy: Fire, Water
+2 A1 087
+2 A1 089
+2 A1a 056
+1 A1a 068
+1 A2 147
+1 A2 150
+1 A2 155
+2 A3 037
+2 A3 144
+2 A3 150
+2 P-A 005
+2 P-A 007
+
+# cbb32fb3
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+1 A2 147
+1 A2 148
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# cd931b85
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A2 022
+1 A2 143
+1 A2 147
+1 A2 148
+2 A2 150
+2 A2a 072
+2 P-A 005
+2 P-A 007
+
+# cfe14336
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 A2 146
+2 A2 154
+2 P-A 005
+2 P-A 007
+
+# d1bc5019
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+1 P-A 022
+
+# d55aa126
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 198
+2 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# d89afa25
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# df183b89
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# df1e5a6c
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 198
+2 A1a 056
+2 A1a 068
+2 A2 148
+1 A2 150
+2 A2b 069
+2 P-A 005
+2 P-A 007
+
+# e0efe986
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# e1ef2544
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+1 A1 204
+2 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# e30b4cc7
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+1 A1 223
+2 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e44da530
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 198
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ea13fcca
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+1 A1 223
+2 A1 225
+2 A1a 056
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ea74be97
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 091
+2 A1 225
+2 A1a 056
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ece6d4d3
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# f0b58757
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 223
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 A2 146
+2 A2 150
+2 P-A 005
+2 P-A 007
+
+# f10bb65d
+Energy: Fire, Water
+2 A1 087
+1 A1 088
+2 A1 089
+1 A1 203
+1 A1 225
+2 A1a 056
+2 A2 146
+1 A2 150
+2 A2b 069
+2 A3 144
+2 P-A 005
+2 P-A 007
+
+# f18cc673
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 A2 148
+2 A2 150
+1 A2 154
+2 P-A 005
+2 P-A 007
+
+# f2f6ce20
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 091
+2 A1 220
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# f3791701
+Energy: Fire, Water
+2 A1 087
+2 A1 089
+2 A1a 056
+1 A2 147
+1 A2 148
+1 A2 150
+2 A3 144
+1 A4 032
+1 A4a 023
+2 B1 225
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# f38acb34
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+2 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# f485681a
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 198
+1 A1 223
+2 A1 225
+2 A1a 056
+1 A1a 060
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# f4de7aac
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 223
+1 A1 225
+2 A1a 056
+1 A1a 060
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# f6aeafd4
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 203
+2 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# fd988c46
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 198
+1 A1 211
+1 A1 223
+2 A1 225
+2 A1a 056
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ff5cc1a3
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 220
+2 A1 223
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# ffbcec06
+Energy: Fire, Water
+2 A1 087
+2 A1 088
+2 A1 089
+1 A1 225
+2 A1a 056
+1 A2 146
+1 A2 147
+2 A2 148
+1 A2a 072
+1 A2b 069
+1 P-A 002
+2 P-A 005
+2 P-A 007

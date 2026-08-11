@@ -1,0 +1,13 @@
+# ddc46662
+Energy: Fighting, Psychic
+1 A1 147
+2 A1 223
+2 A1 224
+2 A1a 034
+2 A1a 035
+1 A1a 043
+2 A1a 044
+2 A1a 045
+2 P-A 001
+2 P-A 005
+2 P-A 007

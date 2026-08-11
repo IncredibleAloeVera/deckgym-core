@@ -1,0 +1,29 @@
+# 5892e841
+Energy: Fighting, Metal
+2 A1 185
+1 A2 147
+2 A3 144
+1 B1 225
+2 B2b 051
+2 B2b 052
+2 B2b 054
+2 B2b 056
+1 B2b 067
+1 B2b 069
+2 P-A 005
+2 P-A 007
+
+# 6e9b841b
+Energy: Fighting, Metal
+2 A1 185
+2 A3 144
+1 B1 225
+1 B2 147
+2 B2b 051
+2 B2b 052
+2 B2b 054
+2 B2b 056
+1 B2b 067
+1 B2b 069
+2 P-A 005
+2 P-A 007

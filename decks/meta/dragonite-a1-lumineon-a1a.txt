@@ -1,0 +1,12 @@
+# 2b866e5b
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 220
+2 A1a 020
+2 A1a 021
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007

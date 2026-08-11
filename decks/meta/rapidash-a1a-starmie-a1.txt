@@ -1,0 +1,13 @@
+# 0bff0deb
+Energy: Fire, Water
+2 A1 074
+2 A1 075
+1 A1 223
+1 A1 225
+2 A1a 010
+2 A1a 011
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007

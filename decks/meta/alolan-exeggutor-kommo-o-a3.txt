@@ -1,0 +1,12 @@
+# 646ea360
+Energy: Fighting, Grass, Lightning
+2 A1 219
+2 A1a 001
+2 A2 146
+2 A2 147
+2 A3 002
+2 A3 125
+2 A3 127
+2 A3 144
+2 A3 147
+2 P-A 007

@@ -1,0 +1,13 @@
+# c9f7a7f9
+Energy: Fighting, Grass
+1 A1 023
+2 A1 219
+2 A1a 001
+1 A1a 002
+2 A1a 046
+2 A1a 063
+2 A2 146
+2 A3 002
+2 A3 147
+2 A4 156
+2 P-A 007

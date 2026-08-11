@@ -1,0 +1,28 @@
+# a278ee93
+Energy: Lightning, Psychic
+2 A1 102
+1 A1 112
+2 A1 124
+2 A1 125
+2 A1 206
+2 A1 223
+1 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# e110afdf
+Energy: Lightning
+2 A1 102
+1 A1 104
+2 A1 124
+2 A1 125
+2 A1 206
+2 A1 223
+2 A1 225
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007

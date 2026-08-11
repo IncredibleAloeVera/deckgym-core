@@ -1,0 +1,43 @@
+# 22b7cf6b
+Energy: Fighting, Metal
+1 A1 225
+2 A2 088
+2 A2 089
+2 A2 111
+2 A2 144
+2 A2 146
+2 A2 147
+2 A2 148
+1 A2a 073
+1 P-A 001
+1 P-A 005
+2 P-A 007
+
+# 403846ed
+Energy: Fighting, Metal
+2 A2 088
+2 A2 089
+2 A2 111
+2 A2 144
+2 A2 146
+2 A2 147
+2 A2 148
+1 A2 150
+1 A2a 073
+1 P-A 001
+1 P-A 005
+2 P-A 007
+
+# 6e75075a
+Energy: Fighting, Metal
+2 A2 088
+2 A2 089
+2 A2 111
+2 A2 144
+2 A2 146
+2 A2 147
+2 A2 148
+2 A2 154
+1 A2a 073
+1 P-A 005
+2 P-A 007

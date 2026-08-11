@@ -1,0 +1,545 @@
+# 0156ced3
+Energy: Lightning
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+2 P-A 005
+1 P-A 007
+
+# 1015d889
+Energy: Psychic
+1 A1 225
+2 A2 148
+1 A2 150
+1 A2 155
+2 A2a 063
+2 A2a 074
+1 A2b 035
+1 A2b 070
+1 A3 084
+1 A3 149
+2 B1 121
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 11264507
+Energy: Lightning, Psychic
+1 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+2 B2 147
+2 B2 154
+2 P-A 005
+2 P-A 007
+
+# 240bba06
+Energy: Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+1 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# 24c88c67
+Energy: Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# 2867a445
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+1 A3 151
+2 B1 121
+1 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# 29ae2f93
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+2 P-A 005
+1 P-A 007
+
+# 2afa4a2e
+Energy: Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2 155
+1 A2b 035
+1 A2b 070
+2 A3 066
+1 A3 151
+2 B1 121
+1 B1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 4e52e0b5
+Energy: Lightning, Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+2 A2 155
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 5ecb8967
+Energy: Lightning, Psychic
+1 A1 223
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# 67678635
+Energy: Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+2 P-A 005
+1 P-A 007
+
+# 76eee3ed
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+1 B2 147
+2 B2 154
+2 P-A 005
+1 P-A 007
+
+# 7b3c7231
+Energy: Lightning, Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+2 P-A 005
+1 P-A 007
+
+# 87bf2f25
+Energy: Lightning, Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+2 B2 147
+2 P-A 005
+2 P-A 007
+
+# 89f0a0ee
+Energy: Lightning, Psychic
+1 A1 223
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# 8bf38f16
+Energy: Lightning, Psychic
+2 A2 147
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+1 B3 004
+2 P-A 005
+1 P-A 007
+
+# 8c9738f1
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# 90b220af
+Energy: Lightning, Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# a80bd31a
+Energy: Lightning, Psychic
+1 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ad72a087
+Energy: Lightning, Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2 155
+1 A2b 035
+1 A2b 070
+2 A3 066
+1 A3 151
+2 B1 121
+1 B1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# addef011
+Energy: Lightning, Psychic
+1 A2 147
+2 A2 150
+1 A2b 035
+1 A2b 071
+2 A3 066
+2 A3a 021
+2 B1 121
+2 B1 225
+1 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# b0f7d381
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+1 B2 147
+2 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# c4696519
+Energy: Psychic
+1 A1 225
+2 A2 148
+1 A2 150
+1 A2 155
+2 A2a 063
+2 A2a 074
+1 A2b 035
+1 A2b 070
+1 A3 084
+1 A3 149
+2 B1 121
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# cc64204e
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# cf39ac89
+Energy: Psychic
+1 A1 225
+1 A2 147
+2 A2 148
+1 A2 150
+1 A2 155
+2 A2a 063
+2 A2a 074
+1 A2b 035
+1 A2b 070
+1 A3 084
+1 A3 149
+2 B1 121
+2 P-A 005
+2 P-A 007
+
+# d1b00396
+Energy: Lightning, Psychic
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# d232c066
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+1 P-A 007
+
+# d374305a
+Energy: Lightning, Psychic
+1 A1 225
+1 A1a 068
+2 A2 147
+1 A2 150
+1 A2 155
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# d7403bf0
+Energy: Lightning, Psychic
+1 A1 223
+1 A2 147
+1 A2 150
+1 A2b 035
+1 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# d852cd43
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+1 B3 147
+2 P-A 005
+1 P-A 007
+
+# ebbf413d
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+1 B1 225
+2 B2 145
+2 B2 147
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# ecb00c7b
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+1 B2 147
+1 B2 154
+2 P-A 005
+2 P-A 007
+
+# f71cce97
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+1 A3 142
+2 B1 121
+2 B1 225
+2 B2 147
+1 B2 154
+1 P-A 001
+2 P-A 005
+1 P-A 007
+
+# f7e28093
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+1 A2b 035
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+1 B2 147
+2 B2 154
+1 B3 147
+2 P-A 005
+2 P-A 007

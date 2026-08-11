@@ -1,0 +1,27 @@
+# 439f978a
+Energy: Fire, Water
+2 A1a 068
+1 A2 146
+1 A3 047
+2 A3 144
+2 A3 155
+2 A3b 022
+2 A3b 024
+2 A3b 068
+2 A4a 010
+2 P-A 005
+2 P-A 007
+
+# eadcf706
+Energy: Fire, Water
+2 A1a 068
+1 A2 146
+2 A2 148
+2 A3 144
+1 A3 155
+2 A3b 022
+2 A3b 024
+2 A3b 068
+2 A4a 010
+2 P-A 005
+2 P-A 007

@@ -1,0 +1,45 @@
+# 2e0b6e5a
+Energy: Fighting, Water
+1 A1 225
+2 A2 123
+1 A2 146
+1 A2 147
+1 A2 148
+1 A2 150
+2 A2 152
+2 A2a 036
+2 A2a 045
+2 A2a 046
+1 A2a 072
+2 P-A 005
+2 P-A 007
+
+# 31ed519b
+Energy: Fighting, Water
+1 A2 088
+1 A2 089
+2 A2 121
+2 A2 122
+2 A2 123
+1 A2 144
+2 A2 146
+2 A2 150
+1 A2 152
+2 A2a 036
+2 A2a 072
+2 P-A 007
+
+# 7f3bbfa7
+Energy: Fighting, Water
+2 A2 121
+2 A2 122
+2 A2 123
+1 A2 146
+2 A2 148
+1 A2 150
+2 A2 152
+2 A2a 036
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007

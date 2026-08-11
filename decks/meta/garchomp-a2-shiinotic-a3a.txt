@@ -1,0 +1,278 @@
+# 19b89d30
+Energy: Fighting, Water
+1 A1 225
+2 A2 121
+2 A2 123
+1 A2 147
+1 A2 155
+1 A2b 072
+2 A3 016
+2 A3 144
+1 A3 155
+2 A3a 027
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 204dafff
+Energy: Fighting, Water
+1 A1 225
+1 A1a 007
+2 A2 121
+2 A2 123
+2 A2 152
+1 A2a 046
+1 A3 016
+2 A3 144
+1 A3 151
+1 A3 155
+2 A3a 027
+2 P-A 005
+2 P-A 007
+
+# 334495d4
+Energy: Fighting, Water
+2 A2 121
+2 A2 123
+1 A2 147
+2 A2 152
+1 A2b 072
+2 A3 016
+2 A3 144
+1 A3 155
+2 A3a 027
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 380f4f01
+Energy: Fighting, Water
+1 A1 225
+2 A1a 007
+2 A2 121
+2 A2 123
+1 A2 150
+2 A2 152
+1 A2 155
+2 A2a 046
+2 A3a 027
+1 A4 158
+2 P-A 005
+2 P-A 007
+
+# 5605e4e6
+Energy: Fighting, Water
+2 A2 123
+1 A2 146
+1 A2 147
+1 A2 152
+1 A2 155
+2 A2a 045
+2 A2a 046
+2 A3 016
+2 A3a 027
+2 A4 158
+2 P-A 005
+2 P-A 007
+
+# 5e851402
+Energy: Fighting, Water
+2 A2 121
+1 A2 122
+2 A2 123
+1 A2 150
+2 A2 152
+1 A2b 069
+2 A3 016
+2 A3 144
+1 A3 155
+2 A3a 027
+2 P-A 005
+2 P-A 007
+
+# 5e892ede
+Energy: Fighting, Water
+2 A2 121
+2 A2 122
+2 A2 123
+1 A2 150
+1 A2 152
+1 A2 155
+2 A3 016
+1 A3 155
+2 A3a 027
+1 A4 158
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 6c3e6add
+Energy: Fighting, Water
+1 A1 225
+1 A1a 047
+2 A2 121
+2 A2 123
+1 A2 150
+1 A2 155
+1 A2b 069
+2 A3 016
+2 A3 144
+1 A3 155
+2 A3a 027
+2 P-A 005
+2 P-A 007
+
+# 7086de88
+Energy: Fighting, Water
+1 A1 225
+1 A1a 007
+2 A2 121
+2 A2 123
+2 A2 152
+1 A2 155
+1 A2a 046
+1 A3 016
+2 A3 144
+1 A3 151
+1 A3 155
+2 A3a 027
+1 P-A 005
+2 P-A 007
+
+# 7c1817b5
+Energy: Fighting, Water
+1 A1 225
+2 A2 121
+1 A2 122
+2 A2 123
+1 A2 146
+1 A2 155
+1 A2a 072
+1 A2b 070
+2 A3 016
+2 A3 144
+2 A3a 027
+2 P-A 005
+2 P-A 007
+
+# 874f5aaf
+Energy: Fighting, Water
+1 A1 223
+1 A1 225
+1 A1a 007
+2 A2 121
+2 A2 123
+1 A2 155
+1 A2a 046
+1 A3 016
+2 A3 144
+1 A3 151
+1 A3 155
+2 A3a 027
+2 P-A 005
+2 P-A 007
+
+# 89fd9ac0
+Energy: Fighting, Water
+1 A1 225
+2 A2 121
+2 A2 123
+2 A2 152
+1 A2 155
+1 A2a 046
+2 A3 016
+2 A3 144
+1 A3 155
+2 A3a 027
+2 P-A 005
+2 P-A 007
+
+# 92795dc7
+Energy: Fighting, Water
+1 A1 225
+2 A2 121
+1 A2 122
+2 A2 123
+1 A2 147
+2 A3 016
+2 A3 144
+2 A3 155
+2 A3a 027
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# b510cf98
+Energy: Fighting, Water
+1 A1 225
+2 A2 123
+1 A2 147
+2 A2 152
+2 A2a 045
+2 A3 016
+2 A3 144
+1 A3 155
+2 A3a 027
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# bc8ab29c
+Energy: Fighting, Water
+2 A2 121
+2 A2 123
+2 A2 146
+2 A2 152
+1 A2 155
+2 A2a 046
+2 A3 016
+2 A3a 027
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# bee712f6
+Energy: Fighting, Water
+2 A2 121
+1 A2 122
+2 A2 123
+1 A2 146
+2 A2 152
+2 A3 016
+2 A3 144
+1 A3 155
+2 A3a 027
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# e20ac674
+Energy: Fighting, Water
+2 A2 121
+2 A2 122
+2 A2 123
+1 A2 150
+1 A2 152
+2 A2 155
+1 A2b 070
+2 A3 016
+2 A3a 027
+1 A4 077
+2 P-A 005
+2 P-A 007
+
+# ecd23d56
+Energy: Fighting, Water
+2 A2 121
+2 A2 123
+1 A2 146
+1 A2 147
+1 A2 152
+1 A2 155
+2 A2a 046
+2 A3 016
+1 A3 155
+2 A3a 027
+1 A4 158
+2 P-A 005
+2 P-A 007

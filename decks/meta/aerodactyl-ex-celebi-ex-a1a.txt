@@ -1,0 +1,27 @@
+# 3d52a1aa
+Energy: Fighting, Grass
+1 A1 219
+1 A1 225
+2 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 046
+1 A1a 047
+2 A1a 063
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 6eb7e672
+Energy: Fighting, Grass
+2 A1 219
+2 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 046
+2 A1a 063
+2 P-A 002
+2 P-A 005
+2 P-A 007

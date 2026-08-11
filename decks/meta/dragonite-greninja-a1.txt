@@ -1,0 +1,930 @@
+# 003fcbc3
+Energy: Lightning, Water
+2 A1 087
+1 A1 088
+2 A1 089
+2 A1 183
+1 A1 184
+2 A1 185
+2 A1a 056
+1 A1a 068
+1 A2 147
+2 A3 144
+2 P-A 005
+2 P-A 007
+
+# 0423b915
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+1 A1 184
+2 A1 185
+1 A1a 056
+1 A2 147
+1 A2 148
+1 A2 150
+1 A2b 069
+2 A3 144
+1 A3 155
+1 P-A 001
+2 P-A 005
+1 P-A 007
+
+# 0d32f7ae
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 223
+2 A1 225
+2 A1a 056
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# 0d608b0b
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 204
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 13bafc85
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 A1a 056
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1508143b
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+1 A1a 056
+2 A1a 068
+1 P-A 002
+1 P-A 005
+2 P-A 007
+
+# 1971b739
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 223
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 21992cf5
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 124
+1 A1 125
+1 A1 160
+1 A1 161
+1 A1 183
+1 A1 184
+1 A1 185
+1 A1 196
+1 A1 203
+1 A1 220
+1 A1 223
+1 A1 225
+1 P-A 001
+1 P-A 002
+1 P-A 005
+1 P-A 006
+1 P-A 007
+
+# 241d7ca1
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 211
+1 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2771c4a7
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A2 078
+1 A2 146
+2 A2 147
+1 A2 154
+1 A2a 072
+2 P-A 005
+2 P-A 007
+
+# 2c8f39d2
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+1 P-A 006
+2 P-A 007
+
+# 304301a7
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 38944576
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 39000580
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 196
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3ab08423
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3c19ca40
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 A1a 056
+2 A1a 068
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 4330e22a
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1a 068
+2 A2 087
+2 A2 146
+1 A2 148
+1 A2a 072
+2 P-A 005
+2 P-A 007
+
+# 439ed0a1
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 225
+1 A1a 028
+1 A1a 029
+1 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 006
+2 P-A 007
+
+# 445019a1
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 110
+1 A1 111
+1 A1 183
+1 A1 184
+1 A1 185
+1 A1 196
+1 A1 198
+1 A1 203
+1 A1 205
+1 A1 216
+1 A1 223
+1 A1 225
+1 P-A 001
+1 P-A 002
+1 P-A 005
+1 P-A 006
+1 P-A 007
+
+# 4c9e25c1
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 110
+1 A1 111
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 223
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 50a9d67b
+Energy: Lightning, Water
+1 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 056
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 51bdc615
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 532041e6
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+1 A1a 068
+2 A2 146
+2 A2 147
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 6221e7de
+Energy: Lightning, Water
+2 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+1 A1 184
+1 A1 185
+1 A1 186
+1 A1 187
+1 A1 188
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 6364e791
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A2 087
+1 A2 146
+2 A2 148
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 64f83b0a
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 67fffb94
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 211
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 6a3b5e6d
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 714cdfd4
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 102
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 205
+1 A1 206
+1 A1 223
+1 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 7474836a
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1a 056
+1 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 7b0963ed
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 82bb59a1
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 056
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 8d1d6223
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 202
+1 A1 203
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 9130dee9
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A2 087
+2 A2 146
+1 A2 148
+2 A2a 072
+2 P-A 005
+2 P-A 007
+
+# 961f4fd2
+Energy: Lightning, Water
+1 A1 084
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 220
+1 A1 225
+2 P-A 005
+2 P-A 007
+
+# 962259bc
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 056
+2 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 9c1b5c52
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 056
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a073b49b
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 220
+1 A1a 056
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# a0fd52c6
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ae3a6479
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 A1a 056
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ae95c089
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+1 P-A 022
+
+# bd0328cf
+Energy: Lightning, Water
+2 A1 087
+1 A1 088
+2 A1 089
+2 A1 183
+1 A1 184
+2 A1 185
+1 A1a 056
+1 A1a 068
+1 A2 150
+2 A3 144
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# bd553c1e
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 A1a 056
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# c458ae30
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 223
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# cbf883ce
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ce66669b
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 196
+1 A1 203
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ced9fe20
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 056
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# cf390828
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 102
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 206
+2 P-A 005
+2 P-A 007
+
+# d1642e8e
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1a 056
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# d3bf6ff0
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 220
+1 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d9527380
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 176
+1 A1 177
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 222
+2 P-A 001
+2 P-A 002
+1 P-A 005
+2 P-A 007
+
+# da8ece94
+Energy: Lightning
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 185
+1 A2 146
+1 A2b 069
+2 A3 144
+2 A3a 021
+1 A3b 051
+1 A3b 052
+2 A4 066
+2 A4 151
+2 P-A 005
+2 P-A 007
+
+# ddf00da5
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1a 056
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 007
+
+# df253571
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 022
+
+# e19b9380
+Energy: Lightning, Water
+1 A1 087
+1 A1 088
+1 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A2 087
+2 A2 146
+1 A2 147
+1 A2a 072
+1 A2b 069
+2 P-A 005
+2 P-A 007
+
+# e1c5cf82
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 220
+1 A1 223
+1 A1a 068
+1 P-A 001
+1 P-A 002
+1 P-A 005
+2 P-A 007
+
+# e6049cea
+Energy: Lightning, Water
+1 A1 062
+1 A1 063
+1 A1 087
+1 A1 088
+1 A1 089
+1 A1 183
+1 A1 184
+1 A1 185
+2 A1 211
+1 A1 220
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# f086c352
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 225
+1 A1a 056
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# f14cda95
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+1 A1 211
+1 A1 223
+1 A1 225
+2 P-A 005
+2 P-A 007
+
+# f890dbe5
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 220
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# fd896617
+Energy: Lightning, Water
+2 A1 087
+2 A1 088
+2 A1 089
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007

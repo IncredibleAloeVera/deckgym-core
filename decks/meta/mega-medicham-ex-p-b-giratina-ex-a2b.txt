@@ -1,0 +1,256 @@
+# 0feef120
+Energy: Fighting
+1 A1 225
+1 A2 150
+2 A2 154
+2 A2b 035
+2 A3a 028
+1 B1 223
+1 B1 225
+2 B2 145
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 14cb2836
+Energy: Fighting
+1 A2 148
+1 A2 150
+2 A2 154
+2 A2b 035
+2 A3a 028
+1 B1 223
+1 B1 225
+2 B2 145
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 2a97459a
+Energy: Fighting
+2 A2 147
+2 A2 154
+2 A2a 043
+2 A2b 035
+2 B1 225
+2 B2 145
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 30668f5f
+Energy: Fighting
+1 A2 147
+1 A2 150
+2 A2 154
+1 A2 155
+2 A2b 035
+2 A3a 028
+2 B1 225
+2 B2 145
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 482b3de3
+Energy: Fighting
+1 A1 225
+2 A2 148
+1 A2 150
+2 A2 154
+2 A2b 035
+2 A3a 028
+1 B1 225
+1 B2 145
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 6e8a8db7
+Energy: Fighting, Psychic
+1 A1 225
+1 A2 147
+2 A2 154
+2 A2b 035
+2 A3a 028
+1 B1 225
+1 B2 073
+2 B2 145
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 8eff53b4
+Energy: Fighting, Psychic
+1 A1 225
+1 A2 150
+2 A2 154
+2 A2b 035
+1 A2b 070
+1 A3 151
+2 A3a 028
+1 B1 121
+1 B1 225
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 9e07917b
+Energy: Fighting, Psychic
+1 A2 150
+1 A2 154
+1 A2 155
+2 A2b 035
+1 A3 151
+2 B1 121
+1 B1 225
+1 B2 083
+2 B2 145
+1 B2 154
+1 B2 155
+1 B2a 088
+1 P-A 005
+2 P-A 007
+2 P-B 029
+
+# 9f77ae56
+Energy: Fighting
+1 A2 148
+1 A2 150
+2 A2 154
+2 A2b 035
+1 A2b 070
+1 A2b 071
+2 B1 225
+2 B2 083
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# a565237f
+Energy: Fighting, Psychic
+1 A1 223
+1 A1 225
+1 A2 148
+1 A2 150
+2 A2 154
+2 A2a 043
+2 A2b 035
+1 B1 121
+1 B1 225
+1 B2 145
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# c2b71e4a
+Energy: Fighting, Psychic
+1 A1 225
+1 A2 150
+2 A2 154
+2 A2b 035
+2 A3a 028
+1 B1 121
+1 B1 225
+2 B2 145
+1 B2 153
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# ca91bf1a
+Energy: Fighting, Psychic
+1 A1 225
+2 A2 148
+1 A2 150
+2 A2 154
+1 A2 155
+2 A2b 035
+1 B1 120
+1 B1 225
+2 B2 083
+1 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# d1925e7a
+Energy: Fighting
+2 A1 154
+2 A2 150
+2 A2 154
+1 A2a 043
+1 A2b 035
+2 B1 225
+2 B2 145
+1 B2 147
+1 B2 153
+1 P-A 002
+2 P-A 005
+2 P-A 007
+1 P-B 029
+
+# e68dd2a8
+Energy: Fighting
+1 A1 225
+2 A2 147
+2 A2 154
+2 A2a 043
+2 A2b 035
+2 B1 225
+2 B2 145
+1 B2 155
+1 B2b 069
+2 P-A 005
+1 P-A 007
+2 P-B 029
+
+# eb872bfa
+Energy: Fighting, Psychic
+1 A2 150
+2 A2 154
+2 A2b 035
+1 A2b 071
+1 B1 225
+1 B2 073
+2 B2 083
+2 B2 145
+2 B2 155
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# eff95da3
+Energy: Fighting
+1 A1a 068
+1 A2 147
+1 A2 150
+2 A2 154
+2 A2a 043
+1 A2b 035
+1 A3 104
+1 B1 225
+1 B2 147
+1 B3 147
+1 B3 149
+1 B3 154
+2 P-A 005
+2 P-A 007
+2 P-B 029

@@ -1,0 +1,50 @@
+# 107ac9d7
+Energy: Fighting, Lightning
+2 A2 121
+1 A2 122
+2 A2 123
+1 A2 147
+1 A2 150
+2 A2 152
+2 A3 144
+1 A3 151
+1 A3 155
+2 A4 054
+1 A4 158
+1 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 2152cb5d
+Energy: Fighting, Water
+2 A2 121
+1 A2 122
+2 A2 123
+1 A2 147
+1 A2 150
+2 A2 152
+2 A3 144
+1 A3 151
+1 A3 155
+2 A4 054
+1 A4 158
+1 P-A 005
+1 P-A 006
+2 P-A 007
+
+# b2ce0af3
+Energy: Fighting, Water
+1 A2 121
+1 A2 122
+2 A2 123
+2 A2 152
+1 A2a 045
+1 A2a 046
+1 A3a 060
+1 A3a 061
+1 A3a 067
+2 A4 054
+1 A4 158
+2 P-A 005
+2 P-A 006
+2 P-A 007

@@ -1,0 +1,29 @@
+# 2bb0e1df
+Energy: Darkness
+1 A1 225
+1 A2 147
+1 A2 155
+2 A2a 048
+2 A2a 050
+2 A2a 071
+2 A3 144
+2 A3b 034
+2 A3b 056
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2db4483a
+Energy: Darkness
+1 A2 147
+1 A2 150
+1 A2 155
+2 A2a 048
+2 A2a 050
+2 A2a 071
+2 A3 144
+2 A3b 034
+2 A3b 056
+1 P-A 002
+2 P-A 005
+2 P-A 007

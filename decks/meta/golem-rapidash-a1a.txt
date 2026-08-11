@@ -1,0 +1,31 @@
+# cb0183d4
+Energy: Fighting, Fire
+2 A1 147
+1 A1 149
+1 A1 196
+1 A1 223
+2 A1 224
+2 A1a 010
+2 A1a 011
+2 A1a 044
+1 A1a 045
+2 P-A 001
+1 P-A 002
+1 P-A 005
+2 P-A 007
+
+# dfdd35c1
+Energy: Fighting
+1 A1 147
+1 A1 154
+1 A1 223
+2 A1 224
+2 A1a 010
+2 A1a 011
+1 A1a 043
+2 A1a 044
+2 A1a 045
+1 A1a 047
+1 A1a 068
+2 P-A 005
+2 P-A 007

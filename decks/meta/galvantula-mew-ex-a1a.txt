@@ -1,0 +1,30 @@
+# 19a025fe
+Energy: Lightning
+1 A1 105
+2 A1 106
+1 A1 198
+1 A1 223
+2 A1 225
+2 A1a 028
+2 A1a 029
+1 A1a 032
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e407dfca
+Energy: Lightning
+1 A1 105
+2 A1 106
+1 A1 198
+1 A1 223
+2 A1 225
+2 A1a 028
+2 A1a 029
+1 A1a 032
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007

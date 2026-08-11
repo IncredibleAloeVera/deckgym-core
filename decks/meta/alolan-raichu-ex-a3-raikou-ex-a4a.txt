@@ -1,0 +1,420 @@
+# 0b2da7aa
+Energy: Lightning
+1 A2 147
+1 A2 150
+1 A2 155
+2 A2a 025
+1 A2b 070
+2 A3 058
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 0bfdbfd9
+Energy: Lightning
+1 A1 225
+2 A1a 025
+1 A2 150
+1 A2b 071
+2 A3 058
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 1f78c30d
+Energy: Lightning
+1 A1 225
+1 A2 147
+1 A2 150
+2 A2a 025
+2 A3 058
+2 A3a 021
+2 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 33145ba1
+Energy: Lightning
+1 A2 150
+2 A2a 025
+1 A2b 071
+2 A3 058
+2 A3a 021
+1 A3a 064
+2 A3a 065
+2 A4 151
+2 A4a 025
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 46e227d2
+Energy: Lightning
+1 A1 225
+1 A2 147
+1 A2 150
+2 A2a 025
+2 A3 058
+1 A3 066
+1 A3a 021
+1 A3a 064
+2 A4 066
+1 A4 151
+2 A4a 025
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 4caf49b4
+Energy: Lightning
+2 A1 094
+1 A2 150
+1 A2 155
+2 A3 058
+1 A3 151
+2 A3a 021
+1 A3a 064
+1 A4 066
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 5274f58e
+Energy: Lightning
+2 A1 094
+1 A2 147
+1 A2 150
+2 A3 058
+1 A3 151
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 59c6732a
+Energy: Lightning
+1 A1 094
+1 A2 146
+1 A2 147
+1 A2 150
+1 A2a 025
+2 A3 058
+1 A3 066
+1 A3 151
+1 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 69c401bb
+Energy: Lightning
+1 A2 147
+1 A2 150
+2 A2a 025
+2 A3 058
+2 A3a 021
+1 A3a 064
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 7137aee9
+Energy: Lightning
+1 A1 094
+1 A1 185
+1 A1 225
+1 A2 150
+1 A2b 072
+1 A3 058
+1 A3 066
+1 A3 144
+1 A3 155
+1 A3a 021
+1 A3a 065
+1 A4a 025
+1 B1 225
+1 B2a 086
+1 B2b 051
+1 B2b 052
+2 P-A 005
+2 P-A 007
+
+# 72c4b1b8
+Energy: Lightning
+2 A1 094
+1 A2 146
+1 A2 147
+2 A2 150
+2 A3 058
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 769bbc75
+Energy: Lightning
+1 A1a 068
+1 A2 150
+1 A2 155
+2 A2a 025
+2 A3 058
+1 A3 151
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 851dca22
+Energy: Lightning
+1 A1 225
+1 A2 147
+2 A2 150
+1 A2 155
+2 A2a 025
+2 A3 058
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+2 P-A 005
+2 P-A 007
+
+# 8ab02328
+Energy: Lightning
+2 A2 150
+1 A2 154
+1 A2 155
+1 A2a 025
+1 A2b 071
+1 A3 058
+1 A3a 019
+2 A3a 021
+1 A3a 064
+1 A3a 065
+2 A4 151
+1 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9628736d
+Energy: Lightning
+1 A1a 068
+1 A2 150
+1 A2 155
+2 A2a 025
+2 A3 058
+2 A3a 021
+1 A3a 064
+1 A3a 065
+2 A4 151
+2 A4a 025
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 9d7ca19f
+Energy: Lightning
+1 A1 094
+1 A1 225
+1 A2 148
+1 A2 150
+1 A2a 025
+1 A2b 070
+2 A3 058
+1 A3 066
+1 A3 151
+2 A3a 021
+2 A4 151
+2 A4a 025
+2 P-A 005
+2 P-A 007
+
+# a4a44703
+Energy: Lightning
+1 A2 146
+1 A2 147
+1 A2 150
+2 A2a 025
+2 A3 058
+1 A3 151
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a7b269b4
+Energy: Lightning
+2 A1 094
+1 A2 147
+1 A2 150
+1 A2 155
+2 A3 058
+1 A3 151
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ab074481
+Energy: Lightning
+1 A2 150
+1 A2 155
+2 A2a 025
+2 A3 058
+2 A3a 021
+1 A3a 064
+2 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# bd3d48de
+Energy: Lightning
+2 A1 094
+1 A1a 068
+1 A2 147
+1 A2 150
+1 A2 155
+2 A3 058
+2 A3a 021
+2 A4 151
+2 A4a 025
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# bf85b21b
+Energy: Lightning
+2 A1 094
+1 A1 225
+1 A1a 068
+1 A2 147
+1 A2 150
+1 A2 155
+2 A3 058
+1 A3 151
+2 A3a 021
+2 A4 151
+2 A4a 025
+2 P-A 005
+2 P-A 007
+
+# c7d81aae
+Energy: Lightning
+2 A1 094
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 071
+2 A3 058
+1 A3 151
+1 A3a 019
+2 A3a 021
+2 A4 151
+1 A4a 025
+2 P-A 005
+2 P-A 007
+
+# d005f251
+Energy: Lightning
+1 A2 146
+1 A2 147
+1 A2 150
+2 A2a 025
+2 A3 058
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ea582f8b
+Energy: Lightning
+1 A1a 068
+2 A2 150
+1 A2 155
+2 A2a 025
+1 A2b 071
+2 A3 058
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+2 P-A 005
+2 P-A 007
+
+# efb3c272
+Energy: Lightning
+1 A1a 068
+1 A2 147
+1 A2 150
+2 A2a 025
+2 A3 058
+1 A3 151
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# f633ea2b
+Energy: Lightning
+1 A2 147
+1 A2 150
+1 A2 155
+2 A2a 025
+2 A3 058
+1 A3 151
+2 A3a 021
+1 A3a 065
+2 A4 151
+2 A4a 025
+2 P-A 005
+1 P-A 006
+2 P-A 007

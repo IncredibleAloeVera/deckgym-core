@@ -1,0 +1,13 @@
+# ce76a8a4
+Energy: Darkness
+2 A3 146
+2 A4 107
+2 A4b 232
+2 A4b 237
+2 A4b 238
+2 A4b 247
+2 A4b 314
+1 A4b 327
+1 A4b 345
+2 P-A 005
+2 P-A 007

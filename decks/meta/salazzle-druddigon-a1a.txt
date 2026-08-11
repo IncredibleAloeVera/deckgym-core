@@ -1,0 +1,12 @@
+# e7551fdb
+Energy: Fire, Water
+2 A1 091
+2 A1 225
+2 A1a 015
+2 A1a 016
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007

@@ -1,0 +1,26 @@
+# 300fdf97
+Energy: Lightning, Psychic
+2 A2 147
+2 A2b 070
+2 A3 066
+2 B1 121
+2 B1 225
+2 B2 145
+2 B2 147
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 6440b388
+Energy: Lightning, Psychic
+2 A2 147
+1 A2 150
+2 A2b 070
+2 A3 066
+1 A3 151
+2 B1 121
+2 B2 145
+2 B2 147
+2 B2 154
+2 P-A 005
+2 P-A 007

@@ -1,0 +1,16 @@
+{
+  "model": "BAAI/bge-small-en-v1.5",
+  "sentence_transformers": "5.6.1",
+  "sklearn": "1.9.0",
+  "corpus_size": 11910,
+  "corpus_size_normalized": 10155,
+  "pocket_effect_texts": 640,
+  "pocket_ability_texts": 141,
+  "effect_dim": 128,
+  "ability_dim": 48,
+  "explained_variance_at_48": 0.8265787959098816,
+  "explained_variance_at_128": 0.9510621428489685,
+  "whitened": true,
+  "effect_block_energy": 0.9681407809257507,
+  "ability_block_energy": 1.148980975151062
+}

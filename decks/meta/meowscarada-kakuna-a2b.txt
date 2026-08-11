@@ -1,0 +1,12 @@
+# 4aaafe57
+Energy: Psychic
+2 A1 055
+2 A2b 001
+2 A2b 002
+2 A2b 004
+2 A2b 005
+2 A2b 006
+2 A2b 007
+2 A2b 008
+2 A2b 017
+2 A2b 018

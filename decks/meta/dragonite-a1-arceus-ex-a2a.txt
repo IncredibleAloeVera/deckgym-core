@@ -1,0 +1,28 @@
+# 64944eee
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+1 A1a 068
+2 A2 050
+2 A2 147
+1 A2a 069
+1 A2a 071
+2 A2a 072
+2 P-A 005
+2 P-A 007
+
+# b24b1cff
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+2 A2 050
+2 A2 146
+2 A2 147
+1 A2a 069
+1 A2a 071
+2 A2a 072
+2 P-A 005
+2 P-A 007

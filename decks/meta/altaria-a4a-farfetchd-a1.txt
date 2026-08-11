@@ -1,0 +1,67 @@
+# 1ed3431d
+Energy: Fire, Lightning, Water
+2 A1 198
+1 A1 225
+2 A2 147
+1 A2 150
+1 A2 155
+1 A2a 072
+1 A2b 070
+1 A2b 072
+1 A3 151
+1 A3a 064
+2 A4a 055
+2 A4a 064
+2 P-A 005
+2 P-A 007
+
+# 27bc5c8d
+Energy: Fighting, Grass, Psychic
+2 A1 198
+1 A2 146
+2 A2 148
+1 A2 150
+1 A2 155
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 A4a 064
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ccef1c3b
+Energy: Fighting, Grass, Psychic
+2 A1 198
+1 A1 223
+2 A2 148
+1 A2 150
+1 A2 155
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 A4a 064
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# e2b2ab44
+Energy: Darkness, Fighting, Metal
+2 A1 198
+1 A1 223
+2 A2 148
+1 A2 150
+1 A2 155
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 A4a 064
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007

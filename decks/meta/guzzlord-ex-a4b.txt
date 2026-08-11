@@ -1,0 +1,84 @@
+# 0986a0e3
+Energy: Darkness
+1 A2b 070
+1 A3 151
+1 A3a 064
+2 A4 156
+2 A4b 248
+1 A4b 305
+2 A4b 323
+1 A4b 327
+1 A4b 345
+2 A4b 350
+1 A4b 353
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 19a75b42
+Energy: Darkness
+1 A2b 070
+1 A3a 064
+2 A4 156
+2 A4b 248
+1 A4b 305
+2 A4b 323
+1 A4b 327
+1 A4b 345
+2 A4b 350
+1 A4b 353
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 703f7e15
+Energy: Darkness
+2 A2b 070
+1 A3a 064
+1 A4 156
+2 A4b 248
+1 A4b 305
+1 A4b 323
+2 A4b 327
+2 A4b 350
+1 A4b 353
+1 P-A 001
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# d8b7b26d
+Energy: Darkness
+1 A2b 070
+1 A3 151
+1 A3a 064
+2 A4 156
+2 A4b 248
+1 A4b 305
+2 A4b 323
+1 A4b 327
+1 A4b 345
+2 A4b 350
+1 A4b 353
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# fadab56b
+Energy: Darkness
+1 A3 151
+1 A3a 064
+2 A4 156
+2 A4b 248
+1 A4b 305
+1 A4b 321
+1 A4b 323
+1 A4b 327
+1 A4b 337
+2 A4b 350
+1 A4b 353
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007

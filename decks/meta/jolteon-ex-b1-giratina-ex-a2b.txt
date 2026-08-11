@@ -1,0 +1,51 @@
+# 127ea4d4
+Energy: Darkness, Lightning
+1 A1 225
+2 A1a 068
+1 A2 110
+1 A2 147
+1 A2 148
+1 A2 150
+1 A2b 035
+1 A2b 070
+1 A2b 071
+2 B1 081
+2 B1 184
+1 B1 225
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 40f8c8f6
+Energy: Darkness, Lightning
+1 A1 225
+2 A1a 068
+1 A2 110
+2 A2 148
+2 A2 150
+1 A2b 035
+1 A2b 070
+2 B1 081
+2 B1 184
+1 B1 225
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 612916fe
+Energy: Lightning
+1 A1a 068
+1 A2 147
+1 A2 148
+1 A2 150
+1 A2 155
+1 A2b 035
+1 A2b 071
+2 A3 066
+1 A3a 064
+2 B1 081
+2 B1 184
+1 B1 223
+2 P-A 005
+1 P-A 006
+2 P-A 007

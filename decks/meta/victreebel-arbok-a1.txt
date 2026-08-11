@@ -1,0 +1,26 @@
+# 6fce834c
+Energy: Darkness, Grass, Water
+2 A1 018
+2 A1 019
+2 A1 020
+2 A1 081
+2 A1 082
+2 A1 164
+2 A1 165
+2 A1 216
+2 P-A 002
+2 P-A 007
+
+# eae1163c
+Energy: Grass
+2 A1 018
+2 A1 019
+2 A1 020
+2 A1 164
+2 A1 165
+2 A1 196
+2 A1 223
+2 A1a 060
+1 P-A 002
+1 P-A 005
+2 P-A 007
