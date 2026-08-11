@@ -190,8 +190,7 @@ fn simulate_against_folder(
             SimulationConfig {
                 num_games: games_for_this_deck,
                 players: None,
-                seed: None,
-                data_output: None,
+                ..Default::default()
             },
             ParallelConfig {
                 enabled: false,

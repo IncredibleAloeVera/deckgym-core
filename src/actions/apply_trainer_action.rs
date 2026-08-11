@@ -12,10 +12,11 @@ use crate::{
             item_search_outcomes, pokemon_search_outcomes, tool_search_outcomes,
         },
     },
+    belief::{RevealEvent, Zone},
     card_ids::CardId,
     card_logic::{
-        can_rare_candy_evolve, diantha_targets, ilima_targets, quick_grow_extract_candidates,
-        wallace_candidates,
+        can_rare_candy_evolve, diantha_targets, ilima_targets, mallow_targets,
+        quick_grow_extract_candidates, wallace_candidates,
     },
     combinatorics::generate_combinations,
     effects::TurnEffect,
@@ -128,11 +129,13 @@ pub fn forecast_trainer_action(
         | CardId::A4b351Lusamine
         | CardId::A4b375Lusamine => Outcomes::single_fn(lusamine_effect),
         CardId::A3149Ilima | CardId::A3191Ilima => Outcomes::single_fn(ilima_effect),
+        CardId::A3154Mallow | CardId::A3196Mallow => Outcomes::single_fn(mallow_effect),
         CardId::A3150Kiawe | CardId::A3192Kiawe => Outcomes::single_fn(kiawe_effect),
         CardId::A4157Lyra | CardId::A4197Lyra | CardId::A4b332Lyra | CardId::A4b333Lyra => {
             Outcomes::single_fn(lyra_effect)
         }
         CardId::A4156Will | CardId::A4196Will => Outcomes::single_fn(will_effect),
+        CardId::A4160Jasmine | CardId::A4200Jasmine => Outcomes::single_fn(jasmine_effect),
         CardId::A4158Silver | CardId::A4198Silver | CardId::A4b336Silver | CardId::A4b337Silver => {
             Outcomes::single_fn(silver_effect)
         }
@@ -188,6 +191,7 @@ pub fn forecast_trainer_action(
         }
         CardId::B3147FieldBlower => Outcomes::single_fn(field_blower_effect),
         CardId::B3149Korrina | CardId::B3190Korrina => Outcomes::single_fn(korrina_effect),
+        CardId::B3151Cheren | CardId::B3192Cheren => Outcomes::single_fn(cheren_effect),
         CardId::B3150Cabbie | CardId::B3191Cabbie => card_search_outcomes_with_filter_multiple(
             acting_player,
             state,
@@ -659,14 +663,18 @@ fn mars_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
     state.decks[opponent_player]
         .cards
         .append(&mut state.hands[opponent_player]);
-    state.decks[opponent_player].shuffle(false, rng);
+    state.shuffle_deck(opponent_player, rng);
 
-    // Draw cards
+    // Draw cards (via maybe_draw_card so each blind draw clears deck-position certainty).
     for _ in 0..cards_to_draw {
-        if let Some(card) = state.decks[opponent_player].draw() {
-            state.hands[opponent_player].push(card);
-        }
+        state.maybe_draw_card(opponent_player);
     }
+
+    // Hand was shuffled away and redrawn: any known position of the opponent's hand is now stale.
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: opponent_player,
+        zone: Zone::Hand,
+    });
 }
 
 fn giovanni_effect(_: &mut StdRng, state: &mut State, _: &Action) {
@@ -701,6 +709,34 @@ fn adaman_effect(_: &mut StdRng, state: &mut State, action: &Action) {
     );
 }
 
+fn jasmine_effect(_: &mut StdRng, state: &mut State, action: &Action) {
+    // During your opponent's next turn, all of your Steelix and Skarmory ex take -50 damage from
+    // attacks from your opponent's Pokémon.
+    state.add_turn_effect(
+        TurnEffect::ReducedDamageForSpecificPokemon {
+            amount: 50,
+            pokemon_names: vec!["Steelix".to_string(), "Skarmory ex".to_string()],
+            player: action.actor,
+            attacker_must_be_ex: false,
+        },
+        1,
+    );
+}
+
+fn cheren_effect(_: &mut StdRng, state: &mut State, action: &Action) {
+    // During your opponent's next turn, all of your Watchog and Stoutland take -100 damage from
+    // attacks from your opponent's Pokémon ex.
+    state.add_turn_effect(
+        TurnEffect::ReducedDamageForSpecificPokemon {
+            amount: 100,
+            pokemon_names: vec!["Watchog".to_string(), "Stoutland".to_string()],
+            player: action.actor,
+            attacker_must_be_ex: true,
+        },
+        1,
+    );
+}
+
 fn piers_effect(_: &mut StdRng, state: &mut State, action: &Action) {
     // Discard 2 random Energy from your opponent's Active Pokémon.
     let opponent = (action.actor + 1) % 2;
@@ -730,6 +766,30 @@ fn diantha_effect(_: &mut StdRng, state: &mut State, action: &Action) {
             in_play_idx,
             heal_amount: 90,
             discard_energies: vec![EnergyType::Psychic; 2],
+        })
+        .collect::<Vec<_>>();
+
+    if !possible_moves.is_empty() {
+        state
+            .move_generation_stack
+            .push((action.actor, possible_moves));
+    }
+}
+
+fn mallow_effect(_: &mut StdRng, state: &mut State, action: &Action) {
+    // Heal all damage from 1 of your Shiinotic or Tsareena. If you do, discard all Energy from
+    // that Pokémon.
+    let possible_moves = mallow_targets(state, action.actor)
+        .into_iter()
+        .map(|in_play_idx| {
+            let pokemon = state.in_play_pokemon[action.actor][in_play_idx]
+                .as_ref()
+                .expect("Mallow target should be in play");
+            SimpleAction::HealAndDiscardEnergy {
+                in_play_idx,
+                heal_amount: pokemon.get_effective_total_hp() - pokemon.get_remaining_hp(),
+                discard_energies: pokemon.attached_energy.clone(),
+            }
         })
         .collect::<Vec<_>>();
 
@@ -804,9 +864,11 @@ fn kiawe_effect(_: &mut StdRng, state: &mut State, action: &Action) {
         })
         .collect();
     if !possible_targets.is_empty() {
-        state
-            .move_generation_stack
-            .push((action.actor, vec![SimpleAction::EndTurn]));
+        // The turn ends through `end_turn_pending`, never as a stacked `EndTurn`: promotions are
+        // inserted at the *bottom* of the stack (`trigger_promotion_or_declare_winner`), so a
+        // stacked `EndTurn` would outrank one queued after it and end the turn with an empty
+        // Active Spot. Move generation drains the stack before it looks at the flag.
+        state.end_turn_pending = true;
         state
             .move_generation_stack
             .push((action.actor, possible_targets));
@@ -932,6 +994,12 @@ fn mythical_slab_effect(_: &mut StdRng, state: &mut State, action: &Action) {
             let card = state.decks[action.actor].cards.remove(0);
             state.decks[action.actor].cards.push(card);
         }
+        // The observer can't tell whether the top card was drawn to hand or sent to the bottom;
+        // either way it may have left the deck, so clear deck-position certainty.
+        state.emit_reveal(RevealEvent::ZoneCleared {
+            owner: action.actor,
+            zone: Zone::Deck,
+        });
     } // else do nothing
 }
 
@@ -941,13 +1009,18 @@ fn red_card_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
     // Your opponent shuffles their hand into their deck and draws 3 cards.
     let acting_player = action.actor;
     let opponent = (acting_player + 1) % 2;
-    let opponent_hand = &mut state.hands[opponent];
-    let opponent_deck = &mut state.decks[opponent];
-    opponent_deck.cards.append(opponent_hand);
-    opponent_deck.shuffle(false, rng);
+    let opponent_hand = std::mem::take(&mut state.hands[opponent]);
+    state.decks[opponent].cards.extend(opponent_hand);
+    state.shuffle_deck(opponent, rng);
     for _ in 0..3 {
         state.maybe_draw_card(opponent);
     }
+
+    // Hand shuffled away and redrawn: stale any known position of the opponent's hand.
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: opponent,
+        zone: Zone::Hand,
+    });
 }
 
 // Give the choice to the player to attach a tool to one of their pokemon.
@@ -1072,6 +1145,16 @@ fn elemental_switch_effect(_: &mut StdRng, state: &mut State, action: &Action) {
 fn silver_effect(_: &mut StdRng, state: &mut State, action: &Action) {
     let player = action.actor;
     let opponent = (player + 1) % 2;
+    // "Your opponent reveals their hand" — presence + position over the whole hand, emitted
+    // whether or not a Supporter is present to shuffle.
+    let revealed: Vec<_> = state.hands[opponent]
+        .iter()
+        .map(|card| card.get_card_id())
+        .collect();
+    state.emit_reveal(RevealEvent::HandRevealed {
+        owner: opponent,
+        cards: revealed,
+    });
     let possible_shuffles: Vec<SimpleAction> = state.hands[opponent]
         .iter()
         .filter(|card| card.is_support())
@@ -1198,12 +1281,19 @@ fn copycat_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
 
     // Shuffle player's hand into their deck
     state.decks[player].cards.append(&mut state.hands[player]);
-    state.decks[player].shuffle(false, rng);
+    state.shuffle_deck(player, rng);
 
     // Draw cards equal to opponent's hand size
     for _ in 0..opponent_hand_size {
         state.maybe_draw_card(player);
     }
+
+    // The acting player's own hand was shuffled away and redrawn: stale the opponent's knowledge
+    // of it (belief is directional — this wipes what the opponent knows about `player`).
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: player,
+        zone: Zone::Hand,
+    });
 }
 
 fn iono_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
@@ -1222,13 +1312,13 @@ fn iono_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
 
     // Shuffle player's hand into their deck
     state.decks[player].cards.append(&mut state.hands[player]);
-    state.decks[player].shuffle(false, rng);
+    state.shuffle_deck(player, rng);
 
     // Shuffle opponent's hand into their deck
     state.decks[opponent]
         .cards
         .append(&mut state.hands[opponent]);
-    state.decks[opponent].shuffle(false, rng);
+    state.shuffle_deck(opponent, rng);
 
     // Each player draws the same number of cards they had
     for _ in 0..player_hand_size {
@@ -1237,6 +1327,16 @@ fn iono_effect(rng: &mut StdRng, state: &mut State, action: &Action) {
     for _ in 0..opponent_hand_size {
         state.maybe_draw_card(opponent);
     }
+
+    // Both hands were shuffled away and redrawn: stale both position overlays.
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: player,
+        zone: Zone::Hand,
+    });
+    state.emit_reveal(RevealEvent::ZoneCleared {
+        owner: opponent,
+        zone: Zone::Hand,
+    });
 }
 
 pub fn may_effect(acting_player: usize, state: &State) -> Outcomes {
@@ -1247,7 +1347,7 @@ pub fn may_effect(acting_player: usize, state: &State) -> Outcomes {
     if num_pokemon == 0 {
         // No Pokemon in deck, just shuffle
         return Outcomes::single_fn(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -1409,7 +1509,7 @@ fn sightseer_effect(acting_player: usize, state: &State) -> Outcomes {
                     state.transfer_card_from_deck_to_hand(acting_player, card);
                 }
             }
-            state.decks[acting_player].shuffle(false, rng);
+            state.shuffle_deck(acting_player, rng);
         }));
     }
 
@@ -1469,7 +1569,7 @@ fn quick_grow_extract_effect(acting_player: usize, state: &State) -> Outcomes {
     if evolution_choices.is_empty() {
         // No valid evolution targets
         return Outcomes::single_fn(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -1481,7 +1581,7 @@ fn quick_grow_extract_effect(acting_player: usize, state: &State) -> Outcomes {
     for (in_play_idx, evolution_card) in evolution_choices {
         outcomes.push(Box::new(move |rng, state, action| {
             apply_evolve(action.actor, state, &evolution_card, in_play_idx, true);
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         }));
     }
 

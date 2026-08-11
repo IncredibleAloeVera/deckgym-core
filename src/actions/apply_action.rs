@@ -10,6 +10,7 @@ use crate::{
         apply_abilities_action::forecast_ability,
         apply_action_helpers::{apply_activate, wrap_with_common_logic},
     },
+    belief::{card_category, RevealEvent, Zone},
     effects::TurnEffect,
     hooks::{
         get_retreat_cost, on_bench_from_hand, on_evolve, to_playable_card, DamageModifierContext,
@@ -441,7 +442,20 @@ pub(crate) fn apply_place_card(
         state.remove_card_from_hand(actor, card);
         let placed_in_bench = index != 0;
         if placed_in_bench && has_ability_mechanic(card, &AbilityMechanic::InfiltratingInspection) {
-            debug!("Misdreavus's Infiltrating Inspection: Opponent's hand is revealed (no-op in AI context)");
+            // Infiltrating Inspection reveals the opponent's whole hand (presence + position).
+            let opponent = (actor + 1) % 2;
+            let cards: Vec<_> = state.hands[opponent]
+                .iter()
+                .map(|c| c.get_card_id())
+                .collect();
+            debug!(
+                "Misdreavus's Infiltrating Inspection: revealing opponent's hand ({} cards)",
+                cards.len()
+            );
+            state.emit_reveal(RevealEvent::HandRevealed {
+                owner: opponent,
+                cards,
+            });
         }
         if placed_in_bench {
             on_bench_from_hand(actor, state, card, index);
@@ -483,6 +497,16 @@ fn apply_shuffle_in_play_pokemon_into_deck(
         .expect("Pokemon should be there if shuffling into deck");
     let mut cards_to_shuffle = played_card.cards_behind.clone();
     cards_to_shuffle.push(played_card.card.clone());
+    // These cards were public (in play); moving them into the deck is fully known to the observer,
+    // who now knows each is somewhere in this player's deck (position → Deck, presence bumped).
+    for card in &cards_to_shuffle {
+        state.emit_reveal(RevealEvent::KnownCardMoved {
+            owner: acting_player,
+            card: card.get_card_id(),
+            from: Zone::Public,
+            to: Zone::Deck,
+        });
+    }
     state.decks[acting_player].cards.extend(cards_to_shuffle);
 
     if in_play_idx == 0 {
@@ -678,7 +702,7 @@ fn forecast_pokemon_communication(
     if num_deck_pokemon == 0 {
         // Should not happen if move generation is correct, but just shuffle deck
         return Outcomes::single_fn(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -696,12 +720,18 @@ fn forecast_pokemon_communication(
                 .expect("Deck Pokemon should exist");
 
             // Perform the swap
-            // 1. Transfer hand Pokemon to deck
+            // 1. Transfer hand Pokemon to deck (secret: the opponent doesn't see the choice →
+            //    reset that stage's hand positions). The deck→hand transfer emits its own reset.
+            state.emit_reveal(RevealEvent::TypedZoneReset {
+                owner: action.actor,
+                zone: Zone::Hand,
+                category: card_category(&hand_pokemon_clone),
+            });
             state.transfer_card_from_hand_to_deck(action.actor, &hand_pokemon_clone);
             // 2. Transfer deck Pokemon to hand
             state.transfer_card_from_deck_to_hand(action.actor, &deck_pokemon_card);
             // 5. Shuffle deck
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
 
             debug!(
                 "Pokemon Communication: Swapped {:?} from hand with {:?} from deck",
@@ -717,9 +747,16 @@ fn forecast_shuffle_pokemon_into_deck(acting_player: usize, hand_pokemon: &[Card
     let pokemon_list = hand_pokemon.to_vec();
     Outcomes::single_fn(move |rng, state, _action| {
         for pokemon in &pokemon_list {
+            // Secret selective shuffle-back: the opponent doesn't see which Pokémon was chosen →
+            // reset that stage's hand positions rather than a specific card.
+            state.emit_reveal(RevealEvent::TypedZoneReset {
+                owner: acting_player,
+                zone: Zone::Hand,
+                category: card_category(pokemon),
+            });
             state.transfer_card_from_hand_to_deck(acting_player, pokemon);
         }
-        state.decks[acting_player].shuffle(false, rng);
+        state.shuffle_deck(acting_player, rng);
         debug!("May: Shuffled {:?} from hand into deck", pokemon_list);
     })
 }
@@ -728,9 +765,15 @@ fn forecast_shuffle_own_cards_into_deck(acting_player: usize, cards: &[Card]) ->
     let cards_to_shuffle = cards.to_vec();
     Outcomes::single_fn(move |rng, state, _action| {
         for card in &cards_to_shuffle {
+            // Secret selective shuffle-back: reset that category's hand positions.
+            state.emit_reveal(RevealEvent::TypedZoneReset {
+                owner: acting_player,
+                zone: Zone::Hand,
+                category: card_category(card),
+            });
             state.transfer_card_from_hand_to_deck(acting_player, card);
         }
-        state.decks[acting_player].shuffle(false, rng);
+        state.shuffle_deck(acting_player, rng);
         state.maybe_draw_card(acting_player);
         debug!(
             "Maintenance: Shuffled {:?} from hand into deck, then drew a card",
@@ -743,8 +786,16 @@ fn forecast_shuffle_opponent_supporter(acting_player: usize, supporter_card: &Ca
     let supporter_clone = supporter_card.clone();
     Outcomes::single_fn(move |rng, state, _action| {
         let opponent = (acting_player + 1) % 2;
+        // The whole hand was revealed when Silver's choice list was built (silver_effect), so the
+        // observer knows *which* Supporter moves hand → deck: mutate its position to the deck.
+        state.emit_reveal(RevealEvent::KnownCardMoved {
+            owner: opponent,
+            card: supporter_clone.get_card_id(),
+            from: Zone::Hand,
+            to: Zone::Deck,
+        });
         state.transfer_card_from_hand_to_deck(opponent, &supporter_clone);
-        state.decks[opponent].shuffle(false, rng);
+        state.shuffle_deck(opponent, rng);
         debug!(
             "Silver: Shuffled {:?} from opponent's hand into their deck",
             supporter_clone
@@ -756,6 +807,8 @@ fn forecast_discard_opponent_supporter(acting_player: usize, supporter_card: &Ca
     let supporter_clone = supporter_card.clone();
     Outcomes::single_fn(move |_rng, state, _action| {
         let opponent = (acting_player + 1) % 2;
+        // `discard_card_from_hand` → `remove_card_from_hand` centrally emits the Hand → Public
+        // move; the whole hand was already revealed when the Claw's choice list was built.
         state.discard_card_from_hand(opponent, &supporter_clone);
         debug!(
             "Mega Absol Ex: Discarded {:?} from opponent's hand",

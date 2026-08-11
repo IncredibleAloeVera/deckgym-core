@@ -87,3 +87,53 @@ fn test_flygon_ex_sand_slammer_damages_all_opponent_pokemon_on_checkup() {
         "Sand Slammer should deal 10 damage to opponent's benched Pokémon"
     );
 }
+
+/// Two Sand Slammers facing each other: the first one's checkup damage knocks the second one out
+/// before the second one is reached. The knocked-out source must simply deal nothing — it used to
+/// be handed to the damage pipeline as an attacker no longer on the board.
+#[test]
+fn test_sand_slammer_mirror_survives_a_source_knocked_out_mid_checkup() {
+    let mut game = get_initialized_game(0);
+    let mut state = game.get_state_clone();
+
+    // Player 1's Flygon ex is one checkup tick from fainting, so player 0's Sand Slammer takes it
+    // out of the Active Spot before player 1's own Sand Slammer gets to fire.
+    state.set_board(
+        vec![
+            PlayedCard::from_id(CardId::B3126FlygonEx),
+            PlayedCard::from_id(CardId::A1001Bulbasaur),
+        ],
+        vec![
+            PlayedCard::from_id(CardId::B3126FlygonEx).with_remaining_hp(10),
+            PlayedCard::from_id(CardId::A1001Bulbasaur),
+        ],
+    );
+    state.current_player = 0;
+    state.turn_count = 3;
+    game.set_state(state);
+
+    let own_active_hp = game.get_state_clone().get_remaining_hp(0, 0);
+    let own_bench_hp = game.get_state_clone().get_remaining_hp(0, 1);
+
+    game.apply_action(&Action {
+        actor: 0,
+        action: SimpleAction::EndTurn,
+        is_stack: false,
+    });
+
+    let state = game.get_state_clone();
+    assert!(
+        state.in_play_pokemon[1][0].is_none(),
+        "player 1's Flygon ex should have been knocked out by the first Sand Slammer"
+    );
+    assert_eq!(
+        state.get_remaining_hp(0, 0),
+        own_active_hp,
+        "a Sand Slammer knocked out earlier in the same checkup should deal no damage"
+    );
+    assert_eq!(
+        state.get_remaining_hp(0, 1),
+        own_bench_hp,
+        "a Sand Slammer knocked out earlier in the same checkup should deal no damage"
+    );
+}

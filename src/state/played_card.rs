@@ -204,6 +204,12 @@ impl PlayedCard {
         self.damage_counters >= self.get_effective_total_hp()
     }
 
+    /// Printed HP, before tool/ability/stadium bonuses. The stable per-card denominator for
+    /// damage-absorption statistics (`get_effective_total_hp` moves with the board state).
+    pub fn get_base_hp(&self) -> u32 {
+        self.base_hp
+    }
+
     pub(crate) fn get_damage_counters(&self) -> u32 {
         self.damage_counters
     }

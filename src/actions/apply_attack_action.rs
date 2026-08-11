@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 use log::trace;
 use rand::{rngs::StdRng, Rng};
@@ -16,6 +16,7 @@ use crate::{
         effect_mechanic_map::EFFECT_MECHANIC_MAP,
         Action,
     },
+    belief::{RevealEvent, Zone},
     combinatorics::generate_combinations,
     effects::{CardEffect, TurnEffect},
     hooks::{
@@ -53,14 +54,27 @@ pub(crate) fn forecast_attack(
     attack: &Attack,
     is_sub_attack: bool,
 ) -> Outcomes {
+    forecast_attack_outcomes(acting_player, state, attack, is_sub_attack).into_outcomes()
+}
+
+/// The same forecast, *before* it is lowered into `Outcomes`. The structured form keeps each
+/// branch's damage as plain data, so a caller can read expected / minimum damage by inspection —
+/// no closure runs, no RNG is drawn, the state is not mutated. This is what the RL observation's
+/// threat matrix (`crate::rl::damage`) consumes.
+pub(crate) fn forecast_attack_outcomes(
+    acting_player: usize,
+    state: &State,
+    attack: &Attack,
+    is_sub_attack: bool,
+) -> AttackOutcomes {
     trace!("Forecasting attack: {attack:?} (is_sub_attack={is_sub_attack})");
 
     let base_outcomes = forecast_attack_inner(state, attack);
 
     if is_sub_attack {
-        apply_copied_attack_modifiers(acting_player, state, attack, base_outcomes).into_outcomes()
+        apply_copied_attack_modifiers(acting_player, state, attack, base_outcomes)
     } else {
-        apply_attack_common_modifiers(acting_player, state, attack, base_outcomes).into_outcomes()
+        apply_attack_common_modifiers(acting_player, state, attack, base_outcomes)
     }
 }
 
@@ -309,6 +323,9 @@ fn forecast_effect_attack_by_mechanic(
             damage_and_discard_energy(attack.fixed_damage, 1)
         }
         Mechanic::CoinFlipDiscardEnergyFromOpponentActive => mawile_crunch(),
+        Mechanic::CoinFlipsDiscardEnergyFromOpponentActiveOrNothing { num_coins } => {
+            coin_flips_discard_energy_or_nothing(attack.fixed_damage, *num_coins)
+        }
         Mechanic::DiscardOpponentActiveToolsBeforeDamage => {
             discard_opponent_active_tools_before_damage(attack.fixed_damage)
         }
@@ -564,6 +581,9 @@ fn forecast_effect_attack_by_mechanic(
         Mechanic::DiscardRandomGlobalEnergy { count } => {
             discard_random_global_energy_attack(attack.fixed_damage, *count, state)
         }
+        Mechanic::RandomizeOpponentNextEnergy => {
+            randomize_opponent_next_energy_attack(attack.fixed_damage)
+        }
         Mechanic::RandomDamageToOpponentPokemonPerSelfEnergy {
             energy_type,
             damage_per_hit,
@@ -597,6 +617,15 @@ fn forecast_effect_attack_by_mechanic(
         Mechanic::ExtraDamageIfEvolvedThisTurn { extra_damage } => {
             extra_damage_if_evolved_this_turn_attack(state, attack.fixed_damage, *extra_damage)
         }
+        Mechanic::ExtraDamageIfEvolvedFromThisTurn {
+            pokemon_name,
+            extra_damage,
+        } => extra_damage_if_evolved_from_this_turn_attack(
+            state,
+            attack.fixed_damage,
+            pokemon_name,
+            *extra_damage,
+        ),
         Mechanic::RecoilIfKo { self_damage } => {
             recoil_if_ko_attack(attack.fixed_damage, *self_damage)
         }
@@ -614,6 +643,9 @@ fn forecast_effect_attack_by_mechanic(
         }
         Mechanic::DamageAndDiscardOpponentDeck { discard_count } => {
             damage_and_discard_opponent_deck(attack.fixed_damage, *discard_count)
+        }
+        Mechanic::FlipUntilTailsDiscardOpponentDeck => {
+            flip_until_tails_discard_opponent_deck(attack.fixed_damage)
         }
         Mechanic::MegaAmpharosExLightningLancer => mega_ampharos_lightning_lancer(state),
         Mechanic::OminousClaw => ominous_claw_attack(state.current_player, attack.fixed_damage),
@@ -786,7 +818,9 @@ fn forecast_effect_attack_by_mechanic(
         Mechanic::ExtraDamageIfDefenderAsleep { extra_damage } => {
             extra_damage_if_defender_asleep(state, attack.fixed_damage, *extra_damage)
         }
-        Mechanic::DiscardTopSelfDeck => discard_top_self_deck(attack.fixed_damage),
+        Mechanic::DiscardTopSelfDeck { count } => {
+            discard_top_self_deck(attack.fixed_damage, *count)
+        }
         Mechanic::TieredCoinFlipDamage {
             num_coins,
             extra_damage_by_heads,
@@ -1085,7 +1119,7 @@ fn waterfall_evolution(state: &State) -> AttackOutcomes {
     if evolution_cards.is_empty() {
         // No evolution cards in deck, just shuffle
         return AttackOutcomes::single_effect(|rng, state, action| {
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         });
     }
 
@@ -1099,7 +1133,7 @@ fn waterfall_evolution(state: &State) -> AttackOutcomes {
             apply_evolve(action.actor, state, &evolution_card, 0, true);
 
             // Shuffle the deck
-            state.decks[action.actor].shuffle(false, rng);
+            state.shuffle_deck(action.actor, rng);
         }));
     }
 
@@ -1799,24 +1833,47 @@ fn self_discard_energy_and_card_effect(
 /// For attacks that deal damage and discard random energy from opponent's active Pokémon
 fn damage_and_discard_energy(damage: u32, discard_count: usize) -> AttackOutcomes {
     active_damage_effect_doutcome(damage, move |rng, state, action| {
-        let opponent = (action.actor + 1) % 2;
-        let mut to_discard = Vec::new();
-        let mut remaining = state.get_active(opponent).attached_energy.clone();
-
-        for _ in 0..discard_count {
-            if remaining.is_empty() {
-                break; // No more energy to discard
-            }
-
-            let energy_count = remaining.len();
-            let rand_idx = rng.gen_range(0..energy_count);
-            to_discard.push(remaining.swap_remove(rand_idx));
-        }
-
-        if !to_discard.is_empty() {
-            state.discard_from_active(opponent, &to_discard);
-        }
+        discard_random_energy_from_opponent_active(rng, state, action.actor, discard_count);
     })
+}
+
+/// Flip `num_coins` coins and discard a random Energy from the opponent's Active Pokémon for
+/// each heads (e.g. Pidgeot's Twister). On all tails the attack does nothing — including no
+/// damage — so that branch is a no-op outcome.
+fn coin_flips_discard_energy_or_nothing(damage: u32, num_coins: usize) -> AttackOutcomes {
+    AttackOutcomes::binomial_by_heads(num_coins, move |heads| {
+        if heads == 0 {
+            return AttackOutcome::noop();
+        }
+        active_damage_effect_outcome(damage, move |rng, state, action| {
+            discard_random_energy_from_opponent_active(rng, state, action.actor, heads);
+        })
+    })
+}
+
+fn discard_random_energy_from_opponent_active(
+    rng: &mut StdRng,
+    state: &mut State,
+    actor: usize,
+    discard_count: usize,
+) {
+    let opponent = (actor + 1) % 2;
+    let mut to_discard = Vec::new();
+    let mut remaining = state.get_active(opponent).attached_energy.clone();
+
+    for _ in 0..discard_count {
+        if remaining.is_empty() {
+            break; // No more energy to discard
+        }
+
+        let energy_count = remaining.len();
+        let rand_idx = rng.gen_range(0..energy_count);
+        to_discard.push(remaining.swap_remove(rand_idx));
+    }
+
+    if !to_discard.is_empty() {
+        state.discard_from_active(opponent, &to_discard);
+    }
 }
 
 fn discard_opponent_active_tools_before_damage(damage: u32) -> AttackOutcomes {
@@ -1836,10 +1893,19 @@ fn discard_opponent_active_tools_before_damage(damage: u32) -> AttackOutcomes {
     ))
 }
 
-fn discard_top_self_deck(damage: u32) -> AttackOutcomes {
-    active_damage_effect_doutcome(damage, |_, state, action| {
-        if let Some(card) = state.decks[action.actor].draw() {
-            state.discard_piles[action.actor].push(card);
+fn discard_top_self_deck(damage: u32, count: usize) -> AttackOutcomes {
+    active_damage_effect_doutcome(damage, move |_, state, action| {
+        for _ in 0..count {
+            if let Some(card) = state.decks[action.actor].draw() {
+                // Milled to the public discard pile: drop this card's deck position (it is now visible).
+                state.emit_reveal(RevealEvent::KnownCardMoved {
+                    owner: action.actor,
+                    card: card.get_card_id(),
+                    from: Zone::Deck,
+                    to: Zone::Public,
+                });
+                state.discard_piles[action.actor].push(card);
+            }
         }
     })
 }
@@ -1858,16 +1924,36 @@ fn tiered_coin_flip_damage(
 /// For attacks that deal damage and discard cards from the top of opponent's deck
 fn damage_and_discard_opponent_deck(damage: u32, discard_count: usize) -> AttackOutcomes {
     active_damage_effect_doutcome(damage, move |_, state, action| {
-        let opponent = (action.actor + 1) % 2;
-
-        for _ in 0..discard_count {
-            if let Some(card) = state.decks[opponent].draw() {
-                state.discard_piles[opponent].push(card);
-            } else {
-                break; // No more cards to discard
-            }
-        }
+        discard_top_opponent_deck(state, action.actor, discard_count);
     })
+}
+
+/// Flip a coin until tails, discarding the top card of the opponent's deck for each heads
+/// (e.g. Coalossal's Mountain Crush). Truncated at 8 heads like the other flip-until-tails
+/// attacks, to keep the probability space manageable.
+fn flip_until_tails_discard_opponent_deck(damage: u32) -> AttackOutcomes {
+    AttackOutcomes::geometric_until_tails(8, move |heads| {
+        active_damage_effect_outcome(damage, move |_, state, action| {
+            discard_top_opponent_deck(state, action.actor, heads);
+        })
+    })
+}
+
+fn discard_top_opponent_deck(state: &mut State, actor: usize, discard_count: usize) {
+    let opponent = (actor + 1) % 2;
+    for _ in 0..discard_count {
+        let Some(card) = state.decks[opponent].draw() else {
+            break; // No more cards to discard
+        };
+        // Milled to the public discard pile: drop this card's deck position.
+        state.emit_reveal(RevealEvent::KnownCardMoved {
+            owner: opponent,
+            card: card.get_card_id(),
+            from: Zone::Deck,
+            to: Zone::Public,
+        });
+        state.discard_piles[opponent].push(card);
+    }
 }
 
 fn vaporeon_hyper_whirlpool(_state: &State, damage: u32) -> AttackOutcomes {
@@ -1948,9 +2034,9 @@ fn damage_and_both_active_multiple_status_attack(
 /// Draw cards and deal damage in the same attack.
 fn draw_and_damage_outcome(damage: u32, amount: u8) -> AttackOutcomes {
     active_damage_effect_doutcome(damage, move |_, state, action| {
-        state
-            .move_generation_stack
-            .push((action.actor, vec![SimpleAction::DrawCard { amount }]));
+        for _ in 0..amount {
+            state.maybe_draw_card(action.actor);
+        }
     })
 }
 
@@ -2215,6 +2301,17 @@ fn damage_and_discard_all_energy(damage: u32) -> AttackOutcomes {
     active_damage_effect_doutcome(damage, move |_, state, action| {
         let active = state.get_active_mut(action.actor);
         active.attached_energy.clear(); // Discard all energy
+    })
+}
+
+/// Porygon-Z's Buggy Beam: the Energy previewed in the opponent's Energy Zone becomes a
+/// uniformly random one of the 8 basic Energy types (i.e. every type the Energy Zone can
+/// generate), even if their deck declares no such Energy.
+fn randomize_opponent_next_energy_attack(damage: u32) -> AttackOutcomes {
+    active_damage_effect_doutcome(damage, move |rng, state, action| {
+        let choices = EnergyType::SELECTABLE;
+        let opponent = (action.actor + 1) % 2;
+        state.energy_zone[opponent].next = Some(choices[rng.gen_range(0..choices.len())]);
     })
 }
 
@@ -2749,9 +2846,44 @@ fn extra_damage_if_evolved_this_turn_attack(
     active_damage_doutcome(damage)
 }
 
+/// Like `extra_damage_if_evolved_this_turn_attack`, but the evolution must have come from a
+/// specific Pokémon: the card directly underneath the active must be `pokemon_name`.
+fn extra_damage_if_evolved_from_this_turn_attack(
+    state: &State,
+    base_damage: u32,
+    pokemon_name: &str,
+    extra_damage: u32,
+) -> AttackOutcomes {
+    let evolved_from_named = state.in_play_pokemon[state.current_player][0]
+        .as_ref()
+        .is_some_and(|active| {
+            active.played_this_turn
+                && active
+                    .cards_behind
+                    .last()
+                    .is_some_and(|under| under.get_name() == pokemon_name)
+        });
+    let damage = if evolved_from_named {
+        base_damage + extra_damage
+    } else {
+        base_damage
+    };
+    active_damage_doutcome(damage)
+}
+
 fn knock_back_attack(damage: u32) -> AttackOutcomes {
     active_damage_effect_doutcome(damage, move |_, state, action| {
         let opponent = (action.actor + 1) % 2;
+        // Mirror of `switch_self_with_bench`'s attacker-alive guard: this effect runs after the
+        // damage but before knockouts resolve, so a lethal Knock Back would queue a switch on a
+        // Pokémon that is about to be discarded. The KO's own promotion frame then targets the
+        // same empty active spot, and the second of the two swaps a `None` into it.
+        let defender_alive = state.in_play_pokemon[opponent][0]
+            .as_ref()
+            .is_some_and(|p| !p.is_knocked_out());
+        if !defender_alive {
+            return;
+        }
         let mut choices = Vec::new();
         for (in_play_idx, _) in state.enumerate_bench_pokemon(opponent) {
             choices.push(SimpleAction::Activate {
@@ -2835,6 +2967,15 @@ fn ominous_claw_attack(acting_player: usize, fixed_damage: u32) -> AttackOutcome
     AttackOutcomes::binary_coin(
         active_damage_effect_outcome(fixed_damage, move |_, state, _action| {
             let opponent = (acting_player + 1) % 2;
+            // "Your opponent reveals their hand" — presence + position over the whole hand.
+            let revealed: Vec<_> = state.hands[opponent]
+                .iter()
+                .map(|card| card.get_card_id())
+                .collect();
+            state.emit_reveal(RevealEvent::HandRevealed {
+                owner: opponent,
+                cards: revealed,
+            });
             let possible_discards: Vec<SimpleAction> = state
                 .iter_hand_supporters(opponent)
                 .map(|card| SimpleAction::DiscardOpponentSupporter {
@@ -2857,6 +2998,15 @@ fn ominous_claw_attack(acting_player: usize, fixed_damage: u32) -> AttackOutcome
 fn darkness_claw_attack(acting_player: usize, fixed_damage: u32) -> AttackOutcomes {
     active_damage_effect_doutcome(fixed_damage, move |_, state, _action| {
         let opponent = (acting_player + 1) % 2;
+        // "Your opponent reveals their hand" — presence + position over the whole hand.
+        let revealed: Vec<_> = state.hands[opponent]
+            .iter()
+            .map(|card| card.get_card_id())
+            .collect();
+        state.emit_reveal(RevealEvent::HandRevealed {
+            owner: opponent,
+            cards: revealed,
+        });
         let possible_discards: Vec<SimpleAction> = state
             .iter_hand_supporters(opponent)
             .map(|card| SimpleAction::DiscardOpponentSupporter {
@@ -2925,6 +3075,18 @@ fn shuffle_opponent_active_into_deck() -> AttackOutcomes {
             let mut cards_to_shuffle = active_pokemon.cards_behind.clone();
             cards_to_shuffle.push(active_pokemon.card.clone());
 
+            // These cards were public (the Active in play); the attacker now knows each is
+            // somewhere in the opponent's deck (position → Deck), and the shuffle only randomises
+            // order, not zone membership.
+            for card in &cards_to_shuffle {
+                state.emit_reveal(RevealEvent::KnownCardMoved {
+                    owner: opponent,
+                    card: card.get_card_id(),
+                    from: Zone::Public,
+                    to: Zone::Deck,
+                });
+            }
+
             // Add cards to deck
             state.decks[opponent].cards.extend(cards_to_shuffle);
 
@@ -2932,7 +3094,7 @@ fn shuffle_opponent_active_into_deck() -> AttackOutcomes {
             state.discard_energies[opponent].extend(active_pokemon.attached_energy.iter().cloned());
 
             // Shuffle the deck
-            state.decks[opponent].shuffle(false, rng);
+            state.shuffle_deck(opponent, rng);
 
             // Trigger promotion from bench (or declare winner if no bench)
             state.trigger_promotion_or_declare_winner(opponent);
@@ -2952,8 +3114,17 @@ fn coin_flip_shuffle_random_opponent_hand_card_into_deck() -> AttackOutcomes {
             }
             let idx = rng.gen_range(0..state.hands[opponent].len());
             let card = state.hands[opponent].remove(idx);
+            let card_id = card.get_card_id();
             state.decks[opponent].cards.push(card);
-            state.decks[opponent].shuffle(false, rng);
+            state.shuffle_deck(opponent, rng);
+            // The card is revealed as it moves, so the observer knows *which* one went hand → deck.
+            // Position mutates to the deck (the shuffle only randomises order, not zone membership).
+            state.emit_reveal(RevealEvent::KnownCardMoved {
+                owner: opponent,
+                card: card_id,
+                from: Zone::Hand,
+                to: Zone::Deck,
+            });
         }),
         // Tails: do nothing
         active_damage_outcome(0),
@@ -3163,11 +3334,22 @@ type DamageDistribution = Vec<(usize, usize, u32)>;
 type EnumeratedOutcome = (f64, DamageDistribution);
 
 /// Generates forecastable outcomes for random multi-target damage attacks.
-/// Given a list of possible targets, enumerates all possible targeting combinations
-/// and groups them by damage distribution with correct probabilities.
+/// Given a list of possible targets, enumerates every distinct damage distribution with the
+/// probability of landing on it.
 ///
 /// Returns a Vec of (probability, damage_distribution) where damage_distribution
 /// is a sorted Vec of (player, in_play_idx, total_damage).
+///
+/// Enumerated over distributions, not over the `n^times` targeting sequences. Which sequence was
+/// drawn cannot be read off the result, so the sequences collapse into the `C(times + n - 1, n - 1)`
+/// ways of splitting the hits between targets, each weighted by the multinomial count of the
+/// sequences producing it. Distinguishing them cost a training run 40 minutes on a single frame:
+/// Gholdengo ex holding 14 [M] Energy against four Pokémon is 4^14 ≈ 268 million sequences and 680
+/// distributions, and the §1.2.5 threat matrix forecasts every attack on the board *every frame*
+/// ([`crate::rl::damage`]), so no game containing that board ever finishes.
+///
+/// Distributions come out in a fixed order, which the `HashMap` grouping this replaced did not
+/// give: the branch a game samples is now a function of its seed alone.
 pub(crate) fn enumerate_random_damage_outcomes(
     possible_targets: &[(usize, usize)],
     times: usize,
@@ -3178,34 +3360,84 @@ pub(crate) fn enumerate_random_damage_outcomes(
         return vec![];
     }
 
-    let total_sequences = n.pow(times as u32);
-    let prob_per_sequence = 1.0 / total_sequences as f64;
+    // Carried as the probability it is about to become rather than as the sequence count it came
+    // from: `n.pow(times)` overflows `usize` from six targets and twenty-five hits on.
+    let per_sequence = (1.0 / n as f64).powi(times as i32);
+    let mut hits = vec![0usize; n];
+    let mut outcomes = Vec::new();
+    accumulate_damage_distributions(
+        possible_targets,
+        damage_per_hit,
+        DistributionWalk {
+            index: 0,
+            remaining: times,
+            orderings: 1.0,
+            per_sequence,
+        },
+        &mut hits,
+        &mut outcomes,
+    );
+    outcomes
+}
 
-    let mut outcome_groups: HashMap<Vec<(usize, usize, u32)>, f64> = HashMap::new();
+/// One level of [`accumulate_damage_distributions`]: how many hits are still unplaced, and how many
+/// orderings the hits placed so far already account for.
+struct DistributionWalk {
+    index: usize,
+    remaining: usize,
+    orderings: f64,
+    per_sequence: f64,
+}
 
-    for seq_idx in 0..total_sequences {
-        let mut damage_map: HashMap<(usize, usize), u32> = HashMap::new();
-        let mut remaining = seq_idx;
-        for _ in 0..times {
-            let target_idx = remaining % n;
-            remaining /= n;
-            let target = possible_targets[target_idx];
-            *damage_map.entry(target).or_insert(0) += damage_per_hit;
-        }
-
-        let mut key: Vec<(usize, usize, u32)> = damage_map
-            .into_iter()
-            .map(|((p, i), d)| (p, i, d))
+/// One recursion level per target: give it a share of the hits, multiply in the orderings that
+/// choice admits, recurse on the rest. The last target takes whatever is left, so every leaf has
+/// spent all the hits and the leaf weights are the multinomial coefficients.
+fn accumulate_damage_distributions(
+    targets: &[(usize, usize)],
+    damage_per_hit: u32,
+    walk: DistributionWalk,
+    hits: &mut [usize],
+    out: &mut Vec<EnumeratedOutcome>,
+) {
+    if walk.index == targets.len() - 1 {
+        hits[walk.index] = walk.remaining;
+        let mut distribution: DamageDistribution = targets
+            .iter()
+            .zip(hits.iter())
+            .filter(|(_, &count)| count > 0)
+            .map(|(&(player, idx), &count)| (player, idx, count as u32 * damage_per_hit))
             .collect();
-        key.sort();
-
-        *outcome_groups.entry(key).or_insert(0.0) += prob_per_sequence;
+        distribution.sort();
+        out.push((walk.orderings * walk.per_sequence, distribution));
+        return;
     }
 
-    outcome_groups
-        .into_iter()
-        .map(|(dist, prob)| (prob, dist))
-        .collect()
+    for count in 0..=walk.remaining {
+        hits[walk.index] = count;
+        accumulate_damage_distributions(
+            targets,
+            damage_per_hit,
+            DistributionWalk {
+                index: walk.index + 1,
+                remaining: walk.remaining - count,
+                orderings: walk.orderings * binomial_coefficient(walk.remaining, count),
+                per_sequence: walk.per_sequence,
+            },
+            hits,
+            out,
+        );
+    }
+}
+
+/// `C(n, k)` as an `f64`, multiplicatively so the intermediate stays near the answer rather than
+/// running through `n!`. Rounded because the exact value is an integer and the division is not.
+fn binomial_coefficient(n: usize, k: usize) -> f64 {
+    let k = k.min(n - k);
+    let mut result = 1.0;
+    for i in 0..k {
+        result = result * (n - i) as f64 / (i + 1) as f64;
+    }
+    result.round()
 }
 
 /// Converts enumerated damage outcomes (with absolute player indices) into structured
@@ -4279,6 +4511,76 @@ mod test {
             let targets: Vec<(usize, usize)> = vec![];
             let outcomes = enumerate_random_damage_outcomes(&targets, 3, 50);
             assert!(outcomes.is_empty());
+        }
+
+        /// The distribution enumeration must agree with the sequence enumeration it replaced, not
+        /// merely be self-consistent — so this is the old `n^times` walk, kept as the oracle.
+        #[test]
+        fn test_matches_brute_force_over_sequences() {
+            for num_targets in 1..=4usize {
+                for times in 0..=5usize {
+                    let targets: Vec<(usize, usize)> = (0..num_targets).map(|i| (1, i)).collect();
+
+                    let mut expected: std::collections::HashMap<Vec<(usize, usize, u32)>, f64> =
+                        std::collections::HashMap::new();
+                    let total_sequences = num_targets.pow(times as u32);
+                    for seq_idx in 0..total_sequences {
+                        let mut damage = vec![0u32; num_targets];
+                        let mut remaining = seq_idx;
+                        for _ in 0..times {
+                            damage[remaining % num_targets] += 40;
+                            remaining /= num_targets;
+                        }
+                        let mut key: Vec<(usize, usize, u32)> = damage
+                            .iter()
+                            .enumerate()
+                            .filter(|(_, &d)| d > 0)
+                            .map(|(idx, &d)| (1, idx, d))
+                            .collect();
+                        key.sort();
+                        *expected.entry(key).or_insert(0.0) += 1.0 / total_sequences as f64;
+                    }
+
+                    let outcomes = enumerate_random_damage_outcomes(&targets, times, 40);
+                    assert_eq!(
+                        outcomes.len(),
+                        expected.len(),
+                        "{num_targets} targets, {times} hits"
+                    );
+                    for (probability, distribution) in outcomes {
+                        let reference = expected
+                            .get(&distribution)
+                            .unwrap_or_else(|| panic!("unexpected distribution {distribution:?}"));
+                        assert!(
+                            (probability - reference).abs() < 1e-12,
+                            "{distribution:?}: {probability} != {reference}"
+                        );
+                    }
+                }
+            }
+        }
+
+        /// The board that wedged `runs/long_v3`: Gholdengo ex with 14 [M] Energy against four
+        /// Pokémon. The sequence enumeration this replaced took ~40 minutes on it, so a test that
+        /// merely asserted the result would have been a test that never finished.
+        #[test]
+        fn test_fourteen_hits_over_four_targets_is_immediate() {
+            let targets: Vec<(usize, usize)> = (0..4).map(|i| (1, i)).collect();
+            let started = std::time::Instant::now();
+            let outcomes = enumerate_random_damage_outcomes(&targets, 14, 40);
+
+            // C(14 + 4 - 1, 4 - 1) = 680 distributions, against 4^14 ≈ 268 million sequences.
+            assert_eq!(outcomes.len(), 680);
+            let prob_sum: f64 = outcomes.iter().map(|(p, _)| p).sum();
+            assert!(
+                (prob_sum - 1.0).abs() < 1e-9,
+                "probabilities sum to {prob_sum}"
+            );
+            assert!(
+                started.elapsed() < std::time::Duration::from_secs(1),
+                "took {:?}",
+                started.elapsed()
+            );
         }
 
         #[test]

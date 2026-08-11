@@ -23,6 +23,19 @@ pub enum EnergyType {
     Colorless,
 }
 impl EnergyType {
+    /// The 8 Energy types the Energy Zone can generate, i.e. the ones a deck can be built
+    /// around. See `is_selectable`.
+    pub const SELECTABLE: [EnergyType; 8] = [
+        EnergyType::Grass,
+        EnergyType::Fire,
+        EnergyType::Water,
+        EnergyType::Lightning,
+        EnergyType::Psychic,
+        EnergyType::Fighting,
+        EnergyType::Darkness,
+        EnergyType::Metal,
+    ];
+
     pub(crate) fn from_str(energy_type: &str) -> Option<Self> {
         match energy_type {
             "Grass" => Some(EnergyType::Grass),
@@ -37,6 +50,16 @@ impl EnergyType {
             "Colorless" => Some(EnergyType::Colorless),
             _ => None,
         }
+    }
+
+    /// Whether a deck can be built around this energy, i.e. whether the Energy Zone
+    /// can generate it.
+    ///
+    /// Dragon and Colorless cannot. Colorless only ever appears as an attack cost
+    /// (payable by any energy), and there is no Dragon energy in the game — Dragon
+    /// Pokemon are powered by other types.
+    pub fn is_selectable(&self) -> bool {
+        !matches!(self, EnergyType::Dragon | EnergyType::Colorless)
     }
 
     pub fn as_str(&self) -> &'static str {

@@ -1,3 +1,3 @@
 mod mechanic;
 
-pub use mechanic::AbilityMechanic;
+pub use mechanic::{AbilityMechanic, AbilityMechanicDiscriminants};

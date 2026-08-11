@@ -11,7 +11,14 @@ pub struct Action {
     pub is_stack: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+/// `SimpleActionDiscriminants` (generated below) is the fieldless projection of this enum. The RL
+/// observation's History token encodes *which kind* of action the opponent chose as
+/// `discriminant(SimpleAction)` (`RL_ARCHITECTURE.md` §1.2.7), reusing this enumeration rather than
+/// inventing a parallel vocabulary — any variant added here is tracked automatically.
+#[derive(
+    Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, strum_macros::EnumDiscriminants,
+)]
+#[strum_discriminants(derive(strum_macros::EnumIter, strum_macros::EnumCount, Hash))]
 pub enum SimpleAction {
     DrawCard {
         amount: u8,

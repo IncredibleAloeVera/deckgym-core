@@ -94,6 +94,7 @@ fn can_use_ability_by_mechanic(
             !card.ability_used && state.discard_energies[state.current_player].contains(energy_type)
         }
         AbilityMechanic::ReduceDamageFromAttacks { .. } => false,
+        AbilityMechanic::ReduceDamageFromAttacksIfArceusInPlay { .. } => false,
         AbilityMechanic::ReduceOpponentActiveDamage { .. } => false,
         AbilityMechanic::IncreaseDamageWhenRemainingHpAtMost { .. } => false,
         AbilityMechanic::IncreaseDamageForTypeInPlay { .. } => false,
@@ -166,6 +167,7 @@ fn can_use_ability_by_mechanic(
         AbilityMechanic::CanEvolveOnFirstTurnIfActive => false,
         AbilityMechanic::CounterattackDamage { .. } => false,
         AbilityMechanic::PoisonAttackerOnDamaged => false,
+        AbilityMechanic::AttachEnergyFromZoneToBenchedOnDamaged { .. } => false,
         AbilityMechanic::IncreaseAttackCostForOpponentActive { .. } => false,
         AbilityMechanic::IncreaseRetreatCostForOpponentActive { .. } => false,
         AbilityMechanic::PreventDamageWhileBenched => false,

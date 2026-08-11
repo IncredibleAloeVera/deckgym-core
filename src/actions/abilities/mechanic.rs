@@ -1,10 +1,19 @@
 use crate::models::EnergyType;
 
-#[derive(Debug, Clone, PartialEq)]
+/// `AbilityMechanicDiscriminants` (generated below) is the fieldless projection of this enum: one
+/// variant per mechanic, iterable and hashable. It is the single source of truth for the typed
+/// ability multi-hot in the RL Pokémon static descriptor (`crate::rl`), so adding a mechanic here
+/// widens that feature block automatically instead of silently desynchronising it.
+#[derive(Debug, Clone, PartialEq, strum_macros::EnumDiscriminants)]
+#[strum_discriminants(derive(strum_macros::EnumIter, strum_macros::EnumCount, Hash))]
 pub enum AbilityMechanic {
     VictreebelFragranceTrap,
+    /// Heal `amount` damage from each of your Pokémon. `energy_type` restricts which Pokémon are
+    /// healed: `None` heals all of them, `Some(t)` heals only your Pokémon of that type (e.g.
+    /// Primarina's Melodious Healing, which heals only your [W] Pokémon).
     HealAllYourPokemon {
         amount: u32,
+        energy_type: Option<EnergyType>,
     },
     HealOneYourPokemon {
         amount: u32,
@@ -65,6 +74,12 @@ pub enum AbilityMechanic {
         self_damage: u32,
     },
     ReduceDamageFromAttacks {
+        amount: u32,
+    },
+    /// Magnezone's Resilience Link: like `ReduceDamageFromAttacks`, but only while its owner has
+    /// Arceus or Arceus ex in play. Because it depends on the board it cannot be modeled as a
+    /// plain `CardEffect` derived from the card alone; it is resolved in `hooks::modify_damage`.
+    ReduceDamageFromAttacksIfArceusInPlay {
         amount: u32,
     },
     ReduceOpponentActiveDamage {
@@ -190,6 +205,13 @@ pub enum AbilityMechanic {
         amount: u32,
     },
     PoisonAttackerOnDamaged,
+    /// Jellicent's Bouncy Body: if this Pokémon is in the Active Spot and is damaged by an attack
+    /// from the opponent's Pokémon, its owner takes an Energy of `energy_type` from their Energy
+    /// Zone and attaches it to 1 of their Benched Pokémon (their choice). Passive; triggered from
+    /// the damage path.
+    AttachEnergyFromZoneToBenchedOnDamaged {
+        energy_type: EnergyType,
+    },
     IncreaseAttackCostForOpponentActive {
         amount: u32,
     },
