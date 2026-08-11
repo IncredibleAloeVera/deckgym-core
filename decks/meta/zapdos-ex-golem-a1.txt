@@ -1,0 +1,30 @@
+# 0d49c10e
+Energy: Fighting, Lightning
+2 A1 104
+1 A1 147
+1 A1 148
+1 A1 149
+2 A1 203
+2 A1 223
+2 A1 224
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# f72ea48f
+Energy: Fighting, Lightning
+2 A1 104
+1 A1 147
+1 A1 148
+1 A1 149
+2 A1 203
+2 A1 223
+1 A1 224
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007

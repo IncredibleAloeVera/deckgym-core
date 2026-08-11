@@ -1,0 +1,17 @@
+# 9df520eb
+Energy: Darkness, Fighting, Grass
+1 A1 225
+1 A2 147
+1 A2 150
+1 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 223
+2 B1 226
+1 B2 017
+1 B3a 068
+2 B3a 074
+2 P-A 007

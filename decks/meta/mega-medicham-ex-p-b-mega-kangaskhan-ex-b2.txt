@@ -1,0 +1,35 @@
+# bbe1d813
+Energy: Fighting, Psychic
+1 A2 091
+1 A2 092
+1 A2 150
+1 A2b 071
+1 A3 149
+1 A4 066
+1 A4a 023
+1 B1 225
+2 B2 083
+1 B2 127
+1 B2 147
+1 B2 153
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-B 029
+
+# d04f9aa5
+Energy: Fighting, Psychic
+1 A2 150
+1 A2 155
+2 A2a 043
+1 A2a 072
+1 A2b 071
+1 A3 149
+2 A4a 023
+2 B1 225
+1 B2 127
+1 B2 145
+1 B2 147
+2 P-A 005
+2 P-A 007
+2 P-B 029

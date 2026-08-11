@@ -1,0 +1,27 @@
+# 68fb3ce1
+Energy: Darkness
+2 A1 016
+2 A1 017
+1 A1 219
+1 A1 225
+2 A1a 053
+2 A1a 054
+2 A1a 055
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 6cf20f62
+Energy: Darkness, Grass
+2 A1 016
+2 A1 017
+2 A1 225
+2 A1a 053
+2 A1a 054
+2 A1a 055
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007

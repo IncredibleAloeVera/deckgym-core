@@ -1,9 +1,42 @@
 /target
 .venv
 .DS_Store
+.vscode/settings.json
 
 TODO.md
+NOTES.md
+/auxiliaries/*
+!/auxiliaries/text_embeddings/
+# Generator of the versioned decks/ DBs (RL_ARCHITECTURE 1.5.3). Its inputs stay untracked, but
+# the code that turned them into the training input has to be readable next to its output.
+!/auxiliaries/build_deck_dbs.py
+# Same reason, one step upstream: these three turn the Limitless API into that generator's input.
+# The 28 MB response cache and the meta_decks.json they write stay untracked.
+!/auxiliaries/build_meta_decks.py
+!/auxiliaries/deck_energy.py
+!/auxiliaries/energy_model.py
+# The tutorial DB's extractor and the two inputs that do not survive a re-extraction: the Event
+# decks were transcribed by hand, and `preset_decks_fixed.json` carries repairs the Game8 pages
+# cannot produce. Tracked because nothing else can rebuild them — see README.md, step 3.
+!/auxiliaries/extract_preset_decks.py
+!/auxiliaries/preset_decks_fixed.json
+!/auxiliaries/raw_event_decks.txt
+# `cargo run --bin card_status` writes it; every playability rule downstream reads it.
+!/auxiliaries/card_status.txt
+# The cached Game8 pages the extractor reads. Third-party page content, not ours to redistribute:
+# `--refresh` refetches them.
+/auxiliaries/.game8_cache/
 
 __pycache__/
 *.so
 *.pyd
+
+# Run artefacts (RL_ARCHITECTURE 1.5.5). The config that produced them is cloned inside.
+/runs
+# Replays a run's metrics.jsonl into TensorBoard (RL_ARCHITECTURE 1.5.6). Same reason as above:
+# the bridge between the training loop and the curves has to be readable next to the loop.
+!/auxiliaries/jsonl_to_tensorboard.py
+
+# Written by a bare `uv run` in the repo (the pyo3 build needs --no-project). Not the project's
+# dependency set: the auxiliaries pull what they need with `uv run --with`.
+uv.lock

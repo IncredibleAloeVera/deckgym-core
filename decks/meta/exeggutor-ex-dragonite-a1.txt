@@ -1,0 +1,42 @@
+# 11529242
+Energy: Grass, Lightning, Water
+2 A1 023
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 219
+2 A1a 001
+1 A1a 068
+1 A2 146
+1 A2 148
+1 A2 150
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# dea04f2f
+Energy: Grass, Lightning, Water
+2 A1 021
+2 A1 023
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 219
+2 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e90bb467
+Energy: Grass, Lightning, Water
+2 A1 021
+2 A1 023
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 219
+1 A1 225
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007

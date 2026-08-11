@@ -1,0 +1,41 @@
+# 3faf234c
+Energy: Psychic
+2 A1 120
+2 A1 123
+2 A1 223
+2 A1 225
+2 A1a 056
+2 A1a 065
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 020
+
+# 4e78e187
+Energy: Psychic
+2 A1 120
+2 A1 121
+2 A1 123
+1 A1 225
+2 A1a 056
+2 A1a 065
+1 A1a 068
+2 A2 148
+1 A2 150
+1 A2b 071
+2 P-A 005
+2 P-A 007
+
+# eccaad5b
+Energy: Psychic
+2 A1 120
+2 A1 121
+2 A1 123
+1 A1 127
+2 A1a 056
+2 A1a 065
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007

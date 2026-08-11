@@ -1,0 +1,15 @@
+# a7040382
+Energy: Fighting, Psychic
+1 A1 129
+1 A1 154
+1 A1 223
+1 A1a 032
+2 A1a 034
+2 A1a 035
+2 A1a 047
+2 A1a 060
+2 A1a 068
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007

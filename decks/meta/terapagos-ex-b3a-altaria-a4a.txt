@@ -1,0 +1,222 @@
+# 05e90fa1
+Energy: Fighting, Metal, Psychic
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 070
+1 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# 1f9f1345
+Energy: Fighting, Metal, Psychic
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 070
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+2 B1 225
+1 B1 226
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# 2e199aa0
+Energy: Darkness, Fighting, Grass
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 070
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+1 B3 147
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# 63914d46
+Energy: Grass, Metal, Psychic
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 070
+1 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# 651d45d1
+Energy: Fighting, Grass, Psychic
+1 A1 225
+1 A1a 068
+1 A2 147
+1 A2 150
+1 A2b 070
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 A4a 064
+1 B1 223
+1 B1 225
+2 B3a 068
+2 P-A 005
+2 P-A 007
+
+# 715d8770
+Energy: Fighting, Grass, Psychic
+1 A1 225
+1 A2 148
+1 A2 150
+2 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+2 B1 225
+1 B1 226
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# 8f9ce97e
+Energy: Fighting, Grass, Psychic
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 070
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+1 B3 147
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# 9ad4387b
+Energy: Fighting, Grass, Psychic
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2b 070
+1 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+2 B3a 068
+1 B3a 074
+1 P-A 005
+2 P-A 007
+
+# c2311d5d
+Energy: Fighting, Grass, Psychic
+1 A1 225
+1 A2 150
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+1 B2 145
+1 B3 147
+2 B3a 068
+1 B3a 074
+2 P-A 005
+2 P-A 007
+
+# ed443f51
+Energy: Fighting, Grass, Psychic
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 070
+1 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# f06b1284
+Energy: Darkness, Grass, Metal
+1 A1 225
+1 A2 147
+1 A2 150
+1 A2 155
+1 A2b 070
+1 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+2 B3a 068
+1 P-A 005
+2 P-A 007
+
+# f873f182
+Energy: Darkness, Fighting, Psychic
+1 A1 225
+1 A2 150
+1 A2b 070
+1 A3 149
+1 A4 032
+1 A4 066
+1 A4a 023
+2 A4a 055
+2 B1 196
+1 B1 225
+1 B1 226
+1 B2 145
+2 B3a 068
+1 B3a 074
+1 P-A 005
+2 P-A 007

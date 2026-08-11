@@ -1,0 +1,56 @@
+# 1a79fbbc
+Energy: Fighting
+2 A1 151
+2 A1 153
+2 A1 176
+2 A1 177
+2 A1 222
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2ce3ae01
+Energy: Fighting
+2 A1 151
+2 A1 153
+1 A1 176
+2 A1 177
+1 A1 222
+2 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4ecf2e05
+Energy: Fighting
+2 A1 151
+2 A1 153
+2 A1 176
+2 A1 177
+1 A1 198
+2 A1 222
+1 A1 225
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# bcdb3c44
+Energy: Fighting
+2 A1 151
+2 A1 153
+2 A1 176
+2 A1 177
+2 A1 222
+1 A1 223
+1 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007

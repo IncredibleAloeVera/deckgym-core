@@ -1,0 +1,228 @@
+# 03078aac
+Energy: Fire, Psychic
+1 A1 223
+1 A2 147
+1 A2a 010
+1 A2b 069
+1 A2b 070
+1 A2b 071
+1 A3 147
+1 A3b 009
+1 A3b 028
+1 A3b 034
+2 A3b 055
+2 A3b 056
+2 A3b 066
+1 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 0b5689f2
+Energy: Fire
+1 A2 155
+1 A2b 071
+1 A3 151
+2 A3b 009
+2 A3b 056
+2 A4a 010
+1 B1 121
+2 B1 217
+1 B1 223
+2 B1 225
+1 B2 153
+2 P-A 005
+2 P-A 007
+
+# 100beb50
+Energy: Fire
+2 A2 147
+1 A2b 069
+1 A2b 070
+2 A3b 008
+1 A3b 009
+1 A3b 034
+2 A3b 055
+2 A3b 056
+2 A3b 066
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 11b4c991
+Energy: Fire, Psychic
+1 A2 147
+1 A2 150
+1 A2a 010
+1 A2b 070
+1 A2b 071
+1 A3 147
+1 A3 151
+1 A3b 009
+1 A3b 028
+1 A3b 034
+2 A3b 055
+2 A3b 056
+2 A3b 066
+2 P-A 005
+2 P-A 007
+
+# 36d2f262
+Energy: Fire, Psychic
+1 A1 225
+1 A2 147
+1 A2a 010
+1 A2b 071
+1 A3 147
+1 A3 151
+1 A3b 008
+1 A3b 009
+1 A3b 034
+2 A3b 055
+2 A3b 056
+1 A3b 066
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 46ceaac2
+Energy: Fire, Psychic
+1 A1a 068
+1 A2 147
+1 A2 150
+1 A2b 069
+1 A2b 070
+1 A2b 071
+1 A3a 064
+2 A3b 009
+2 A3b 034
+2 A3b 056
+1 A3b 066
+1 A4 083
+1 A4a 010
+1 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 4880b574
+Energy: Fire, Psychic
+1 A2 147
+1 A2 150
+1 A2a 010
+1 A2b 069
+1 A2b 070
+1 A2b 071
+1 A3 147
+1 A3b 009
+1 A3b 028
+1 A3b 034
+2 A3b 055
+2 A3b 056
+2 A3b 066
+1 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 7599f58d
+Energy: Fire
+1 A1 045
+1 A2 146
+1 A2 147
+1 A2 148
+1 A2 155
+1 A2b 071
+1 A3b 008
+1 A3b 009
+1 A3b 034
+2 A3b 055
+2 A3b 056
+2 A3b 066
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 81ae9e63
+Energy: Fire, Lightning
+2 A1a 068
+1 A2 146
+1 A2 147
+1 A2 150
+1 A2b 071
+2 A3a 019
+2 A3b 009
+2 A3b 056
+1 A3b 066
+1 A4 151
+1 A4a 010
+1 A4a 025
+2 P-A 005
+2 P-A 007
+
+# aa54be04
+Energy: Fire, Psychic
+1 A1a 068
+1 A2 147
+2 A2 150
+1 A2b 069
+1 A2b 070
+1 A2b 071
+2 A3b 009
+2 A3b 034
+2 A3b 056
+2 A3b 066
+1 A4 083
+1 A4a 010
+1 P-A 005
+2 P-A 007
+
+# bfa91df9
+Energy: Fire, Lightning
+1 A1 206
+1 A2 150
+1 A2 155
+1 A2a 010
+1 A2b 070
+1 A2b 071
+1 A3 066
+1 A3 151
+1 A3b 009
+1 A3b 025
+1 A3b 034
+1 A3b 055
+2 A3b 056
+2 A3b 066
+2 P-A 005
+2 P-A 007
+
+# c857a52e
+Energy: Darkness, Fire, Psychic
+1 A1 045
+2 A2b 071
+2 A3a 064
+1 A3b 009
+1 A3b 034
+1 A3b 043
+2 A3b 056
+2 A3b 066
+2 A4 032
+2 A4 134
+2 P-A 005
+2 P-A 007
+
+# ce25445b
+Energy: Fire
+1 A1 045
+1 A1 225
+1 A2 020
+1 A2 147
+1 A2a 010
+1 A2b 071
+1 A3b 008
+1 A3b 009
+1 A3b 034
+2 A3b 055
+2 A3b 056
+2 A3b 066
+2 P-A 005
+1 P-A 006
+2 P-A 007

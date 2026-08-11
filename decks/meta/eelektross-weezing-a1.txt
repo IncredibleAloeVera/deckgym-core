@@ -1,0 +1,14 @@
+# 1afb07a5
+Energy: Darkness, Lightning
+1 A1 107
+2 A1 108
+1 A1 109
+1 A1 176
+2 A1 177
+2 A1 222
+1 A1a 015
+2 A1a 030
+2 A2 146
+2 P-A 002
+2 P-A 005
+2 P-A 007

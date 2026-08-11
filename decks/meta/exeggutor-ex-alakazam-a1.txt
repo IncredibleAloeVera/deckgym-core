@@ -1,0 +1,543 @@
+# 00fecdb2
+Energy: Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 094f185c
+Energy: Grass
+2 A1 021
+2 A1 023
+1 A1 115
+1 A1 116
+1 A1 117
+2 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 144ead78
+Energy: Grass, Psychic
+2 A1 021
+1 A1 022
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 17cea329
+Energy: Psychic
+2 A1 022
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 196e811d
+Energy: Grass, Psychic
+2 A1 021
+1 A1 023
+1 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+1 A1 223
+1 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 275ea7a0
+Energy: Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 196
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 29daa670
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+2 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 336ffef9
+Energy: Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 223
+1 A1 225
+2 A1a 001
+1 A1a 002
+1 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 36fe012a
+Energy: Grass, Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+1 A1a 032
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 381d5f20
+Energy: Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 225
+2 A1a 001
+1 A1a 032
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 3f67e831
+Energy: Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 203
+1 A1 223
+1 A1 225
+2 A1a 001
+1 A1a 002
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 457b7fa2
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 219
+2 A1 223
+2 A1 225
+2 A1a 068
+1 P-A 005
+2 P-A 007
+
+# 480e5fe4
+Energy: Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 223
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4f15e7e4
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 219
+1 A1 223
+1 A1 225
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 50e37ef7
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+1 A1 223
+2 A1 225
+2 P-A 001
+1 P-A 005
+2 P-A 007
+
+# 64b7f5a0
+Energy: Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 225
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 65e87fc1
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+1 A1 223
+1 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 7971f3e8
+Energy: Grass
+2 A1 021
+2 A1 023
+2 A1 115
+1 A1 116
+2 A1 117
+1 A1 223
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 95d32c06
+Energy: Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+1 A1a 032
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 961d5d92
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 196
+1 A1 219
+1 A1 223
+1 A1 225
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9deddb12
+Energy: Grass, Psychic
+2 A1 021
+1 A1 022
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+2 A1 223
+1 A1 225
+2 P-A 005
+2 P-A 007
+
+# a55a2ba2
+Energy: Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 223
+2 A1a 001
+1 A1a 032
+1 A1a 060
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# aa877ef3
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 219
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# acdaf92e
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# b40e6cb2
+Energy: Psychic
+1 A1 022
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 223
+1 A1 225
+2 A1a 001
+1 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# b67ba8b7
+Energy: Grass, Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+2 A1a 001
+1 A1a 032
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# bb76315a
+Energy: Grass, Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 198
+2 A1 219
+2 A1a 001
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# c3c9a850
+Energy: Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 223
+1 A1 225
+2 A1a 001
+1 A1a 002
+1 A1a 003
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# d194bd72
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+2 A1 225
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# d39944be
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 219
+1 A1 223
+1 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# d47d8055
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+1 A1 225
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d9106bf9
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+1 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d9485d04
+Energy: Psychic
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 223
+2 A1 225
+2 A1a 001
+1 A1a 032
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# db9629f9
+Energy: Grass, Psychic
+2 A1 022
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e17a9214
+Energy: Grass, Psychic
+1 A1 022
+2 A1 023
+1 A1 115
+2 A1 116
+2 A1 117
+2 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 003
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# e212a178
+Energy: Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# eabbf942
+Energy: Grass, Psychic
+2 A1 021
+1 A1 022
+2 A1 023
+2 A1 115
+2 A1 116
+2 A1 117
+1 A1 223
+1 A1 225
+1 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# f6072b01
+Energy: Grass, Psychic
+2 A1 021
+2 A1 023
+2 A1 115
+1 A1 116
+1 A1 117
+2 A1 127
+1 A1 219
+2 A1 223
+1 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007

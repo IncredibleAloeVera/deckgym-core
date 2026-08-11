@@ -1,0 +1,14 @@
+# adc3ff3e
+Energy: Fighting, Grass, Water
+1 A1 203
+2 A1 205
+2 A2 148
+1 A2 150
+2 A2a 063
+2 A2a 074
+2 A2b 070
+2 A3 149
+1 A3 151
+2 P-A 005
+1 P-A 006
+2 P-A 007

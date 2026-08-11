@@ -1,0 +1,60 @@
+# 2ff8fb45
+Energy: Darkness, Grass, Metal
+2 A1 089
+2 A2 150
+2 A3 144
+1 A3 149
+1 A4 032
+1 A4a 023
+2 B1 071
+1 B1 225
+1 B2 017
+1 B2 154
+2 B3a 068
+2 P-A 005
+2 P-A 007
+
+# 6b105d93
+Energy: Fire, Metal, Psychic
+2 A1 087
+2 A1 089
+2 A2 150
+2 A3 144
+1 A4 066
+1 A4a 023
+2 B1 225
+1 B2 154
+2 B3a 068
+1 B3a 071
+2 P-A 005
+2 P-A 007
+
+# 7baed9a3
+Energy: Darkness, Fighting, Metal
+2 A1 089
+1 A2 147
+2 A2 150
+2 A3 144
+1 A4 066
+1 A4a 023
+2 B1 071
+2 B1 225
+1 B2 017
+2 B3a 068
+2 P-A 005
+2 P-A 007
+
+# e556be58
+Energy: Water
+2 A1 087
+2 A1 089
+2 A2 150
+2 A3 144
+1 A4 066
+1 A4a 023
+2 B1 225
+1 B2 154
+2 B3a 068
+1 B3a 071
+2 P-A 005
+2 P-A 007

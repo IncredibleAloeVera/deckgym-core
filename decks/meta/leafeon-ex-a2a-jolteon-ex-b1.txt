@@ -1,0 +1,32 @@
+# 2ff06def
+Energy: Lightning
+2 A1a 001
+2 A2a 010
+2 A3 002
+1 A3 147
+1 A3b 056
+2 A4 156
+1 B1 081
+1 B1 120
+2 B1 184
+1 B1 223
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# fef19a28
+Energy: Fire, Lightning
+1 A1 225
+1 A2 020
+2 A2a 010
+1 A2b 071
+1 A3b 009
+1 A3b 056
+2 A3b 066
+1 B1 081
+2 B1 184
+2 B1 225
+1 B3 155
+1 B3b 065
+2 P-A 005
+2 P-A 007

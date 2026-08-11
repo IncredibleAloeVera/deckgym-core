@@ -1,0 +1,14 @@
+# db51d4d8
+Energy: Fire, Lightning, Water
+1 A1 225
+1 A2 150
+2 A2b 069
+2 A3 144
+2 A3 149
+1 A3 151
+2 A3a 054
+2 A3a 056
+1 A4 034
+2 A4 149
+2 A4 151
+2 P-A 007

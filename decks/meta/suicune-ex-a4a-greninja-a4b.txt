@@ -1,0 +1,248 @@
+# 0497907c
+Energy: Water
+1 A3a 064
+2 A4a 020
+1 A4a 067
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+1 A4b 327
+2 A4b 331
+1 A4b 345
+2 P-A 005
+2 P-A 007
+
+# 1668dcd7
+Energy: Water
+1 A1 220
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+2 A4b 327
+2 A4b 331
+1 A4b 345
+2 P-A 005
+2 P-A 007
+
+# 1f78a26e
+Energy: Water
+2 A2b 070
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+2 A4b 327
+1 A4b 345
+1 A4b 347
+2 P-A 005
+2 P-A 007
+
+# 2288e517
+Energy: Water
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+1 A4b 327
+2 A4b 331
+1 A4b 345
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 261a05aa
+Energy: Water
+1 A3 151
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+1 A4b 327
+2 A4b 331
+1 A4b 345
+2 P-A 005
+2 P-A 007
+
+# 3685a416
+Energy: Water
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 147
+1 A4b 172
+2 A4b 314
+1 A4b 321
+1 A4b 327
+1 A4b 331
+1 A4b 345
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4d287f72
+Energy: Water
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 147
+2 A4b 314
+1 A4b 321
+2 A4b 327
+2 A4b 331
+1 A4b 345
+1 A4b 353
+2 P-A 005
+2 P-A 007
+
+# 618901ea
+Energy: Water
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+2 A4b 327
+2 A4b 331
+1 A4b 345
+1 A4b 347
+2 P-A 005
+2 P-A 007
+
+# 64d73a7e
+Energy: Water
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+2 A4b 327
+2 A4b 331
+1 A4b 345
+1 A4b 353
+2 P-A 005
+2 P-A 007
+
+# 6aed2687
+Energy: Water
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+2 A4b 321
+1 A4b 327
+2 A4b 331
+1 A4b 345
+2 P-A 005
+2 P-A 007
+
+# 7ccc0091
+Energy: Water
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 321
+1 A4b 327
+2 A4b 331
+1 A4b 345
+1 A4b 347
+2 P-A 005
+2 P-A 007
+
+# 8b4a6908
+Energy: Water
+1 A3 151
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 172
+2 A4b 314
+1 A4b 327
+2 A4b 331
+1 A4b 345
+1 A4b 347
+2 P-A 005
+2 P-A 007
+
+# 9b24eacd
+Energy: Water
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+2 A4b 147
+2 A4b 314
+1 A4b 327
+2 A4b 331
+1 A4b 345
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a8121717
+Energy: Water
+1 A3a 064
+2 A4a 020
+2 A4b 111
+2 A4b 114
+1 A4b 147
+1 A4b 172
+2 A4b 314
+1 A4b 321
+1 A4b 327
+2 A4b 331
+1 A4b 345
+2 P-A 005
+2 P-A 007
+
+# bc9ff6b3
+Energy: Water
+2 A1 220
+1 A3a 064
+2 A4a 020
+1 A4b 107
+2 A4b 111
+2 A4b 114
+2 A4b 314
+1 A4b 327
+1 A4b 331
+1 A4b 345
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# cbb0dfc7
+Energy: Water
+2 A4a 020
+1 A4a 023
+1 A4b 109
+2 A4b 111
+2 A4b 114
+1 A4b 299
+2 A4b 314
+2 A4b 327
+2 A4b 331
+1 A4b 353
+2 P-A 005
+2 P-A 007

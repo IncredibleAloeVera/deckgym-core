@@ -1,0 +1,26 @@
+# 30c2decf
+Energy: Metal
+2 A2a 042
+2 A2a 057
+2 A2a 066
+2 A2a 067
+1 A2a 068
+2 A2a 071
+1 A2a 074
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d0be8f4d
+Energy: Metal
+2 A1a 068
+2 A2a 042
+2 A2a 053
+2 A2a 054
+2 A2a 055
+2 A2a 057
+2 A2a 071
+2 A2a 075
+2 P-A 005
+2 P-A 007

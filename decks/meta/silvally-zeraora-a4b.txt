@@ -1,0 +1,15 @@
+# f8f86e83
+Energy: Lightning
+2 A2b 072
+2 A3a 067
+2 A4b 150
+2 A4b 301
+2 A4b 303
+1 A4b 311
+1 A4b 321
+1 A4b 327
+1 A4b 339
+1 A4b 345
+1 A4b 353
+2 P-A 005
+2 P-A 007

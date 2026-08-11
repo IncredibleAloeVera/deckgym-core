@@ -1,0 +1,13 @@
+# cfbc7f51
+Energy: Fighting, Fire
+2 A1 110
+2 A1 111
+2 A1 221
+2 A1a 010
+2 A1a 011
+2 A1a 041
+2 A1a 042
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007

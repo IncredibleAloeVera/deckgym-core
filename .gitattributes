@@ -1,0 +1,5 @@
+# The decks/ DBs are generated, not edited: build_deck_dbs.py opens its output with newline="" so
+# that a rerun on unchanged input is byte-identical. Under core.autocrlf they are checked out as
+# CRLF and rewritten as LF, which showed up as five modified tutorial files carrying an empty diff.
+# Pinning the checkout to LF is what makes "the generator is deterministic" observable in git.
+decks/** text eol=lf

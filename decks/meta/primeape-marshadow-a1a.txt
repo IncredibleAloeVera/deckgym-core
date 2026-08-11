@@ -1,0 +1,364 @@
+# 1218b3ca
+Energy: Fighting
+2 A1 141
+1 A1 154
+1 A1 155
+2 A1 223
+1 A1 225
+2 A1a 042
+2 A1a 047
+1 A2 150
+2 A2b 111
+2 P-A 001
+2 P-A 002
+2 P-A 007
+
+# 12376667
+Energy: Fighting
+1 A1 154
+2 A1 223
+2 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+1 A1a 056
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 379c2950
+Energy: Fighting
+2 A1 141
+1 A1 142
+2 A1 223
+2 A1 225
+1 A1a 042
+2 A1a 047
+1 A1a 068
+2 A2 148
+1 A2 150
+2 A2b 111
+2 P-A 001
+2 P-A 007
+
+# 43921d2f
+Energy: Fighting
+2 A1 141
+1 A1 154
+1 A1 198
+2 A1 223
+2 A1 225
+2 A1a 042
+2 A1a 047
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4a9e15e3
+Energy: Fighting
+1 A1 154
+1 A1 198
+2 A1 223
+1 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+1 A1a 048
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 518b43e1
+Energy: Fighting
+1 A1 141
+1 A1 150
+1 A1 154
+1 A1 210
+1 A1 223
+1 A1 224
+1 A1 225
+1 A1a 041
+2 A1a 042
+2 A1a 047
+2 A1a 063
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 5aa0e4a0
+Energy: Fighting
+2 A1 141
+1 A1 154
+2 A1 223
+2 A1 225
+2 A1a 042
+2 A1a 047
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 60e4878f
+Energy: Fighting
+1 A1 154
+1 A1 155
+1 A1 223
+1 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+1 A2 147
+1 A2 148
+1 A2 150
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 61d4a7a7
+Energy: Fighting
+1 A1 154
+1 A1 198
+2 A1 223
+1 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 7bf697fb
+Energy: Fighting
+1 A1 154
+2 A1 223
+2 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 85243afd
+Energy: Fighting
+2 A1 141
+1 A1 142
+1 A1 154
+2 A1 223
+2 A1 225
+1 A1a 042
+2 A1a 047
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 88b938f1
+Energy: Fighting
+1 A1 154
+1 A1 210
+2 A1 223
+2 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+2 A1a 063
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 8a121fdf
+Energy: Fighting
+1 A1 142
+1 A1 154
+2 A1 223
+2 A1 225
+1 A1a 041
+1 A1a 042
+2 A1a 047
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+1 P-A 017
+
+# 9cb76fd7
+Energy: Fighting
+1 A1 031
+1 A1 154
+1 A1 155
+2 A1 223
+2 A1 225
+2 A1a 042
+2 A1a 047
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+1 P-A 017
+
+# 9ec73fc9
+Energy: Fighting
+2 A1 141
+1 A1 154
+1 A1 155
+2 A1 223
+2 A1 225
+2 A1a 042
+2 A1a 047
+1 A1a 048
+1 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ac1a8994
+Energy: Fighting
+1 A1 154
+1 A1 198
+2 A1 223
+2 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# cc7501e6
+Energy: Fighting
+2 A1 141
+1 A1 154
+1 A1 223
+2 A1 225
+2 A1a 042
+2 A1a 047
+2 A2 148
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d2eddcde
+Energy: Fighting
+1 A1 154
+1 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+2 A2 147
+2 A2 148
+1 A2 150
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# dc7e1769
+Energy: Fighting
+2 A1 141
+1 A1 154
+1 A1 155
+2 A1 223
+2 A1 225
+2 A1a 042
+2 A1a 047
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e7676db4
+Energy: Fighting
+1 A1 154
+1 A1 198
+2 A1 223
+2 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+1 A1a 060
+1 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# eb0b1da1
+Energy: Fighting
+1 A1 154
+1 A1 155
+1 A1 198
+2 A1 223
+2 A1 225
+2 A1a 042
+2 A1a 047
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+1 P-A 017
+
+# ed88a640
+Energy: Fighting
+2 A1 141
+1 A1 142
+1 A1 154
+2 A1 223
+2 A1 225
+1 A1a 042
+2 A1a 047
+1 A1a 060
+1 A1a 068
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# fcb1de2b
+Energy: Fighting
+1 A1 154
+1 A1 155
+1 A1 223
+2 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# fe429da0
+Energy: Fighting
+1 A1 203
+1 A1 223
+2 A1 225
+2 A1a 041
+2 A1a 042
+2 A1a 047
+1 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007

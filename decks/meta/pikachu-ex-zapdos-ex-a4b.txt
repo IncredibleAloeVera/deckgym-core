@@ -1,0 +1,14 @@
+# 9f25ebfd
+Energy: Lightning
+2 A4 066
+2 A4b 131
+1 A4b 139
+2 A4b 150
+2 A4b 311
+2 A4b 323
+1 A4b 327
+1 A4b 353
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007

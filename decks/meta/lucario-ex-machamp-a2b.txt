@@ -1,0 +1,26 @@
+# 2e6af2cc
+Energy: Fighting
+2 A2b 037
+2 A2b 038
+2 A2b 039
+2 A2b 042
+2 A2b 043
+2 A2b 044
+2 A2b 071
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 724fde15
+Energy: Fighting
+2 A2b 037
+2 A2b 038
+2 A2b 039
+1 A2b 040
+2 A2b 042
+2 A2b 043
+1 A2b 044
+2 A2b 071
+2 P-A 002
+2 P-A 005
+2 P-A 007

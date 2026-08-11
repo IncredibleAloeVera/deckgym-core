@@ -1,0 +1,14 @@
+# 2c4bdddf
+Energy: Darkness
+1 A3 151
+2 A4 156
+2 A4b 248
+2 A4b 305
+2 A4b 321
+2 A4b 323
+1 A4b 327
+1 A4b 345
+2 A4b 350
+2 P-A 005
+1 P-A 006
+2 P-A 007

@@ -1,0 +1,10 @@
+[project]
+name = "text-embeddings"
+version = "0.1.0"
+description = "Frozen super-set TCG text encoder (RL_ARCHITECTURE §1.2.9): bge-small-en-v1.5 + PCA, exported for src/rl/text_embedding.rs"
+requires-python = ">=3.11"
+dependencies = [
+    "sentence-transformers>=3.0",
+    "scikit-learn>=1.4",
+    "numpy>=1.26",
+]

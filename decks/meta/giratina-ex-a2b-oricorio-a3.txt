@@ -1,0 +1,32 @@
+# adc45ea5
+Energy: Lightning, Psychic
+1 A1 225
+1 A1a 068
+1 A2 150
+1 A2 154
+1 A2a 073
+2 A2b 035
+2 A2b 070
+2 A3 066
+1 A3 080
+2 A3 146
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# c170a1ff
+Energy: Lightning, Psychic
+1 A1 225
+2 A2 147
+2 A2 148
+1 A2 150
+1 A2 154
+2 A2b 035
+2 A2b 070
+1 A2b 071
+2 A3 066
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007

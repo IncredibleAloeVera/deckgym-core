@@ -1,0 +1,499 @@
+# 07b1793e
+Energy: Fighting, Grass
+2 A2 150
+1 A3 144
+1 B1 177
+2 B1 225
+1 B2 147
+1 B2 154
+2 B3 076
+2 B3 125
+2 B3 126
+1 B3 147
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 09eb67a0
+Energy: Fighting, Grass
+1 A2 147
+2 A2 150
+1 A2b 070
+2 A3 144
+1 A3 155
+1 B1 177
+1 B1 225
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3 147
+1 B3 148
+2 P-A 005
+2 P-A 007
+
+# 0de00438
+Energy: Fighting, Grass
+1 A2 148
+1 A2 150
+2 A3 144
+1 B1 109
+2 B1 225
+1 B2 145
+1 B2 147
+2 B3 076
+2 B3 126
+1 B3 147
+1 B3b 061
+1 B3b 064
+2 P-A 005
+2 P-A 007
+
+# 201b8fe1
+Energy: Fighting, Grass
+2 A2 148
+1 A2 150
+1 A2b 070
+2 A3 144
+2 B1 225
+1 B2 145
+1 B2b 069
+2 B3 076
+2 B3 125
+2 B3 126
+2 P-A 005
+2 P-A 007
+
+# 23811743
+Energy: Fighting, Grass
+1 A2 104
+2 A2 148
+2 A2 150
+1 A2b 070
+2 A3 144
+2 B1 225
+1 B1a 065
+2 B3 076
+2 B3 126
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2417b3c4
+Energy: Fighting, Grass
+1 A2 148
+2 A2 150
+2 A3 144
+2 A3 155
+1 B1 223
+2 B1 225
+2 B2 145
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3a 071
+2 P-A 007
+
+# 2521ccfe
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+1 A3 066
+2 A3 144
+1 A4 066
+2 B1 225
+1 B2 145
+2 B3 076
+2 B3 126
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 267388fb
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+2 A3 144
+1 A3 155
+1 B1 225
+2 B2 145
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3 147
+1 B3a 071
+1 P-A 005
+2 P-A 007
+
+# 2abffdc7
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+1 A3 066
+2 A3 144
+1 A4 066
+1 B1 109
+2 B1 225
+1 B2 145
+2 B3 076
+2 B3 126
+1 P-A 002
+2 P-A 005
+1 P-A 007
+
+# 2c33ccf3
+Energy: Fighting, Grass
+1 A2 148
+2 A2 150
+1 A3 066
+2 A3 144
+1 A4 066
+2 B1 225
+2 B3 076
+1 B3 125
+2 B3 126
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2f0c4251
+Energy: Fighting, Grass
+2 A2 150
+1 A2b 070
+2 A3 144
+1 B1 177
+2 B1 225
+1 B1a 065
+1 B2b 069
+2 B3 076
+1 B3 125
+2 B3 126
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 498a1e5f
+Energy: Fighting, Grass
+2 A2 150
+1 A3 144
+1 B1 177
+2 B1 225
+1 B2 147
+1 B2 154
+1 B2b 069
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3 147
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4a1397b7
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+2 A3 144
+1 A3 155
+1 B1 177
+2 B1 225
+1 B2a 093
+1 B2b 069
+2 B3 076
+2 B3 126
+2 P-A 002
+2 P-A 007
+
+# 52e0cecf
+Energy: Fighting, Grass
+1 A2 104
+1 A2 148
+2 A2 150
+1 A2b 070
+2 A3 144
+1 A4a 065
+2 B1 225
+1 B2 145
+2 B3 076
+2 B3 126
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 7df419d6
+Energy: Fighting, Grass
+2 A2 148
+1 A2 150
+2 A3 144
+1 A4a 023
+1 A4a 065
+2 B1 225
+1 B2 147
+2 B3 076
+2 B3 126
+1 B3a 074
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 8452ab72
+Energy: Fighting, Grass
+2 A2 147
+1 A2 150
+1 A2b 070
+2 A3 144
+2 B1 225
+1 B2 145
+1 B2b 069
+2 B3 076
+2 B3 125
+2 B3 126
+2 P-A 005
+2 P-A 007
+
+# 892e8bc5
+Energy: Fighting, Grass
+1 A1 225
+1 A2 104
+2 A2 147
+2 A2 150
+1 A3 142
+2 A3 144
+1 A3 155
+1 B1 225
+2 B3 076
+2 B3 126
+1 B3a 071
+2 P-A 005
+2 P-A 007
+
+# 8aff80cc
+Energy: Fighting, Grass
+1 A2 148
+2 A2 150
+2 A3 144
+1 B1 177
+2 B1 225
+1 B2 147
+2 B3 076
+2 B3 126
+1 B3 147
+1 B3b 061
+1 B3b 064
+2 P-A 005
+2 P-A 007
+
+# 8ca99dff
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+2 A3 144
+1 B1 223
+2 B1 225
+2 B2 145
+1 B2a 093
+2 B3 076
+1 B3 125
+2 B3 126
+1 P-A 005
+2 P-A 007
+
+# 8f5249a3
+Energy: Fighting, Grass
+1 A2 147
+1 A2 150
+2 A3 144
+2 A3 155
+1 B1 223
+2 B1 225
+2 B2 145
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3a 071
+1 P-A 005
+2 P-A 007
+
+# 964fd4a3
+Energy: Fighting, Grass
+2 A2 147
+1 A2 150
+1 A3 144
+1 B1 177
+2 B1 225
+2 B2 145
+1 B2b 069
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3 147
+2 P-A 005
+2 P-A 007
+
+# 9d265a79
+Energy: Fighting, Grass
+2 A2 150
+1 A3 066
+2 A3 144
+1 A4 066
+2 B1 225
+1 B2 145
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3b 064
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a059b69e
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+2 A3 144
+2 B1 225
+2 B2 145
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3a 071
+2 P-A 005
+2 P-A 007
+
+# a6e659dc
+Energy: Fighting, Grass
+1 A2 147
+1 A2 148
+2 A2 150
+2 A3 144
+1 A3 155
+1 B1 225
+1 B2 145
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3 147
+1 B3a 071
+1 P-A 005
+1 P-A 006
+2 P-A 007
+
+# bf2795ab
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+2 A3 144
+2 B1 225
+2 B2 145
+1 B2a 093
+2 B3 076
+1 B3 125
+2 B3 126
+2 P-A 005
+2 P-A 007
+
+# c367b188
+Energy: Fighting, Grass
+2 A2 150
+1 A2b 070
+2 A3 144
+1 B1 177
+2 B1 225
+1 B1a 065
+2 B3 076
+1 B3 125
+2 B3 126
+1 B3 148
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d1b7fdf8
+Energy: Fighting, Grass
+2 A1a 068
+2 A2 148
+2 A2 150
+2 A2b 070
+2 A3 144
+2 B3 076
+2 B3 125
+2 B3 126
+2 P-A 005
+2 P-A 007
+
+# d4125aad
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+2 A3 144
+2 B1 225
+2 B2b 069
+2 B3 076
+1 B3 125
+2 B3 126
+2 P-A 001
+1 P-A 005
+2 P-A 007
+
+# e1b50788
+Energy: Fighting, Grass
+1 A2 147
+1 A2 150
+2 A3 144
+2 A3 155
+1 B1 223
+2 B1 225
+2 B2 145
+2 B3 076
+2 B3 125
+2 B3 126
+1 B3a 071
+2 P-A 007
+
+# eea03e86
+Energy: Fighting, Grass
+1 A2 147
+1 A2 148
+2 A2 150
+1 A2b 070
+2 A3 144
+1 B1 177
+2 B1 225
+1 B1a 065
+2 B3 076
+2 B3 126
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# f09d541a
+Energy: Fighting, Grass
+2 A2 148
+2 A2 150
+2 A3 144
+1 A3 155
+2 B1 225
+1 B2 145
+1 B2a 091
+1 B2a 093
+2 B3 076
+1 B3 125
+2 B3 126
+1 P-A 005
+2 P-A 007
+
+# f481344b
+Energy: Fighting, Grass
+1 A2 148
+1 A2 150
+1 A2b 070
+2 A3 144
+1 A3 155
+2 B1 225
+1 B2 145
+1 B2b 069
+1 B3 004
+2 B3 076
+1 B3 125
+2 B3 126
+2 P-A 005
+2 P-A 007

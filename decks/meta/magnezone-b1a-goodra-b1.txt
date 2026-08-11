@@ -1,0 +1,109 @@
+# 37b9c562
+Energy: Psychic, Water
+2 A1 098
+2 A2 150
+2 B1 177
+1 B1 178
+1 B1 179
+2 B1 225
+2 B1 226
+2 B1a 024
+2 B1a 026
+1 B1a 068
+1 B2 147
+1 P-A 005
+1 P-A 007
+
+# 5835e410
+Energy: Psychic, Water
+2 A1 098
+2 A2 150
+2 B1 177
+1 B1 178
+1 B1 179
+2 B1 225
+2 B1 226
+2 B1a 024
+2 B1a 026
+1 B1a 068
+1 B2 124
+1 P-A 005
+1 P-A 007
+
+# 628f9245
+Energy: Psychic, Water
+2 A1 098
+2 A2 150
+2 B1 177
+1 B1 178
+1 B1 179
+2 B1 225
+2 B1 226
+2 B1a 024
+2 B1a 026
+1 B1a 068
+2 P-A 005
+1 P-A 007
+
+# 637c3fc3
+Energy: Psychic, Water
+2 A1 098
+1 A2 147
+1 A2 150
+2 B1 177
+1 B1 178
+1 B1 179
+2 B1 225
+2 B1 226
+2 B1a 024
+2 B1a 026
+1 B1a 068
+1 P-A 002
+2 P-A 007
+
+# 784b7c8a
+Energy: Psychic, Water
+2 A1 098
+2 A2 150
+2 B1 177
+1 B1 178
+1 B1 179
+2 B1 225
+2 B1 226
+2 B1a 024
+2 B1a 026
+1 B1a 068
+1 P-A 005
+2 P-A 007
+
+# c0bfa7b9
+Energy: Psychic, Water
+2 A1 098
+1 A2 147
+2 A2 150
+1 B1 177
+1 B1 178
+1 B1 179
+2 B1 225
+2 B1 226
+2 B1a 024
+2 B1a 026
+1 B1a 068
+1 B2 124
+1 P-A 005
+1 P-A 007
+
+# e2da67c5
+Energy: Psychic, Water
+2 A1 098
+2 A2 150
+2 B1 177
+1 B1 178
+1 B1 179
+1 B1 225
+2 B1 226
+2 B1a 024
+2 B1a 026
+1 B1a 068
+2 P-A 005
+2 P-A 007

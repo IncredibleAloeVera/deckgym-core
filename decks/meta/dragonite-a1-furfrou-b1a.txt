@@ -1,0 +1,31 @@
+# 52fef351
+Energy: Lightning, Water
+2 A1 185
+1 A2 146
+2 A2 148
+1 A2 150
+2 A2b 070
+1 A3 151
+1 A3 155
+2 A3b 051
+1 B1 225
+2 B1a 065
+2 B2b 052
+1 P-A 005
+2 P-A 007
+
+# e1281c48
+Energy: Lightning, Water
+2 A1 185
+2 A3 144
+1 A3 155
+2 A3b 051
+1 A3b 052
+1 A4 066
+1 A4a 023
+1 B1 219
+1 B1 223
+2 B1 225
+2 B1a 065
+2 P-A 005
+2 P-A 007

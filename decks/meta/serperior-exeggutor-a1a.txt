@@ -1,0 +1,3917 @@
+# 001cf122
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 00a7009d
+Energy: Grass
+1 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+1 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+1 P-A 002
+1 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 00ae38e3
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A2 146
+1 A2 147
+1 A2b 069
+2 P-A 005
+2 P-A 007
+
+# 01b0b65f
+Energy: Grass
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+1 A1a 005
+2 A1a 006
+1 A1a 068
+1 A2 150
+1 A2 155
+1 A2b 004
+2 A3 144
+2 A3 147
+2 P-A 005
+2 P-A 007
+
+# 01dcb90d
+Energy: Grass
+2 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 02964f21
+Energy: Grass
+1 A1 026
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 02a54a8f
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 02bffd4f
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 0305a1bd
+Energy: Grass
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 03ed082e
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 041f600d
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 0494ef23
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 049caeb0
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 04cb8e71
+Energy: Grass
+1 A1 022
+2 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 0505b704
+Energy: Grass
+1 A1 005
+2 A1 219
+2 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 005
+2 P-A 007
+
+# 062030ee
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 06c74127
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 007
+2 A1a 008
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 0945d220
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 0987acfc
+Energy: Grass
+1 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 09b63920
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# 09ff9ca9
+Energy: Grass
+1 A1 219
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 A2 146
+1 A2 148
+1 A2 150
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 0f44fdfc
+Energy: Grass
+1 A1 021
+1 A1 022
+2 A1 219
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 001
+2 P-A 002
+1 P-A 005
+1 P-A 007
+
+# 0ff9ef74
+Energy: Grass
+1 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 117c36b1
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 16ad15bd
+Energy: Grass
+1 A1 001
+1 A1 002
+1 A1 003
+1 A1 005
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 005
+2 P-A 007
+
+# 16be3372
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 032
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 16c74c91
+Energy: Grass
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 A2 146
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 17563b71
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 18bc617c
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 056
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 1a296746
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# 1c6e05e6
+Energy: Grass
+1 A1 026
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 1ce5d9af
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 1db66cd0
+Energy: Grass
+1 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 1f6d1a8e
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 20709e38
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 220a6cd9
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 22cbed26
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 005
+2 P-A 007
+
+# 23dc3cbc
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 23eee1a7
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2464338f
+Energy: Grass
+2 A1 021
+1 A1 219
+1 A1 225
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 2551d4e8
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 A2 150
+2 P-A 005
+2 P-A 007
+
+# 262ca039
+Energy: Grass
+2 A1 026
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 26d382ba
+Energy: Grass
+2 A1 021
+1 A1 219
+1 A1 225
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 056
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 27f049f8
+Energy: Grass
+2 A1 219
+2 A1 223
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 005
+2 P-A 007
+
+# 28f1ff79
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 2c6bcd51
+Energy: Grass
+1 A1 223
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 2e7a859e
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 006
+1 A1a 009
+1 A2 146
+1 A3 002
+2 A3 144
+2 A3 147
+1 A3 155
+1 P-A 005
+2 P-A 007
+
+# 2fdcf5df
+Energy: Grass
+1 A1 203
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3010a993
+Energy: Grass
+2 A1 219
+1 A1 223
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 304bba77
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 3082d3cb
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+1 A1a 005
+2 A1a 006
+1 A1a 009
+1 A2 146
+2 A3 144
+1 A3 147
+2 P-A 005
+2 P-A 007
+
+# 332e9b47
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 35752cc8
+Energy: Grass
+1 A1 026
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 35877c77
+Energy: Grass
+1 A1 029
+1 A1 030
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 006
+
+# 37382154
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# 38aa41fa
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+1 P-A 027
+
+# 3a15c278
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A2 147
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 3c9dcee8
+Energy: Grass
+1 A1 203
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 3d7d6506
+Energy: Grass
+2 A1 203
+1 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 3f4e4b0f
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 3f95a8cc
+Energy: Fighting, Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 047
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 40b2e40c
+Energy: Grass, Water
+2 A1 005
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 42700363
+Energy: Grass
+1 A1 005
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 42bb70e5
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 42d141d9
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 42e6f269
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 4468fddb
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 4527c5a2
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 45e1f891
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 4630a869
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 001
+1 P-A 005
+2 P-A 007
+
+# 47b3cadb
+Energy: Grass
+1 A1 022
+2 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 4a98c4d4
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A2 146
+1 A2 147
+1 A2 148
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 4b5891e5
+Energy: Grass
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4bc35b32
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 223
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 4c9dff43
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4d4638c6
+Energy: Grass
+2 A1 219
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 4dd27c3e
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 4e6503fe
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 A1a 068
+1 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 4ec0c56f
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1 225
+1 A1a 002
+1 A1a 004
+1 A1a 005
+1 A1a 006
+1 A1a 009
+1 A2 150
+1 A3 144
+1 A3 147
+1 B1 225
+1 B1a 067
+1 B2 145
+1 B2a 015
+1 B2b 066
+1 B2b 069
+1 B3 153
+1 P-A 005
+1 P-A 007
+
+# 4ef47665
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 4fcc3f5a
+Energy: Grass
+1 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+1 P-A 002
+1 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 5030e56b
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 225
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 517f4d5c
+Energy: Grass
+1 A1 022
+2 A1 219
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A2b 069
+2 A2b 071
+2 P-A 005
+2 P-A 007
+
+# 51ca9041
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 056
+1 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 524791da
+Energy: Grass
+1 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 032
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 52a12479
+Energy: Grass
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 007
+1 A1a 008
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 533978f7
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A2 147
+1 A2 150
+2 P-A 005
+2 P-A 007
+
+# 53d08fb2
+Energy: Grass
+1 A1 005
+1 A1 203
+1 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 005
+2 P-A 007
+
+# 55c67026
+Energy: Grass
+1 A1 029
+1 A1 030
+1 A1 219
+1 A1a 001
+1 A1a 002
+1 A1a 004
+1 A1a 005
+1 A1a 006
+1 A2 022
+1 A2 148
+1 A2 150
+1 A3 010
+1 A3 144
+1 A3 147
+1 A3a 005
+1 A3a 007
+1 A3a 008
+1 P-A 001
+1 P-A 005
+1 P-A 007
+
+# 55dc8711
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 55f4346b
+Energy: Grass
+1 A1 196
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 56c7de90
+Energy: Grass
+1 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# 5768035b
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 57d6cbbd
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 594f7e85
+Energy: Grass
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 5a35e041
+Energy: Grass
+1 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 5ac7814f
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 001
+1 P-A 002
+1 P-A 005
+2 P-A 007
+
+# 5b6154d5
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 5be1b685
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 5c05f031
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 5cda9f8c
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 A2 146
+2 A2 147
+2 P-A 001
+1 P-A 005
+1 P-A 007
+
+# 5d3a6a25
+Energy: Grass
+1 A1 026
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 603ff17c
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 6052abf8
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A2 022
+1 A2 147
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 61785a2e
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 61cac3c8
+Energy: Grass
+2 A1 219
+1 A1 223
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 62448d5a
+Energy: Grass
+1 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 002
+1 P-A 005
+2 P-A 007
+
+# 62e1877a
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 630e2ef8
+Energy: Grass
+2 A1 021
+2 A1 219
+2 A1 225
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 63a977ca
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1a 002
+1 A1a 005
+1 A1a 006
+1 A1a 009
+1 A2 150
+1 A3 144
+1 A3 147
+1 A3b 006
+1 B1 223
+1 B1 225
+1 B1a 067
+1 B2 145
+1 B2a 015
+1 B3 020
+1 B3 153
+1 P-A 005
+1 P-A 007
+1 P-A 027
+
+# 64de22c3
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A2 146
+1 A2 147
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 6652ef6c
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 66d5d3d3
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 67450366
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# 69957e45
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 007
+1 A1a 008
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 69cbbce8
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 6e5cd675
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 6e5f12e0
+Energy: Grass
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 6e637cf7
+Energy: Grass
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 056
+2 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# 6e87687b
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 6f74b9e7
+Energy: Grass
+1 A1 005
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 70a0e6e4
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 7208b9c7
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 73a74977
+Energy: Grass
+1 A1 223
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 742f5daa
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+1 A1a 006
+1 A1a 009
+2 A1a 056
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 75edc988
+Energy: Grass
+1 A1 021
+1 A1 022
+2 A1 219
+1 A1 223
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 778cff54
+Energy: Grass
+2 A1 026
+1 A1 219
+1 A1 223
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 78770631
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 78e974f9
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 005
+2 P-A 007
+
+# 7a8e9408
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+1 A1a 005
+2 A1a 006
+1 A2 148
+1 A2b 069
+2 A3 144
+1 A3 147
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 7a97ce86
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 7b5c61b1
+Energy: Grass
+1 A1 021
+1 A1 219
+2 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 7c0effc1
+Energy: Grass
+1 A1 022
+2 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 7c266bdb
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 7d99b2eb
+Energy: Grass
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+1 P-A 001
+2 P-A 002
+1 P-A 005
+2 P-A 007
+
+# 7e2cd7b9
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 80a309b3
+Energy: Grass
+2 A1 029
+2 A1 030
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 005
+2 P-A 007
+
+# 80c09c03
+Energy: Grass
+1 A1 021
+1 A1 022
+2 A1 219
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 86394235
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A2 022
+1 A2 146
+1 A2 147
+1 A2b 069
+2 P-A 005
+2 P-A 007
+
+# 86e95587
+Energy: Grass
+1 A1 025
+1 A1 219
+1 A1 223
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 005
+1 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+1 P-A 002
+1 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 87aa7df2
+Energy: Grass
+2 A1 219
+1 A1 223
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 89581637
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 8a03363b
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 056
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 8b73b61e
+Energy: Grass
+1 A1 022
+2 A1 219
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 8bba1f39
+Energy: Grass
+1 A1 029
+1 A1 030
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 002
+1 P-A 005
+2 P-A 007
+
+# 8c2743aa
+Energy: Grass
+1 A1 022
+2 A1 219
+2 A1a 001
+1 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+1 A2 148
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 8e4b2214
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 9016a09b
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A2 146
+2 A2 147
+1 A2 150
+1 P-A 005
+2 P-A 007
+
+# 90f5a2ce
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 91fb29de
+Energy: Grass
+1 A1 022
+2 A1 219
+2 A1 225
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 936ac35e
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 223
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 94b5eda9
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 056
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# 94c2d085
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A2 022
+1 A2 146
+1 A2 147
+1 A2 150
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 94deda0b
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 952223c4
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 9646aa22
+Energy: Grass
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+1 P-A 027
+
+# 979e799e
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 98d42026
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 9b76abef
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 9c1049c8
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 007
+1 A1a 008
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 9cd3b21a
+Energy: Grass
+1 A1 021
+1 A1 219
+2 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A2 150
+2 P-A 005
+2 P-A 007
+
+# 9cf4f6b6
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 225
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A2 147
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 9eecdedc
+Energy: Grass
+1 A1 021
+1 A1 026
+2 A1 219
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# 9f230276
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# a18773ae
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a2ae2f74
+Energy: Grass
+1 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a2fa6c4e
+Energy: Grass
+1 A1 022
+1 A1 219
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 A2 147
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# a444ca54
+Energy: Grass
+1 A1 001
+1 A1 003
+2 A1 219
+2 A1a 001
+2 A1a 002
+1 A1a 005
+2 A1a 006
+2 A3 144
+1 A3 147
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# a4e71ba0
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 225
+2 A1a 002
+1 A1a 005
+2 A1a 006
+2 A2 147
+2 A3 144
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# a626be1f
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# a6f6ab2c
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# a80400f9
+Energy: Grass
+1 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 032
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# a86e4958
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+1 P-A 002
+1 P-A 005
+2 P-A 007
+
+# a932a66a
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ab5ddb72
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ab91432c
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# ae794712
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 001
+2 P-A 002
+1 P-A 005
+2 P-A 007
+
+# b029f803
+Energy: Grass
+1 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+1 P-A 006
+2 P-A 007
+
+# b0c86838
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 225
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 056
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# b0e4df77
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 007
+2 A1a 008
+2 P-A 005
+2 P-A 007
+
+# b16e8e64
+Energy: Grass
+2 A1 026
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# b222b161
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# b2efc483
+Energy: Grass
+1 A1 196
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# b3fa6ad9
+Energy: Grass
+1 A1 021
+1 A1 022
+1 A1 219
+1 A1 223
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# b5ce01a6
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# b6ef6873
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# b7fec02f
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# b9dee66b
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# bb34711c
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 007
+1 A1a 008
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# bb769033
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# bd54948b
+Energy: Grass
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# bd81701e
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# bddbc517
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# bf8467f0
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# bf990ae6
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# c03f74f0
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+1 P-A 005
+2 P-A 007
+
+# c0ad7faa
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1 223
+1 A1 225
+1 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 A2 146
+1 A2 154
+1 P-A 001
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# c0d11841
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+1 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# c0e19684
+Energy: Grass
+2 A1 219
+1 A1 223
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# c1d00785
+Energy: Grass
+2 A1 029
+2 A1 030
+2 A1a 001
+2 A1a 002
+1 A1a 003
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# c2b768a7
+Energy: Grass
+1 A1 021
+1 A1 022
+1 A1 219
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# c83d8e39
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# c9edf53b
+Energy: Grass
+2 A1 219
+1 A1 223
+2 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# cb54f9ed
+Energy: Grass
+1 A1 026
+1 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# cc32964b
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# cca07ff0
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# cca8daba
+Energy: Grass
+1 A1 196
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+1 P-A 005
+2 P-A 007
+
+# cd79f668
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# cd7a2554
+Energy: Grass
+1 A1 219
+1 A1 225
+1 A1a 001
+1 A1a 002
+1 A1a 005
+1 A1a 006
+1 A1a 009
+1 A1a 068
+1 A2 022
+1 A2 146
+1 A2 147
+1 A2b 069
+1 A3 144
+1 A3 147
+1 A4 156
+1 P-A 001
+1 P-A 002
+1 P-A 005
+1 P-A 007
+1 P-A 027
+
+# cd9b03b9
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# cdabe59a
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 056
+1 A1a 068
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ce6883e5
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# d066df84
+Energy: Grass
+2 A1 021
+1 A1 219
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 068
+1 A2 146
+1 A2 147
+1 A2 150
+1 A2b 069
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# d14efdbd
+Energy: Grass
+2 A1 219
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d37b7fc4
+Energy: Grass
+1 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A3 147
+1 B1 225
+2 B1a 067
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# d3f7b48d
+Energy: Grass
+1 A1 198
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 005
+2 P-A 007
+
+# d506c027
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d55b9bcb
+Energy: Grass
+2 A1 026
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# d579cece
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# d66943ad
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# d6d12290
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# d8218ccf
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# d8edbfc6
+Energy: Grass
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# da1f1262
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# dbb0b54b
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# dbbbeba0
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 A2 147
+1 A2 154
+1 P-A 005
+2 P-A 007
+
+# dbec3819
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 223
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# dc41f546
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+1 A1a 005
+2 A1a 006
+1 A2 146
+2 A3 144
+2 A3 147
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# dd152a12
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# dd81ae2d
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+1 A1a 006
+1 A1a 009
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# de7fbca2
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# e023c59f
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1 225
+1 A1a 002
+1 A1a 004
+1 A1a 005
+1 A1a 006
+1 A2 150
+1 A3 144
+1 A3 147
+1 A3a 007
+1 B1 225
+1 B1a 067
+1 B2 145
+1 B2a 015
+1 B2b 066
+1 B2b 069
+1 B3 153
+1 P-A 005
+1 P-A 007
+
+# e05e9b8f
+Energy: Grass
+1 A1 219
+2 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e2348e34
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# e32dcf1e
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 223
+1 A1 225
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+
+# e352e3e7
+Energy: Grass
+2 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# e446e8da
+Energy: Grass
+2 A1 219
+2 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 005
+2 P-A 007
+
+# e54743bd
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 225
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 001
+2 P-A 005
+2 P-A 007
+
+# e9493e04
+Energy: Grass
+1 A1 022
+2 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e9d8a811
+Energy: Grass
+1 A1 219
+2 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# ea4ac848
+Energy: Grass
+1 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ea64e713
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+1 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+2 P-A 005
+2 P-A 007
+1 P-A 027
+
+# eb41bba4
+Energy: Grass
+2 A1 021
+2 A1 219
+2 A1 223
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# ec6fa769
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A2 147
+2 A2b 005
+2 P-A 005
+2 P-A 007
+
+# ede2015e
+Energy: Grass
+2 A1 021
+2 A1 029
+2 A1 030
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ee0bf8c5
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# ef070d65
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 056
+2 A1a 068
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ef8dc47a
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 056
+2 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# efd68708
+Energy: Grass
+1 A1 022
+2 A1 219
+1 A1 225
+2 A1a 001
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# f3480809
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# f551c7b2
+Energy: Grass
+2 A1 021
+2 A1 219
+2 A1 223
+2 A1 225
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# f6bb2e85
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+1 A1a 006
+1 A2 146
+1 A2 150
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# f751b5e6
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# f7d4577e
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 225
+1 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# f89891d8
+Energy: Grass
+2 A1 021
+2 A1 219
+1 A1 225
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+1 P-A 005
+2 P-A 007
+
+# f95f76b8
+Energy: Grass
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+1 A1a 068
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# faea8ded
+Energy: Grass
+1 A1 223
+1 A1 225
+2 A1a 001
+2 A1a 002
+1 A1a 003
+2 A1a 005
+2 A1a 006
+2 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 027
+
+# fcf7ac4b
+Energy: Grass
+1 A1 029
+1 A1 030
+1 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# fd0bb9f9
+Energy: Grass
+2 A1 021
+2 A1 219
+2 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# fd6c8cbd
+Energy: Grass
+1 A1 021
+1 A1 219
+1 A1 223
+1 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 007
+2 A1a 008
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# fd779b47
+Energy: Grass
+2 A1 219
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+1 A1a 068
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# fda2a943
+Energy: Grass
+2 A1 219
+1 A1 223
+1 A1 225
+1 A1a 001
+1 A1a 002
+2 A1a 005
+2 A1a 006
+2 A1a 009
+2 A1a 068
+2 P-A 005
+2 P-A 007
+2 P-A 027
+
+# ff77d838
+Energy: Grass
+1 A1 021
+2 A1 219
+1 A1 223
+1 A1 225
+1 A1a 002
+2 A1a 004
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 A1a 068
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ffeb961c
+Energy: Grass
+2 A1 219
+1 A1 225
+2 A1a 001
+2 A1a 002
+2 A1a 005
+2 A1a 006
+1 A1a 009
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 027

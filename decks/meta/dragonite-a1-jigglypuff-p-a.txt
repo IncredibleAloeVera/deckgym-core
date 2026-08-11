@@ -1,0 +1,195 @@
+# 1823c335
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 022
+
+# 4eca80a6
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 022
+
+# 6e597381
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+1 A1 223
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 022
+
+# 75418f11
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 022
+
+# 8dbbfe44
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 225
+2 A1a 056
+2 A1a 068
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 022
+
+# 8faeb808
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+2 P-A 022
+
+# 98bee007
+Energy: Lightning, Water
+2 A1 083
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 220
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 022
+
+# a55c1fb2
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+1 A1 223
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 022
+
+# cb235d9b
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 198
+1 A1 223
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 022
+
+# d0512dbe
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 203
+1 A1 211
+2 A1 223
+2 A1 225
+1 A1a 068
+1 P-A 001
+1 P-A 002
+1 P-A 005
+2 P-A 007
+2 P-A 022
+
+# d9f44de2
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 218
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007
+2 P-A 022
+
+# f230e307
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1 205
+1 A1 223
+1 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+2 P-A 022
+
+# fae75ea7
+Energy: Lightning, Water
+2 A1 128
+2 A1 183
+2 A1 184
+2 A1 185
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 022
+
+# fe090cc7
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+2 A2 146
+2 A2 147
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+2 P-A 022

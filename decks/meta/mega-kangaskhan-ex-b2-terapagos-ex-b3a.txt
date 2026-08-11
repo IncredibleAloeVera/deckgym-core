@@ -1,0 +1,15 @@
+# 7956f773
+Energy: Darkness, Fighting, Metal
+2 A1 223
+1 A2 147
+1 A2b 071
+1 A3 149
+2 A4 032
+2 A4 066
+2 A4a 023
+2 A4a 059
+1 B1 225
+1 B2 127
+2 B2b 040
+1 B3a 068
+2 P-A 007

@@ -1,0 +1,14 @@
+# a81a9352
+Energy: Lightning, Water
+1 A1 185
+1 A4 066
+1 A4a 023
+2 A4b 147
+2 A4b 268
+2 A4b 271
+2 A4b 311
+2 A4b 314
+1 A4b 317
+2 A4b 333
+2 P-A 005
+2 P-A 007

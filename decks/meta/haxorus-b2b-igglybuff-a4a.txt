@@ -1,0 +1,196 @@
+# 1c00c5d5
+Energy: Fighting, Metal
+1 A1a 068
+1 A2 150
+2 A3 144
+2 A4a 059
+2 B1 225
+1 B1 226
+2 B2b 040
+2 B2b 054
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# 21bc7048
+Energy: Fighting, Metal
+1 A1 225
+1 A1a 068
+1 A2b 070
+2 A3 144
+2 A4a 059
+1 B1 225
+1 B2b 040
+2 B2b 054
+1 B2b 055
+2 B2b 056
+2 B2b 067
+2 P-A 005
+2 P-A 007
+
+# 23b6764c
+Energy: Fighting, Metal
+2 A2 148
+2 A3 144
+1 A4 066
+2 A4a 059
+2 B1 225
+1 B2a 093
+2 B2b 054
+2 B2b 056
+2 B2b 067
+2 P-A 005
+2 P-A 007
+
+# 3338b61b
+Energy: Fighting, Metal
+1 A1 225
+1 A1a 068
+2 A3 144
+2 A4a 059
+2 B1 225
+2 B2b 040
+2 B2b 054
+2 B2b 056
+1 B2b 067
+1 B2b 069
+2 P-A 005
+2 P-A 007
+
+# 40725856
+Energy: Fighting, Metal
+2 A3 144
+2 A4a 059
+1 B1 109
+2 B1 225
+1 B2a 093
+2 B2b 040
+2 B2b 054
+1 B2b 055
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# 42348859
+Energy: Fighting, Metal
+2 A3 144
+2 A4a 059
+2 B1 225
+2 B2b 040
+2 B2b 054
+2 B2b 056
+2 B2b 067
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 5b2792aa
+Energy: Fighting, Metal
+1 A1a 068
+1 A2 150
+2 A3 144
+2 A4a 059
+1 B1 223
+1 B1 225
+1 B2b 028
+2 B2b 040
+2 B2b 054
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# 972c4e57
+Energy: Fighting, Metal
+1 A2 150
+1 A2b 070
+2 A3 144
+1 A4 157
+2 A4a 059
+1 B1 225
+1 B2 154
+2 B2b 040
+2 B2b 054
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# a3cf6776
+Energy: Fighting, Metal
+1 A1a 068
+1 A2 150
+2 A3 144
+2 A4a 059
+2 B1 225
+1 B2b 028
+2 B2b 040
+2 B2b 054
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# bb82257e
+Energy: Fighting, Metal
+2 A1a 068
+1 A2 150
+2 A3 144
+2 A4a 059
+2 B1 225
+2 B2b 040
+2 B2b 054
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# c5bc1257
+Energy: Fighting, Metal
+1 A1 225
+1 A1a 068
+1 A2 150
+2 A3 144
+2 A4a 059
+1 B1 225
+1 B2 145
+2 B2b 040
+2 B2b 054
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# d765fc38
+Energy: Fighting, Metal
+1 A1a 068
+1 A2 150
+2 A3 144
+2 A4a 059
+2 B1 225
+2 B2b 040
+2 B2b 054
+1 B2b 055
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007
+
+# da097afd
+Energy: Fighting, Metal
+1 A1 225
+1 A1a 068
+1 A3 144
+2 A4a 059
+1 B1 225
+1 B1 226
+1 B2 124
+2 B2b 040
+2 B2b 054
+1 B2b 055
+2 B2b 056
+1 B2b 067
+2 P-A 005
+2 P-A 007

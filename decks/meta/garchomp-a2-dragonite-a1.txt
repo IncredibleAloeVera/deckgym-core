@@ -1,0 +1,17 @@
+# f69d4fe3
+Energy: Fighting, Lightning, Water
+1 A1 183
+1 A1 184
+1 A1 185
+1 A2 121
+2 A2 123
+2 A2 146
+1 A2a 045
+1 A2a 046
+1 A2a 072
+1 A3 129
+1 A3 130
+2 A3 144
+2 P-A 005
+2 P-A 007
+1 P-A 063

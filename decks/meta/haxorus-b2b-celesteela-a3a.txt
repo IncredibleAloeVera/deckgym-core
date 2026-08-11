@@ -1,0 +1,14 @@
+# e0e85bc6
+Energy: Fighting, Metal
+2 A3 144
+1 A3 149
+2 A3a 062
+1 A3a 064
+2 B1 225
+2 B2b 054
+1 B2b 055
+2 B2b 056
+2 B2b 067
+1 P-A 002
+2 P-A 005
+2 P-A 007

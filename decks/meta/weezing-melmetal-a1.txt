@@ -1,0 +1,332 @@
+# 040e652d
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+1 A1 223
+1 A1 225
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 0417b458
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 203
+1 A1 222
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 06e19106
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+2 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 0da71a06
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+2 A1 225
+1 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 1888696b
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+1 A1 178
+2 A1 181
+2 A1 182
+1 A1 222
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 1f0cb00d
+Energy: Darkness, Metal
+1 A1 176
+1 A1 177
+2 A1 181
+2 A1 182
+1 A1 203
+2 A1 222
+2 A1 223
+1 A1a 049
+1 A1a 050
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 3f8cb694
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 196
+2 A1 222
+1 A1 223
+1 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 541ba1a4
+Energy: Darkness, Metal
+2 A1 177
+2 A1 178
+2 A1 181
+2 A1 182
+2 A1 222
+1 A1 225
+2 A1a 049
+1 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 5b6d3178
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 644a2e92
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+1 A1 223
+2 A1 225
+1 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 6671ebc1
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 196
+1 A1 211
+2 A1 222
+1 A1 225
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 6684004a
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 203
+2 A1 222
+2 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# 66f076c3
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+1 A1 223
+1 A1 225
+2 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 6aacd659
+Energy: Metal
+1 A1 162
+1 A1 163
+2 A1 176
+2 A1 177
+1 A1 178
+1 A1 181
+1 A1 182
+2 A1 225
+2 P-A 001
+2 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 6dfa293e
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+2 A1 225
+2 P-A 001
+2 P-A 005
+2 P-A 006
+2 P-A 007
+
+# 7402a6a2
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 203
+1 A1 222
+2 A1 225
+2 A1a 068
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# 875e1744
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 196
+2 A1 222
+1 A1 223
+1 A1 225
+1 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# 91436401
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+2 A1 222
+1 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# b07fe1bf
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 203
+1 A1 222
+1 A1 223
+2 A1 225
+2 P-A 001
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# c96af298
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 198
+2 A1 222
+1 A1 223
+2 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+2 P-A 007
+
+# e0126aa4
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 203
+2 A1 222
+2 A1 223
+1 A1 225
+2 P-A 001
+2 P-A 005
+2 P-A 007
+
+# edbb436d
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 203
+2 A1 222
+1 A1 223
+1 A1 225
+1 P-A 001
+1 P-A 002
+2 P-A 005
+1 P-A 006
+2 P-A 007
+
+# ef5739eb
+Energy: Darkness, Metal
+2 A1 176
+2 A1 177
+2 A1 181
+2 A1 182
+1 A1 222
+2 A1 225
+1 A1a 056
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 007

@@ -1,0 +1,13 @@
+# 3f801acd
+Energy: Fighting, Lightning
+2 A1 154
+2 A1a 030
+1 A2 022
+2 A2 148
+1 A2a 069
+2 A3 125
+2 A3 127
+2 A3 144
+2 P-A 001
+2 P-A 005
+2 P-A 007

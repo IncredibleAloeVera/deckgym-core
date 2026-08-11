@@ -1,0 +1,12 @@
+# 5bf6a47a
+Energy: Darkness
+2 A1 223
+2 A1 225
+2 A1a 015
+2 A1a 053
+2 A1a 054
+2 P-A 001
+2 P-A 002
+2 P-A 005
+2 P-A 006
+2 P-A 007

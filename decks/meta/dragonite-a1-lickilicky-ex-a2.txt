@@ -1,0 +1,14 @@
+# 95aac7ab
+Energy: Lightning, Water
+2 A1 183
+2 A1 184
+2 A1 185
+1 A1a 068
+2 A2 050
+1 A2 124
+1 A2 125
+2 A2 146
+2 A2 154
+1 P-A 002
+2 P-A 005
+2 P-A 007

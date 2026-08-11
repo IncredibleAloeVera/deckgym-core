@@ -1,0 +1,12 @@
+# 3681d49f
+Energy: Fighting, Water
+2 A2 123
+2 A2 147
+2 A2 152
+2 A2a 045
+2 A2a 046
+2 A2a 066
+2 A2a 067
+2 A2a 068
+2 A2a 072
+2 P-A 007
