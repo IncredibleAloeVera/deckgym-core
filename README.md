@@ -1,238 +1,399 @@
 <img src="./images/logo.svg" alt="Logo" width="100" height="100">
 
-# deckgym-core: Pokémon TCG Pocket Simulator
+# deckgym-core (RL fork): learning to pilot and to build Pokémon TCG Pocket decks
 
-![Card Implemented](https://img.shields.io/badge/Cards_Implemented-2697_%2F_3289_%2882.0%25%29-yellow)
+![Card Implemented](https://img.shields.io/badge/Cards_Implemented-3156_%2F_3520_%2889.7%25%29-yellow)
 
-**deckgym-core** is a high-performance Rust library designed for simulating Pokémon TCG Pocket games. It features a command-line interface (CLI) capable of running 10,000 simulations in approximately 3 seconds. This is the library that powers https://www.deckgym.com.
+This fork uses [deckgym-core](https://github.com/deckgym/deckgym-core) — a high-performance Rust
+simulator for Pokémon TCG Pocket, ~10,000 games in ~3 s — as the **environment** of a
+reinforcement-learning system made of two coupled agents:
 
-Its mission is to elevate the competitive TCG Pocket scene by helping players optimize their decks through large-scale simulations.
+- a **player** (deck estimator), whose job is not to be the strongest but to pilot *anything*
+  well enough that a result is attributable to the deck rather than to the pilot;
+- a **deckbuilder** (deck cartographer), an energy-based model that maps the deck landscape
+  instead of searching for a single best deck.
 
-Join our Discord: https://discord.gg/ymxXHrzhak!
+The card pool is deliberately **frozen**: no generalization to future expansions, which is what
+makes per-card embeddings and exhaustive per-card / per-pair statistics affordable.
 
-## Usage
+**[RL_ARCHITECTURE.md](./RL_ARCHITECTURE.md) is the specification** — read it before touching
+anything under `src/rl/`. Every module there carries the `§` it implements:
 
-The CLI runs simulations between two decks in DeckGym Format. To create these files, build your decks in https://www.deckgym.com/builder, select **Share** > **Copy as Text**, and save the content as a text file.
+| Part | Subject | Code |
+| --- | --- | --- |
+| [§1.1](./RL_ARCHITECTURE.md#11-part-1--intent) | Intent, framing, build order | — |
+| [§1.2](./RL_ARCHITECTURE.md#12-part-2--observation-v1) | Observation | `src/rl/observation.rs`, `history.rs`, `static_tables.rs` |
+| [§1.3](./RL_ARCHITECTURE.md#13-part-3--action-mask-v1) | Action mask | `src/rl/action_mask.rs` |
+| [§1.4](./RL_ARCHITECTURE.md#14-part-4--model-v1) | Model (Burn) | `src/rl/model/` |
+| [§1.5](./RL_ARCHITECTURE.md#15-part-5--training-loop-v1) | Training loop | `src/rl/env.rs`, `src/rl/train/`, `src/gameplay_stats_collector.rs` |
+| [§1.6](./RL_ARCHITECTURE.md#16-part-6--deckbuilder-sketch) | Deckbuilder | not started |
+| [§1.7](./RL_ARCHITECTURE.md#17-part-7--deployment-sketch) | Deployment | not started |
 
-We already provide several example decks in the repo you can use to get started. For example, to face off a VenusaurEx-ExeggutorEx deck with a Weezing-Arbok deck 1,000 times, run:
+## A pilot that does not cheat
 
-```bash
-cargo run simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 -v
-```
+The player reads what a human player reads and nothing more
+([§1.2.1](./RL_ARCHITECTURE.md#121-design-principles)): its own hand and deck contents, both boards,
+both discards, both energy zones — and of the opponent's hidden cards, only the counts, the energy
+types it has actually watched roll through their Energy Zone, and whatever a reveal effect showed it
+and it is entitled to remember (`src/belief/`).
+No engine internals, no RNG lookahead, no opponent hand.
 
-You can also simulate one deck against multiple decks in a folder. The total games will be distributed evenly across all decks:
+A pilot with hidden information wins with lines no human deck ever gets to play, so its winrate
+measures the leak and not the list. Denied the leak, one pilot run across two decks turns a winrate
+into a property of the deck — which is the number the deckbuilder (§1.6) consumes, and the reason
+the player is optimized for being uniformly competent rather than for being strong.
 
-```bash
-# Simulate your deck against all decks in example_decks folder (1000 games total)
-cargo run simulate my_deck.txt example_decks/ --num 1000 -v
-```
+## Current limitations
 
-## Terminal User Interface (TUI)
+- **The pool stops at B3b** (plus the P-A / P-B promos). B4 and later expansions are out of scope by
+  design — the freeze is what makes per-card embeddings affordable.
+- **364 of the 3520 cards have no engine logic** (`cargo run --bin card_status`). They are legal to
+  print but not to play, and the deck DBs exclude every list that needs one.
+- **The deckbuilder is not built** (§1.6), nor the uniform-deck quota it owns (§1.5.3). Parts 1 to 5
+  are, and a run trains end to end.
 
-The TUI provides an interactive way to view and replay games with a visual representation of the game state.
+## Performance
 
-To use the TUI, you need to enable the `tui` feature:
-
-```bash
-cargo run --bin tui --features tui -- example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --players e,e
-```
-
-### Controls
-
-- **↑/↓/Space**: Navigate between game states (forward/backward)
-- **PageUp/PageDown**: Scroll through battle log
-- **A/D**: Scroll through your hand cards
-- **Shift+A/Shift+D**: Scroll through opponent's hand cards
-- **Q/Esc**: Quit
-
-## Data Export
-
-The simulator can export (state, action) pairs during gameplay for machine learning and data analysis applications. This feature outputs portable JSON files that are easy to consume from any programming language.
-
-### Usage
-
-Use the `--data-output` flag to specify an output folder:
-
-```bash
-cargo run -- simulate example_decks/fire.txt example_decks/flareon.txt \
-  -n 1000 \
-  --players r,r \
-  --data-output ./exported_data
-```
-
-### Output Structure
-
-The data is organized as:
-```
-exported_data/
-├── <game_id_1>/
-│   ├── ply_0000.json
-│   ├── ply_0001.json
-│   └── ...
-├── <game_id_2>/
-│   ├── ply_0000.json
-│   └── ...
-└── ...
-```
-
-Each JSON file contains:
-- `game_id`: UUID of the game
-- `ply`: Sequential decision point number
-- `actor`: Which player (0 or 1) made the decision
-- `state`: Complete game state (hands, decks, in-play Pokemon, etc.)
-- `playable_actions`: All available actions at this decision point
-- `chosen_action`: The action that was actually taken
-
-### Processing the Data
-
-A Python example is included to demonstrate data loading and feature extraction:
+**[PERFORMANCE.md](./PERFORMANCE.md) is the measurement**, regenerated by one command and quoted
+everywhere else:
 
 ```bash
-python examples/load_exported_data.py ./exported_data
+cargo run --release --features rl-model-cuda --example benchmark_players -- --from runs/<run>/checkpoints/<hot-dir>
 ```
 
-The JSON format makes it easy to:
-- Train policy networks (predict actions from states)
-- Train value networks (estimate win probability)
-- Perform imitation learning
-- Build custom machine learning models
-- Analyze gameplay patterns and statistics
+Decisions per second, one seat, one thread. Not games per second: a game is not a fixed amount of
+work.
 
-## Contributing
+| Seat | Code | Decisions/s |
+| --- | --- | ---: |
+| EvolutionRusher | `er` | ~20 200 |
+| WeightedRandom | `w` | ~20 100 |
+| Random | `r` | ~18 600 |
+| AttachAttack | `aa` | ~17 500 |
+| EndTurn | `et` | ~12 700 |
+| ValueFunction | `v` | ~3 500 |
+| ExpectiMiniMax d=2 | `e2` | ~490 |
+| RL model, CUDA, `envs = 64` | `rl:<name>` | ~430 |
+| ExpectiMiniMax d=3 | `e3` | ~140 |
+| RL model, CPU NdArray | `rl:<name>` | ~90 |
 
-New to Open Source? See [CONTRIBUTING.md](./CONTRIBUTING.md).
+Below `v` the seat is the cost; above it the engine is. `rl-model-wgpu` builds and runs, not
+measured. Batching is what the GPU row rests on — a lone forward is ≈ 16 ms against ≈ 386 µs/sample
+saturated ([§1.4.3](./RL_ARCHITECTURE.md#143-sizes-and-measured-budget)) — and buys nothing on CPU,
+where NdArray is GEMM-bound and flat in the batch. The model is ~1.13 M trainable parameters, split
+per component in `PERFORMANCE.md`; the frozen tables it gathers from are ~12 MB and are not
+parameters.
 
-The main contribution is to implement more cards, basically their attack and abilities logic. This makes the cards eligible for simulation and thus available for use in https://www.deckgym.com.
+## Prerequisites and hard dependencies
 
-See the Claude [SKILL.md](./.claude/skills/implement-cards/SKILL.md) describing how to implement cards.
-It's good documentation for humans and AIs alike.
+**Simulator** — a Rust toolchain (edition 2021), nothing else. This is the default build; it
+never pays for the deep-learning stack.
 
+**RL** — everything below is feature-gated:
 
-## Appendix: Useful Commands
+| Need | Dependency |
+| --- | --- |
+| Model (`rl-model`) | [Burn](https://burn.dev) 0.21, CPU `NdArray` backend. |
+| GPU (`rl-model-cuda`) | CUDA 13.3 toolkit + an NVIDIA device. |
+| GPU (`rl-model-wgpu`) | Portable alternative, not re-measured at the current model size. |
+| Text embeddings | The frozen artifact `auxiliaries/text_embeddings/out/text_embeddings.json` is committed — the freeze *is* the dependency. Nothing needs to be regenerated to train. |
+| Regenerating the embeddings | Python + [uv](https://docs.astral.sh/uv/), `BAAI/bge-small-en-v1.5`, and a checkout of [tcgdex/cards-database](https://github.com/tcgdex/cards-database) expected at `../../../cards-database` (the super-set corpus). See its own `README.md`. |
 
-Once you have Rust installed (see https://www.rust-lang.org/tools/install) you should be able to use the following commands from the root of the repo:
+Two invariants the code depends on, both already satisfied — a regression on either silently
+corrupts the observation:
 
-**Running Automated Test Suite**
+- the tie cap in `src/state/mod.rs` is **99 turns**, the finite horizon every turn-derived
+  feature is normalized by;
+- the text-embedding artifact covers **every** pool text (asserted by
+  `frozen_artifact_covers_every_pool_text`).
+
+## Building the training environment
+
+A fresh clone already trains: the generated sources, the frozen text embeddings and the two deck
+DBs of [§1.5.3](./RL_ARCHITECTURE.md#153-data--self-play-two-deck-dbs) are committed. What follows
+is the path back to them, walked when `database.json` moves or when a card's logic lands. Each
+step's output is the next one's input, so a partial rerun starts at the first step whose input
+changed. The response caches and `meta_decks.json` stay untracked — they are caches, reproducible
+from the network by the scripts that wrote them, and one of them is 334 MB. What is versioned is
+every input that is *not* reproducible: `preset_decks_fixed.json` and `raw_event_decks.txt` carry
+hand transcription and repairs no re-extraction recovers, so they ship with the code that reads
+them.
+
+**0. Generated sources** — only when `database.json` changes. `src/card_ids.rs`,
+`src/database.rs` and the mechanic maps are the pool as the engine sees it; the appendix at the
+bottom has the three-step sequence, which is ordered because each step needs the previous one to
+compile.
+
+**1. Text embeddings** ([§1.2.9](./RL_ARCHITECTURE.md#129-deferred-to-later-versions)) — only when
+the pool gains a text, which `frozen_artifact_covers_every_pool_text` is the test that tells you.
+Needs a checkout of [tcgdex/cards-database](https://github.com/tcgdex/cards-database) at
+`../../../cards-database` for the super-set corpus; see `auxiliaries/text_embeddings/README.md`.
+
+```bash
+cd auxiliaries/text_embeddings && uv sync && uv run python extract_corpus.py && uv run python build_embeddings.py && uv run python probes.py
+```
+
+**2. Card status** — which cards the engine still cannot run, and the input every playability rule
+downstream reads. Regenerate it after implementing anything, before rebuilding a deck DB.
+
+```bash
+cargo run --release --bin card_status -- --incomplete-only > auxiliaries/card_status.txt
+```
+
+**3. Preset decks** → `auxiliaries/preset_decks_fixed.json`, the tutorial DB's source, versioned
+because nothing can rebuild it: the Solo and Rental decks are parsed out of Game8 guide pages, the
+Event decks were transcribed by hand into `raw_event_decks.txt`, and the `_fixed` copy carries
+repairs that do not survive a re-extraction. The cached pages themselves are not redistributed
+here — `--refresh` refetches them, and a full extraction then writes `preset_decks.json`, losing
+those repairs. So after step 2, re-judge in place instead: same rules, same `annotate`, decks
+untouched.
+
+```bash
+uv run --no-project --python 3.14 auxiliaries/extract_preset_decks.py --reannotate
+```
+
+**4. Meta decks** → `auxiliaries/meta_decks.json`. `fetch` is the only command that touches the
+network (~11 h cold at the announced rate limit, resumable, one cached file per tournament);
+`build` is offline and re-runs the energy model and the playability rules over that cache. numpy
+and scikit-learn are what separate the model from the stdlib heuristic: without them `build` says
+so on stderr and falls back, which moves the energy of every list that does not declare its own.
+
+```bash
+uv run --no-project --python 3.14 auxiliaries/build_meta_decks.py fetch
+uv run --no-project --python 3.14 --with numpy --with scikit-learn auxiliaries/build_meta_decks.py build
+```
+
+**5. Deck DBs** ([§1.5.3](./RL_ARCHITECTURE.md#153-data--self-play-two-deck-dbs)) → `decks/meta/`
+and `decks/tutorial/`, the two directories the sampler draws from. Only `playable` decks survive
+the walk.
+
+```bash
+uv run --no-project --python 3.14 auxiliaries/build_deck_dbs.py
+```
+
+## Useful commands
+
+Run from the repo root.
+
+**Test suite**
 
 ```bash
 cargo test --features "tui test-utils"
 ```
 
-**Running Benchmarks**
+**RL tests** — the falsifiable properties of §1.2 to §1.5; the filter also catches the unit tests
+inside `src/rl/train/`
+
+```bash
+cargo test --features "rl-model test-utils" rl
+```
+
+**Build with a GPU backend**
+
+```bash
+cargo build --release --features rl-model-cuda
+```
+
+**Train a player** (§1.5). The `.toml` is the whole run — sizes, schedules, panel, curriculum — and
+is cloned into `runs/<name>/`, so a run is reproducible from its own directory. `--resume` picks up
+the hot checkpoint; Ctrl-C writes one before exiting. `config/default.toml` is the schema reference.
+Three features are off in the default config — `[pool] enabled`, `[curriculum] stages` and
+`[model] candidate_cross_attention` — so that a config written before them still describes the run
+it described; the last adds parameters, and a model built with it on cannot read a checkpoint
+written with it off.
+
+```bash
+cargo run --release --features rl-model-cuda --example train_player -- --cuda --config config/default.toml
+```
+
+**Read a run** — metrics land as JSONL and are replayed into a TensorBoard event file, so a lost
+event file is never lost data (§1.5.6)
+
+```bash
+uv run --no-project --with tensorboardX auxiliaries/jsonl_to_tensorboard.py runs/default
+```
+
+**Watch a run as it trains** — `--serve` starts TensorBoard on every run under `runs/` and keeps
+converting what the loop appends, including runs that start later
+
+```bash
+uv run --no-project --with tensorboardX --with tensorboard auxiliaries/jsonl_to_tensorboard.py runs --serve
+```
+
+**Freeze a checkpoint as a panel member** (§1.5.2) — writes `models/<name>/` = `weights.mpk` +
+`meta.toml`, copying rather than moving the source and discarding the directory if it does not load
+back. `--verify` re-checks the ones already there.
+
+```bash
+cargo run --release --features rl-model --example bake_model -- --from models/prototype.mpk --name prototype --note "MMD prototype"
+```
+
+**Simulate** — the environment on its own, used for baselines and mass labeling
+
+```bash
+cargo run --release simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 --players r,r -v
+```
+
+Decks are in DeckGym Format (build one at <https://www.deckgym.com/builder>, **Share** > **Copy
+as Text**). A folder can replace the second deck, distributing games evenly across it. Player codes
+are the ones in the performance table above, plus `h` for a human seat in the TUI.
+
+A seat can also be a baked model from `models/` (§1.5.2), on either side or both. **The repository
+ships no baked model**: `models/` does not exist until you bake one, and the checkpoints of the runs
+these documents quote are not published. Every `rl:<name>` below therefore names a model you have
+baked yourself.
+
+```bash
+cargo run --release --features rl-model -- simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 --players r,rl:my_model --envs 64
+```
+
+`rl:<name>` names a directory under `--models-root` (default `models`), nested paths included.
+Those games run through the batched runner instead of the per-game one, so `--envs` (games in
+flight, and the width of each forward) replaces `--parallel`; add `--cuda` on a
+`--features rl-model-cuda` build, which is the only configuration where a wide `--envs` actually
+pays. `-v` and up behave as they do everywhere else, with the model's name in place of the
+player's.
+
+**Replay a game in the TUI** (↑/↓/Space navigate, PageUp/PageDown scroll the log, A/D the hand,
+Q quit)
+
+```bash
+cargo run --bin tui --features tui -- example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --players e,e
+```
+
+A seat there can be a baked model too, on a `rl-model` build — replayed, or played against with `h`
+on the other seat, in either order (the mat is drawn from yours). Same `--models-root` and `--cuda`
+as `simulate`; there is no `--envs`, one watched game has nothing to batch.
+
+```bash
+cargo run --release --bin tui --features "tui,rl-model" -- example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --players rl:my_model,h
+```
+
+**Inspect cards** — `search` exists because `database.json` blows through any context window
+
+```bash
+cargo run --bin search "Charizard"
+cargo run --bin card_status -- --incomplete-only
+cargo run --bin temp_deck_generator -- "A1 035"
+```
+
+**Lint and format** — `make fix` runs `cargo fmt` then clippy `--fix`. The same pair runs in the
+optional pre-commit hook, enabled with `git config core.hooksPath .githooks`.
+
+```bash
+make fix
+```
+
+Repo-wide `cargo fmt` can overflow its stack on the generated `src/card_ids.rs`; formatting the
+touched files directly with `rustfmt` sidesteps it.
+
+## Contributing
+
+The upstream contribution is implementing cards — attack, ability and trainer logic — which is
+also what widens the pool the RL system trains on. See [CONTRIBUTING.md](./CONTRIBUTING.md) and
+the [implement-cards skill](./.claude/skills/implement-cards/SKILL.md), which reads as
+documentation for humans as much as for agents.
+
+Upstream project: <https://www.deckgym.com> · Discord: <https://discord.gg/ymxXHrzhak>
+
+## Advanced commands
+
+Diagnostics and one-off measurements. None of them is needed to train or to play a model.
+
+**Regenerate `PERFORMANCE.md`** — every seat's decision throughput and every named model's, plus
+the model's parameters per component. `--models` names baked directories under `models/`, `--from`
+takes run checkpoints; both accept a comma-separated list, and either may be omitted for the seats
+alone.
+
+```bash
+cargo run --release --features rl-model-cuda --example benchmark_players -- [--from runs/<run>/checkpoints/<hot-dir>] [--models <name>] [--players er,w,r,aa,et,v,e2,e3] [--seconds 8] [--envs 64] [--decks a.txt,b.txt] [--out PERFORMANCE.md]
+```
+
+**Attention read-out off a checkpoint** (§1.5.6) — the same per-head entropy, family focus and
+pairwise divergence the training loop logs, on weights that have stopped moving. `--repeats` sets
+how many independent draws each reading is averaged over, `--frames` how many frames per draw.
+
+```bash
+cargo run --release --features rl-model --example attention_probe -- --from runs/<run>/checkpoints/<hot-dir> [--repeats 4] [--frames 64]
+```
+
+**Encoder parameter drift** (§1.5.6) — how far each block's `q,k` and `v,o` moved across a run's
+pool clones and hot checkpoints.
+
+```bash
+cargo run --release --features rl-model --example block_drift -- --run runs/<run>
+```
+
+**Attention ablation in winrate** (§1.4.3) — plays the evaluation with a block's attention made
+uniform or silent. `--block` takes a block index or `all`.
+
+```bash
+cargo run --release --features rl-model-cuda --example block_ablation -- --from runs/<run>/checkpoints/<hot-dir> [--block all] [--games 600]
+```
+
+**Ablated against unablated self** (§1.4.3) — the same surgery measured against a skill-matched
+opponent instead of a heuristic anchor. The first arm is the seat-advantage control.
+
+```bash
+cargo run --release --features rl-model-cuda --example head_to_head -- --from runs/<run>/checkpoints/<hot-dir> [--games 600]
+```
+
+**Whitened vs unwhitened text blocks** (§1.2.9) — paired comparison at init, on frames the
+checkpoint drove. `unwhiten.py` rebuilds the pre-whitening table exactly, without re-embedding.
+
+```bash
+uv run --no-project --with numpy auxiliaries/text_embeddings/unwhiten.py
+cargo run --release --features rl-model --example text_scale_ablation -- --from runs/<run>/checkpoints/<hot-dir> [--repeats 6]
+```
+
+**Replay a crash dump** (§1.5.5) — drives a `runs/<run>/crashes/*.json` state again with random
+seats. Second argument is the tick budget, default 200.
+
+```bash
+cargo run --release --example replay_crash -- runs/<run>/crashes/<dump>.json [ticks]
+```
+
+**Threat-matrix profile** — `get_observation` is the per-decision cost's next optimization target
+(≈ 33 % of it, §1.4.3), and the threat matrix is its heaviest part.
+
+```bash
+cargo run --release --example threat_matrix_profile
+```
+
+**Export (state, action) pairs as JSON** — the portable, language-agnostic path, independent of
+the RL observation; see `examples/load_exported_data.py`.
+
+```bash
+cargo run --release -- simulate example_decks/fire.txt example_decks/flareon.txt -n 1000 --players r,r --data-output ./exported_data
+```
+
+**Benchmarks**
 
 ```bash
 cargo bench --features test-utils
 ```
 
-**Running Main Script**
+## Appendix: regenerating generated sources
+
+`src/card_ids.rs`, `src/database.rs` and the mechanic maps are generated from `database.json`.
+Each step needs the previous one to compile, so the intermediate `_ => panic!()` /
+`_ => Bulbasaur` stubs described below are load-bearing, not sloppiness.
 
 ```bash
-# Simulate between two specific decks
-cargo run simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 --players r,r
-cargo run simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1 --players r,r -vv
-cargo run simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1 --players r,r -vvvv
-
-# Simulate one deck against all decks in a folder (games distributed evenly)
-cargo run simulate example_decks/venusaur-exeggutor.txt example_decks/ --num 1000 --players r,r -v
-
-# Optimize incomplete decks
-cargo run optimize example_decks/incomplete-chari.txt A2147,A2148 example_decks/ --num 10 --players e,e -v
-cargo run optimize example_decks/incomplete-chari.txt A2147,A2147,A2148,A2148 example_decks/ --num 1000 --players r,r -v --parallel
-```
-
-**Card Search Tool**
-
-The repository includes a search utility that's particularly useful for agentic AI applications, as reading the complete `database.json` file (which contains all card data) often exceeds context limits.
-
-```bash
-# Search for cards by name
-cargo run --bin search "Charizard"
-
-# Search for cards with specific attacks
-cargo run --bin search "Venusaur" --attack "Giant Bloom"
-```
-
-**Card Implementation Status Tool**
-
-Check which cards are fully implemented versus which are missing attack effects, abilities, or trainer logic. This tool helps contributors identify cards that need implementation work.
-
-```bash
-# Show all cards with their implementation status
-cargo run --bin card_status
-
-# Show only incomplete cards
-cargo run --bin card_status -- --incomplete-only
-
-# Get the first incomplete card (useful for automation)
-cargo run --bin card_status -- --first-incomplete
-```
-
-The tool displays a summary showing total cards, completion percentage, and a breakdown of missing implementations by type (attacks, abilities, tools, trainer logic).
-
-**Temporary Deck Generator**
-
-Generate a valid temporary test deck for a specific card id (it considers the evolution chain of a card and the required energy types if its a pokemon card).
-
-```bash
-cargo run --bin temp_deck_generator -- "A1 035"
-```
-
-**Card Test Command**
-
-Generate a temporary test deck and run 10,000 games against all decks in `example_decks/` (games distributed evenly) using random players.
-
-```bash
-cargo run --bin card_test -- "A1 035"
-```
-
-**Setting Up Git Hooks (Optional)**
-
-The repository includes a pre-commit hook that ensures code quality by automatically fixing issues and running tests before each commit. To enable it:
-
-```bash
-git config core.hooksPath .githooks
-```
-
-The pre-commit hook runs:
-1. `cargo clippy --fix --allow-dirty --features tui -- -D warnings` - Auto-fixes linting issues
-2. `cargo fmt` - Auto-formats code
-3. `git add -u` - Adds clippy and formatting fixes to the commit
-4. `cargo test --features "tui test-utils"` - Runs the full test suite (fails commit if tests fail)
-
-This helps maintain code quality and prevents broken commits, but it's optional and each developer can choose whether to enable it.
-
-**Generating database.rs**
-
-Ensure database.json is up-to-date with latest data. Mock the `get_card_by_enum` in `database.rs` with a `_ => panic` so that
-it compiles mid-way through the generation.
-
-```bash
+# 1. Stub `get_card_by_enum` in database.rs with `_ => panic!()` so this compiles.
 cargo run --bin card_enum_generator > tmp.rs && mv tmp.rs src/card_ids.rs && cargo fmt
-```
 
-Then temporarily edit `database.rs` for `_` to match Bulbasaur (this is so that the next code can compile-run).
-
-```bash
+# 2. Point that `_` arm at Bulbasaur, then:
 cargo run --bin card_enum_generator -- --database > tmp.rs && mv tmp.rs src/database.rs && cargo fmt
-```
 
-To generate attacks do (first time):
-```bash
+# 3. Attack map, first time only:
 cargo run --bin card_enum_generator -- --attack-map > tmp.rs && mv tmp.rs src/actions/effect_mechanic_map.rs && cargo fmt
 ```
 
-then with each new set of new mechanics, use:
+For each new set, the incremental variants print what to paste into
+`src/actions/effect_mechanic_map.rs` and `src/actions/effect_ability_mechanic_map.rs`:
+
 ```bash
 cargo run --bin card_enum_generator -- --incremental-attack-map
-```
-and manually copy-paste into the ever changing `src/actions/effect_mechanic_map.rs`.
-
-For abilities incremental updates, use:
-```bash
 cargo run --bin card_enum_generator -- --incremental-ability-map
-```
-and manually copy-paste into `src/actions/effect_ability_mechanic_map.rs`.
-
-**Profiling Main Script**
-sudo cargo flamegraph --root --dev -- simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 && open flamegraph.svg
 ```
