@@ -1,12 +1,13 @@
 use clap::{ArgAction, Parser, Subcommand};
 use colored::Colorize;
-use deckgym::optimize::{ParallelConfig, SimulationConfig};
+use deckgym::optimize::{ParallelConfig, RlOptions, SimulationConfig};
 use deckgym::players::{parse_player_code, PlayerCode};
 use deckgym::simulate::initialize_logger;
 use deckgym::{cli_optimize, simulate, Deck};
 use log::warn;
 use num_format::{Locale, ToFormattedString};
 use std::fs;
+use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -25,9 +26,9 @@ enum Commands {
         /// Path to the second deck file or folder containing multiple deck files
         deck_b_or_folder: String,
 
-        /// Players' strategies as a comma-separated list (e.g., "e2,e4" or "r,e5")
-        /// Available codes: aa, et, r, h, w, m, v, e<depth>, er
-        /// Example: e2 = ExpectiMiniMax with depth 2
+        /// Players' strategies as a comma-separated list (e.g., "e2,e4" or "r,rl:my_model")
+        /// Available codes: aa, et, r, h, w, m, v, e<depth>, er, rl:<model>
+        /// Example: e2 = ExpectiMiniMax with depth 2; rl:my_model = a model you baked, under --models-root
         #[arg(long, value_delimiter = ',', value_parser = parse_player_code)]
         players: Option<Vec<PlayerCode>>,
 
@@ -46,6 +47,18 @@ enum Commands {
         /// Number of threads to use (defaults to number of CPU cores if not specified)
         #[arg(short = 'j', long)]
         threads: Option<usize>,
+
+        /// Games in flight for an rl: seat — the width of each model forward. Ignored without one.
+        #[arg(long, default_value_t = 64)]
+        envs: usize,
+
+        /// Run rl: seats on the GPU (needs --features rl-model-cuda)
+        #[arg(long, default_value_t = false)]
+        cuda: bool,
+
+        /// Folder holding the baked models an rl: code names
+        #[arg(long, default_value = "models")]
+        models_root: PathBuf,
 
         /// Increase verbosity (-v, -vv, -vvv, etc.)
         #[arg(short, long, action = ArgAction::Count, default_value_t = 1)]
@@ -105,6 +118,7 @@ fn simulate_against_folder(
     let players = sim_config.players;
     let seed = sim_config.seed;
     let data_output = sim_config.data_output;
+    let rl = sim_config.rl;
     let parallel = parallel_config.enabled;
     let num_threads = parallel_config.num_threads;
 
@@ -186,6 +200,7 @@ fn simulate_against_folder(
                 players: players.clone(),
                 seed,
                 data_output: data_output.clone(),
+                rl: rl.clone(),
             },
             ParallelConfig {
                 enabled: parallel,
@@ -212,6 +227,9 @@ fn main() {
             seed,
             parallel,
             threads,
+            envs,
+            cuda,
+            models_root,
             verbose,
             data_output,
         } => {
@@ -219,38 +237,28 @@ fn main() {
 
             warn!("Welcome to {} simulation!", "deckgym".blue().bold());
 
+            let sim_config = SimulationConfig {
+                num_games: num,
+                players,
+                seed,
+                data_output,
+                rl: RlOptions {
+                    envs,
+                    cuda,
+                    models_root,
+                },
+            };
+            let parallel_config = ParallelConfig {
+                enabled: parallel,
+                num_threads: threads,
+            };
+
             // Check if deck_b_or_folder is a directory
             let path = std::path::Path::new(&deck_b_or_folder);
             if path.is_dir() {
-                simulate_against_folder(
-                    &deck_a,
-                    &deck_b_or_folder,
-                    SimulationConfig {
-                        num_games: num,
-                        players,
-                        seed,
-                        data_output,
-                    },
-                    ParallelConfig {
-                        enabled: parallel,
-                        num_threads: threads,
-                    },
-                );
+                simulate_against_folder(&deck_a, &deck_b_or_folder, sim_config, parallel_config);
             } else {
-                simulate(
-                    &deck_a,
-                    &deck_b_or_folder,
-                    SimulationConfig {
-                        num_games: num,
-                        players,
-                        seed,
-                        data_output,
-                    },
-                    ParallelConfig {
-                        enabled: parallel,
-                        num_threads: threads,
-                    },
-                );
+                simulate(&deck_a, &deck_b_or_folder, sim_config, parallel_config);
             }
         }
         Commands::Optimize {
@@ -268,11 +276,22 @@ fn main() {
 
             warn!("Welcome to {} optimizer!", "deckgym".blue().bold());
 
+            // The optimizer runs its games through the blocking `Player` path, which a model seat
+            // cannot use. Refused here rather than at the first decision frame, halfway into a
+            // sweep the user has already waited on.
+            if let Some(codes) = &players {
+                if let Some(code) = codes.iter().find(|c| matches!(c, PlayerCode::RL { .. })) {
+                    warn!("`{code}` cannot play in `optimize`: model seats are only supported by `simulate`");
+                    std::process::exit(2);
+                }
+            }
+
             let sim_config = SimulationConfig {
                 num_games: num,
                 players,
                 seed,
                 data_output: None,
+                rl: RlOptions::default(),
             };
             let parallel_config = ParallelConfig {
                 enabled: parallel,

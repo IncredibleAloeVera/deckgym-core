@@ -1,0 +1,388 @@
+# Run defaults — RL_ARCHITECTURE.md §1.5.5 — and the schema's reference: every field the parser
+# knows appears in this file, live or in a commented form, and the parser refuses a field this
+# file does not show (`deny_unknown_fields` — a misspelled key errors at load instead of silently
+# falling back to its default).
+#
+# This is a single-stage run: `[[curriculum.stages]]` (§1.5.4) is empty, so `[decks]`/`[eval]`/
+# `[pool] anchors,baked`/`[magnet.seed]` below stay in charge for the run's whole life, exactly as
+# before §1.5.4 existed. The commented-out stages at the end of this file are a real two-stage
+# alternative over the `tutorial` DB's difficulty tiers.
+
+[run]
+seed = 0
+
+# Names `runs/<name>/`, which holds this file's clone plus checkpoints/, logs/ and eval/. There is
+# no CLI override: a run is identified by its config, so two runs off one config means two files.
+name = "default"
+root = "runs"
+
+[decks]
+root = "decks"
+
+# `tutorial` (O(1k) preset decks) or `meta` (O(100k) archived meta decks). A curriculum stage
+# (§1.5.4) would name this per stage instead; this run has none, so it picks one for its life.
+db = "tutorial"
+
+# Restrict the draw to these archetypes; empty means the whole DB. `tutorial`'s archetypes are the
+# difficulty tiers — beginner, intermediate, advanced, expert, rental — so this is the lever that
+# keeps a starting run off expert decks. `meta`'s are deck archetypes ("darkrai-ex-a2-110").
+archetypes = ["beginner"]
+
+# `mix` is the alternative to `db` + `archetypes` above (never an addition — a file setting both is
+# refused): several DBs in one draw, each with an explicit share. The share has to be stated
+# because a mix is exactly where deck-uniformity stops being the right default — concatenated into
+# `meta`, `tutorial`'s few hundred decks would be a fraction of a percent of the draw and vanish,
+# when the reason to mix them in is that its beginner tier holds the weak decks `meta` has none of.
+#
+# Two things to know before setting one. The source is rolled **per seat**, so shares of 0.90/0.10
+# give 81% meta-vs-meta, 18% meta-vs-tutorial and 1% tutorial-vs-tutorial: the cross-DB rate is
+# 2·p·q, not the minority share. And the mirror quotas stay inside one source, an archetype being
+# a per-DB label.
+#
+# mix = [
+#   { db = "meta", share = 0.90 },
+#   { db = "tutorial", share = 0.10, archetypes = ["beginner", "intermediate"] },
+# ]
+
+# Fractions of games forced to a mirror matchup (§1.5.3). `pure_mirror` doubles as the §1.5.7
+# calibration test: it has to fit to ~50%, so it stays non-zero even once it stops being useful
+# as training signal.
+pure_mirror = 0.05
+mirror = 0.10
+
+[rollout]
+# The measurement of §1.5.5: on CUDA this number is worth ×37 between 1 and 64, on CPU it is worth
+# nothing. Raising it past 64 is a VRAM question.
+envs = 64
+
+# The §1.5.2 frozen panel, in CLI player codes: r = random, w = weighted-random, eN = expectiminimax
+# at depth N. Expectiminimax is left out of the default mix — it costs orders of magnitude more per
+# decision than the model does, so it would set the rollout's pace rather than the GPU.
+#
+# Read only while `[pool] enabled = false`; the pool decides the panel once it is on.
+opponents = ["r", "w"]
+
+# Floor on *finished* frames per on-policy batch (§1.5.1: whole episodes, γ = 1).
+frames_per_batch = 2048
+batches = 200
+
+[step]
+# Each of the four coefficients below is either a number or a schedule table — the TOML type says
+# which, nothing has to declare it. A schedule is `{ start, phases }`, and each phase carries
+# `over` (an integer = batches, "5%" = a fraction of `batches`, "rest" = what is left), an optional
+# `to` (omitted = hold), and a `shape` (linear, cosine, exponential). A phase begins where the
+# previous one ended, so only destinations are written. Past the last phase the value holds.
+#
+# The default is §1.5.5's "short warmup + constant" for the learning rate, spelled out:
+learning_rate = { start = 0.0, phases = [
+  { over = "2%", to = 3e-4 },
+  { over = "rest" },
+] }
+
+# Not schedulable: Burn takes the clip when the optimizer is built, and a clip is a stability
+# bound rather than a term one anneals.
+grad_clip = 0.5
+
+# Decay applies to the player embedding residuals only (§1.2.2), as a loss term — the optimizer
+# runs with no global weight decay.
+residual_decay = 1e-4
+value_coeff = 0.5
+
+# Left constant for stage 1 on purpose. Annealing entropy is the obvious next knob if the policy
+# collapses, and the shape would be `{ start = 0.01, phases = [{ over = "rest", to = 1e-3,
+# shape = "exponential" }] }` — but §1.1.6 stage 1 asks whether the agent learns at all, and a
+# moving exploration bonus is one more explanation to rule out when it does not.
+entropy_coeff = 0.01
+# Frames per forward inside one step — a memory bound, not an algorithmic one: the step is one step
+# whatever it is set to (§1.5.1).
+#
+# 64 rather than §1.4.3's isolated knee of 256, because the knee was measured on the training step
+# alone. Measured with a rollout in the same pool (§1.4.3): 64 peaks at 1.0 GB, 128 at 2.5 GB and
+# 256 at 3.9 GB of a 4 GB card. Part 5 keeps the magnet resident too and Part 6 adds the
+# deckbuilder, so 1 GB is what leaves room for all three. Raise it on a bigger card.
+micro_batch = 64
+
+# Batches between two per-term gradient probes (§1.5.6), `0` to switch it off. This is the only
+# instrument that says whether `value_coeff` is set right: the loss magnitudes cannot, since a
+# normalized advantage puts `loss/policy` near zero however large its gradient. It costs a forward
+# and a backward per term over one micro-batch — five of those, once every 50 batches.
+grad_probe_every = 50
+
+# The magnet (§1.5.1b) — the average clone MMD does mirror descent *toward*. Switching it off
+# leaves the loss a plain policy gradient, which is §1.1.6 stage 1's ablation and not the algorithm
+# §1.5.1 specifies. None of the numbers below are measured; they are the shapes the spec fixes.
+[magnet]
+enabled = true
+
+# `η`, the weight of KL(π_BR ‖ magnet) in the BR's loss. A number or a schedule table, like every
+# `[step]` coefficient. Small on purpose: the magnetic term is a proximal pull, and one strong
+# enough to dominate the policy gradient stops the best-response being a best response. Read
+# `loss/kl_magnet` beside `sched/eta` — the product is what the loss paid, and a single series
+# cannot tell a KL that collapsed from an η that was annealed.
+eta = 0.05
+
+# The clone's own SL step: cross-entropy on the taken bit, its own AdamW, its own decay on the
+# embedding residuals. Faster than the BR's 3e-4 because it is fitting a *stationary* target — the
+# average of what the BR did — rather than chasing a moving advantage.
+learning_rate = 1e-3
+residual_decay = 1e-4
+grad_clip = 0.5
+
+# The reservoir (§1.5.3), in frames, in **host RAM**: it holds observations and masks, the same
+# objects `frames_per_batch` above holds 2048 of. Uniform over the whole stream, not the recent
+# frames — a ring buffer here would make the magnet a lagged copy of the BR and the KL a pull
+# toward itself.
+capacity = 20000
+
+# Frames the buffer must hold before the SL step runs at all. Below it the buffer is one policy's
+# worth of play, and cloning it would fit the *current* best-response instead of the average. This
+# is also what a resume lands in: the buffer is not checkpointed (the weights are), so the magnet
+# stands still for the batches it takes to refill.
+min_fill = 4000
+
+# Frames per SL step. `micro_batch` is absent, so the step splits at `[step] micro_batch` — the two
+# models are the same shape and share the card; set it apart only to trade one model's VRAM
+# against the other's:
+#
+#   micro_batch = 64
+batch = 256
+
+# §1.1.3's heuristic anchor as the *initial* magnet. Without it the KL spends the early run pulling
+# the policy toward the uniform-over-legal it started at. Delete this table to start the magnet at
+# its own random init; the run then still works, it just has no support to lean on.
+[magnet.seed]
+# A weighted mixture of CLI player codes, consulted per decision, so the seed is the single
+# stochastic policy `Σ share·π` and its clone is that mixture. A lone search player would seed the
+# magnet with a near-pure strategy, and the KL reads `log magnet` floored at 1e-9 ≈ -20.7 nats: a
+# sharp target charges the best-response nearly that much per unit of probability it puts anywhere
+# else, at batch 0, against the entropy bonus. The mixture buys `e2`'s judgement without letting its
+# determinism set the target's entropy.
+#
+# Shares are relative. Cost is not the constraint it looks like — measured on this repo, filling the
+# 20 000-frame buffer costs ≈ 5 s of `w`, ≈ 20 s of `v` and ≈ 113 s of `e2`, once, before batch 0.
+anchors = [
+    { player = "w", share = 0.5 },
+    { player = "v", share = 0.3 },
+    { player = "e2", share = 0.2 },
+]
+envs = 16
+# Cloning steps against the filled buffer, before batch 0.
+steps = 200
+max_crashes = 8
+
+# Engine panics (§1.5.5). A simulator `expect` that fires mid-game costs that game and nothing
+# else: it is caught, the state is dumped to `runs/<name>/crashes/`, and the env starts another.
+# A run of 10^6 games cannot end because one of them found a broken invariant.
+[recovery]
+# Dumps kept, per run. First occurrences are the ones worth having — a panic that fires 400 times
+# fires the same way each time. Set to 0 to keep recovering without writing anything.
+keep_dumps = 32
+
+# Panics tolerated within one collection before the run stops. This is the guard against a
+# *reproducible* crash, which would otherwise spin the collector forever without ever finishing an
+# episode; ordinary attrition never comes near it.
+max_per_batch = 64
+
+# §1.5.6's winrate, measured twice. The continuous curve (`panel/window/*`) is folded off the
+# training rollout per opponent — free, and precise enough (≈ ±2% at 20 batches) that paying for
+# games against an anchor the rollout already covers buys a worse estimate of the same number.
+[eval]
+# Batches in that window. Precision against lag: longer averages more games, over more versions.
+window_batches = 20
+
+# When the *held-out* evaluation runs: an integer is a batch cadence (0 = never, 1 = per batch, the
+# non-regression mode), a table is a floor screened off the window.
+#
+# Off here because `[rollout] opponents` is the whole panel — nothing is held out to measure. Turn
+# it on with an anchor the run does not train against; expectiminimax is the one, and it is the
+# *cheapest* to evaluate against (≈ 37 s per 100 games: it ends games in 18 turns where random drags
+# them to 78, and the cost is set by decision frames):
+#
+#   opponents = ["e2"]
+#   trigger = { winrate = 0.70, hold = 20, cooldown = 20 }
+#
+# The floor reads the *minimum* winrate over the anchors, never the mean. `hold` and `cooldown`
+# space out the tests; effective spacing is max(hold, cooldown). Why screen rather than run on a
+# cadence: NOTES.md.
+trigger = 0
+games_per_opponent = 100
+max_crashes = 8
+
+# Absent means `[rollout] envs`. Only worth setting apart to evaluate at a different batch size
+# than the rollout collects at:
+#
+#   envs = 64
+
+# The §1.5.2 opponent pool: PFSP over frozen best-response clones, rated with Glicko-2.
+#
+# Off by default, and the cost is why: a model on the far seat is a batched forward, so it roughly
+# doubles the forwards per game. An env holds one pending decision at a time and the actor
+# alternates, so it also halves the learner's own batch — raise `[rollout] envs` to 128 when turning
+# this on, which §1.4.3 measures as nearly free in VRAM (x8 on envs costs 35%, against 150% for x2
+# on micro_batch). Every cadence below is sized for this file's 200-batch run and scales with it.
+[pool]
+enabled = false
+
+# Slots for the hardest clones, and for clones drawn back out of the archive. History-heavy on
+# purpose: the best slots converge on the newest checkpoints, so an even split would make half the
+# panel the last few versions of the learner — the plain self-play the history slots exist to break.
+best_slots = 2
+history_slots = 6
+
+# Batches per slot refresh, which is also the Glicko rating period: the eviction and the measurement
+# it reads have to close on the same boundary. Cloning runs on its own, faster cadence — tied
+# together the pool would need (2+6) x refresh_every = 320 batches to fill, which a 200-batch run
+# never reaches; decoupled it is full by batch 80.
+refresh_every = 40
+clone_every = 10
+
+# A new member is guaranteed `grace_games` games and cannot be evicted below them — it enters
+# holding its parent's rating, which is stale by construction. `grace_batches` only caps how long
+# the guarantee may hold, and `grace_share` is the sampling mass reserved to deliver it.
+grace_games = 60
+grace_batches = 10
+grace_share = 0.2
+
+# Sampling: PFSP's (p(1-p))^k prioritizes the ~50% matchups, and the uniform floor keeps everything
+# else alive — including the pinned anchor, without which the rating scale has no origin that plays.
+uniform_floor = 0.15
+pfsp_sharpness = 1.0
+
+# Where the history slots draw from: "uniform" over the whole archive (leans old, which counters the
+# best slots' pull toward the newest), "log_age" for equal mass per age octave, or
+# { kind = "recent", max_age = 500 }. The last one pulls the same way the best slots already do.
+history_draw = "uniform"
+
+# Distinct opponents in flight per collection. NOT a throughput knob (see the note above): what it
+# sets is how many opponents PFSP samples per collection, and so how fast the ratings fill in.
+concurrent_opponents = 1
+
+# Heuristics that stay in the mix for the run's life, and which of them is the rating scale's origin
+# — never updated, so the elo curve has a fixed point to be read against. `er` and not `r`: an origin
+# on a very weak player pushes the whole population to +600 and wastes the resolution where the curve
+# is actually read. The pin must be one of the anchors, or it anchors nothing.
+anchors = ["er", "w"]
+pinned = "er"
+
+# Curriculum-owned reference models from `models/<name>/`. They never leave the panel, and their
+# rating is stored in their own meta.toml so it survives across runs. The repository ships none —
+# bake one first with `examples/bake_model.rs`:
+#
+#   baked = ["my_model"]
+baked = []
+models_root = "models"
+
+# Glicko-2. `tau` constrains how much a volatility may move in one period (Glickman suggests
+# 0.3-1.2); the deviation bounds are its floor and ceiling, and the ceiling is also where an unrated
+# entity starts.
+tau = 0.5
+min_deviation = 30.0
+max_deviation = 350.0
+
+# Rolling autosave (§1.5.5). A hot checkpoint costs about one batch of collection to write, so the
+# cadence trades that against how much rollout a crash throws away. Ctrl-C saves regardless.
+[checkpoint]
+every_batches = 20
+keep_hot = 2
+
+# Part 4 sizes (§1.4.3). Spelled out rather than left to the Rust defaults so the run clone in
+# `runs/<name>/config.toml` describes the model that was actually trained.
+[model]
+# Must stay >= 3 * d_id: the Pokémon token carries 3 * d_id of identity, so 192 sits on the floor.
+d_model = 192
+num_blocks = 2
+num_heads = 6
+# Cut to 2x d_model rather than the usual 4x: per-block MAC is 61% FFN, and Part 5 needs the
+# best-response and the magnet clone resident at once.
+d_ff = 384
+d_id = 64
+d_head_emb = 16
+d_head_hidden = 64
+
+# Part of the model's identity, not a run seed: it fixes the frozen meta-neutral embedding init
+# (§1.2.2), so two runs that differ here are not comparable.
+init_seed = 0x00DEC4C400000001
+
+# Compute caps, not legality ones (§1.3.8). The widest frame observed scores 20 candidates.
+max_scored_candidates = 64
+max_candidate_refs = 8
+
+# The §1.5.7 label harvest. `log` is false / true / a probability, drawn per *game* — never per
+# row, because §1.5.7's denominators depend on every card of a harvested deck getting a row
+# whether it was drawn or not.
+#
+# Off for stage 1: §1.5.7 keeps mechanical counts over the whole run but restricts winrate labels
+# to plateau-region checkpoints, and an untrained pilot produces neither. Turn it on for the long
+# runs, where the games would otherwise be thrown away.
+[harvest]
+log = false
+every_batches = 20
+
+# The curriculum (§1.5.4). `stages` empty — this file's single-stage mode — leaves the two knobs
+# below without a consumer: the winrate-vs-panel plateau stop is read once per `[eval]
+# window_batches` turnover by a curriculum run, `plateau_k` consecutive readings within
+# `plateau_epsilon` of each other ending the run alongside `[rollout] batches`.
+[curriculum]
+plateau_k = 5
+plateau_epsilon = 0.02
+
+# A non-empty `[[curriculum.stages]]` list *supersedes* the flat `[decks]`/`[eval] trigger,
+# opponents,games_per_opponent`/`[pool] anchors,baked`/`[magnet.seed]` fields above for the run —
+# they stay required (and are read to build the very first sampler/panel, which the starting stage
+# retargets immediately), but the stages own those choices from there on. Run-global mechanics
+# (`[pool] best_slots`, `tau`, `[eval] window_batches`, …) stay in charge regardless.
+#
+# The two stages below are a real run over the `tutorial` DB's difficulty tiers — uncomment both
+# to use them. Per stage: `db`/`archetypes`/`pure_mirror`/`mirror` are the stage's deck draw, with
+# `mix` available in place of `db`/`archetypes` exactly as under `[decks]` above (a stage drawing
+# `meta` alongside `tutorial` is how a run gets asymmetric matchups: `meta` on its own is ~60
+# effective archetypes and all of them are tournament-viable, so both seats are always about as
+# strong);
+# `anchors`/`baked` its pool membership when `[pool] enabled = true` (they must include `[pool]
+# pinned` — the rating origin cannot move between stages) or `opponents` its scripted panel when
+# the pool is off; `advance` the §1.5.4 rule — held-out winrate vs the *worst* anchor, screened by
+# the free window over those same anchors (never over the pool's clones, which sit near 50% by
+# construction), `hold`/`cooldown` in batches like `[eval] trigger`'s table form; `magnet_seed`
+# the heuristic mixture refilled into the reservoir on the transition *into* the stage, after
+# `evict_fraction` of it is evicted (inert without a `magnet_seed`: no reseed, no eviction);
+# `harvest_log` a new harvest rate from the stage on — absent keeps the rate already in force, and
+# no stage can turn harvesting on if `[harvest] log = false` built no harvest at all.
+#
+# [[curriculum.stages]]
+# name = "beginner"
+# db = "tutorial"
+# archetypes = ["beginner"]
+# pure_mirror = 0.05
+# mirror = 0.10
+# anchors = ["er", "w"]
+# baked = []
+# games_per_opponent = 100
+# [curriculum.stages.advance]
+# winrate = 0.70
+# hold = 20
+# cooldown = 20
+#
+# [[curriculum.stages]]
+# name = "intermediate"
+# db = "tutorial"
+# archetypes = ["intermediate"]
+# pure_mirror = 0.05
+# mirror = 0.10
+# anchors = ["er", "w", "e2"]
+# baked = []
+# evict_fraction = 0.3
+# games_per_opponent = 100
+# [curriculum.stages.advance]
+# winrate = 0.70
+# hold = 20
+# cooldown = 20
+# # A stronger mixture than the run-start `[magnet.seed]`, since the landscape just got harder.
+# [curriculum.stages.magnet_seed]
+# anchors = [
+#     { player = "w", share = 0.3 },
+#     { player = "v", share = 0.3 },
+#     { player = "e2", share = 0.4 },
+# ]
+# envs = 16
+# steps = 200
+# max_crashes = 8

@@ -1,4 +1,5 @@
 use std::fs;
+use std::path::PathBuf;
 
 use log::warn;
 use num_format::{Locale, ToFormattedString};
@@ -29,12 +30,38 @@ pub struct OptimizationConfig {
 }
 
 /// Configuration for running simulations
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct SimulationConfig {
     pub num_games: u32,
     pub players: Option<Vec<PlayerCode>>,
     pub seed: Option<u64>,
     pub data_output: Option<String>,
+    pub rl: RlOptions,
+}
+
+/// The knobs that only mean anything once a seat is a baked model (`rl:<name>`).
+///
+/// Carried on [`SimulationConfig`] rather than passed alongside it so the folder sweep and the
+/// single-matchup path cannot drift on which device they ran, which is the one thing that changes
+/// how long the same command takes by an order of magnitude.
+#[derive(Clone)]
+pub struct RlOptions {
+    /// Games in flight, and so the width of each forward. Irrelevant on a fully scripted run.
+    pub envs: usize,
+    pub cuda: bool,
+    pub models_root: PathBuf,
+}
+
+impl Default for RlOptions {
+    fn default() -> Self {
+        // 64 is what §1.5.5 trains at, and the count every latency number in §1.4.3 is read
+        // against — a default that matches the measurements is one fewer thing to explain.
+        RlOptions {
+            envs: 64,
+            cuda: false,
+            models_root: PathBuf::from("models"),
+        }
+    }
 }
 
 /// Configuration for parallelism
@@ -527,8 +554,7 @@ mod tests {
         let sim_config = SimulationConfig {
             num_games: 1,
             players: Some(vec![PlayerCode::R, PlayerCode::R]),
-            seed: None,
-            data_output: None,
+            ..Default::default()
         };
         let parallel_config = ParallelConfig {
             enabled: false,
