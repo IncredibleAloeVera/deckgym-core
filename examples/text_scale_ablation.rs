@@ -16,7 +16,7 @@
 //! ```text
 //! uv run --no-project --with numpy auxiliaries/text_embeddings/unwhiten.py
 //! cargo run --release --features rl-model --example text_scale_ablation -- \
-//!     --from runs/long_v5/checkpoints/hot-00001252
+//!     --from runs/<run>/checkpoints/<hot-dir>
 //! ```
 //!
 //! **Why `--from` a checkpoint when the models under test are untrained.** The frames have to be

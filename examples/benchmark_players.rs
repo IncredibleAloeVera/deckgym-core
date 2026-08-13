@@ -5,7 +5,7 @@
 //! ```text
 //! cargo run --release --example benchmark_players
 //! cargo run --release --features rl-model-cuda --example benchmark_players -- \
-//!     --from runs/my_run/checkpoints/hot-00002121 --models my_model
+//!     --from runs/<run>/checkpoints/<hot-dir> --models Cliff
 //! ```
 //!
 //! `--models` names baked directories under `--models-root`, `--from` run checkpoints; a checkpoint

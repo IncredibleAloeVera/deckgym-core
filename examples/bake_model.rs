@@ -9,7 +9,7 @@
 //! ```text
 //! cargo run --release --features rl-model --example bake_model -- --verify
 //! cargo run --release --features rl-model --example bake_model -- \
-//!     --from runs/long_v1/checkpoints/hot-00001423
+//!     --from runs/<run>/checkpoints/<hot-dir>
 //! cargo run --release --features rl-model --example bake_model -- \
 //!     --from runs/my_run/checkpoints/loose.mpk --name my_model --note "MMD prototype"
 //! ```

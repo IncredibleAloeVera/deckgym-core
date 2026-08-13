@@ -414,6 +414,48 @@ impl Pool {
         &self.permanent
     }
 
+    /// Every clone currently holding a slot, ascending. The membership a `partial` carry
+    /// ([`super::init`]) has to copy, since those are the only weights the next batch can ask for.
+    pub fn slot_batches(&self) -> Vec<u64> {
+        let mut batches: Vec<u64> = self.slots.iter().map(|slot| slot.batch).collect();
+        batches.sort_unstable();
+        batches
+    }
+
+    /// Re-admits every occupied slot at `batch`, as if it had just been drawn.
+    ///
+    /// For carrying a pool into a run whose batch counter starts over ([`super::init`]). Tenure is
+    /// stored as the batch a member was admitted at and its game count at that moment, and both are
+    /// read as *differences* against the current batch and game count — so a slot admitted at the
+    /// source's batch 2150 lands in a run at batch 50 with `50 − 2150` saturating to zero. It then
+    /// reads as freshly admitted at every batch until the new run's counter passes 2150, which is a
+    /// grace period that cannot expire: the member holds its slot against every ranking, and keeps
+    /// the sampling share the grace reservation gives it. Re-admitting at the new run's own batch is
+    /// what makes the tenure mean the same thing on both sides of the copy.
+    pub fn readmit_slots(&mut self, ratings: &RatingTable, batch: u64) {
+        for slot in &mut self.slots {
+            slot.admitted = batch;
+            slot.games_at_admission = ratings
+                .get(&OpponentId::Pool(slot.batch))
+                .map(|entry| entry.games)
+                .unwrap_or(0);
+        }
+    }
+
+    /// Narrows the archive to the clones currently in slots, and returns them.
+    ///
+    /// For carrying a pool into a *different* run directory ([`super::init`]): the archive is a
+    /// list of batch numbers that a history draw will happily hand back, and a run whose
+    /// `pool/` holds fewer files than that list promises would fail at the refresh that draws one
+    /// — hours in, and for a file that was never copied rather than for anything that happened.
+    /// The slots themselves are untouched, so the panel the next batch faces is the one the source
+    /// run stopped on.
+    pub fn restrict_to_slots(&mut self) -> Vec<u64> {
+        let kept = self.slot_batches();
+        self.archive.retain(|batch| kept.contains(batch));
+        kept
+    }
+
     fn slots_full(&self) -> bool {
         self.slots.len() >= self.config.best_slots + self.config.history_slots
     }
@@ -755,7 +797,7 @@ mod tests {
         vec![
             Permanent::heuristic(PlayerCode::ER).pinned(),
             Permanent::heuristic(PlayerCode::R),
-            Permanent::baked("default_mmd_prot"),
+            Permanent::baked("Cliff"),
         ]
     }
 
@@ -779,6 +821,40 @@ mod tests {
                 pool.refresh(ratings, batch, &mut rng);
             }
         }
+    }
+
+    /// Carried tenure has to be re-based, or a slot admitted late in the source run is protected
+    /// for as long as it takes the new run's counter to reach the source's — thousands of batches
+    /// during which no ranking can touch it.
+    #[test]
+    fn a_carried_slot_re_admitted_at_the_new_runs_batch_can_be_evicted_again() {
+        let config = PoolConfig {
+            best_slots: 1,
+            history_slots: 1,
+            ..PoolConfig::default()
+        };
+        let mut ratings = ratings();
+        let mut pool = pool(PoolConfig {
+            best_slots: 2,
+            history_slots: 2,
+            ..config.clone()
+        });
+        pool.register(&mut ratings);
+        // Admitted late in a long source run, and never played since — the case where tenure by
+        // games cannot expire the grace either.
+        for batch in [1000u64, 1100, 1200, 1300] {
+            pool.admit_clone(batch, &mut ratings);
+        }
+        assert_eq!(pool.slot_batches().len(), 4);
+
+        let mut carried = pool.clone().with_config(config).expect("narrowed");
+        carried.readmit_slots(&ratings, 0);
+        ratings.close_period();
+        carried.refresh(&mut ratings, 50, &mut rng());
+
+        // Two slots for a config that asks for two. Without the re-admission every carried slot
+        // reads as in grace at batch 50 — `50 − 1000` saturates — and all four hold.
+        assert_eq!(carried.slot_batches().len(), 2);
     }
 
     #[test]
@@ -1135,7 +1211,7 @@ mod tests {
 
         assert!(!pool
             .active()
-            .contains(&OpponentId::Baked("default_mmd_prot".to_string())));
+            .contains(&OpponentId::Baked("Cliff".to_string())));
         assert!(pool
             .active()
             .contains(&OpponentId::Heuristic(PlayerCode::W)));

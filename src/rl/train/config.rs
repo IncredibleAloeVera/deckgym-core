@@ -70,6 +70,11 @@ pub struct TrainConfig {
     #[serde(default, rename = "model")]
     #[allow(dead_code)]
     model_unused: Option<toml::Value>,
+    /// Where this run's *starting weights* come from, when they are not a random init
+    /// ([`super::init`]). Absent — the default — is a run that starts from its own `init_seed`,
+    /// which is every run before this section existed.
+    #[serde(default)]
+    pub init: Option<InitSection>,
     /// The frozen text-encoder artifact (§1.2.9), as a path to the JSON
     /// `auxiliaries/text_embeddings` writes.
     ///
@@ -104,6 +109,93 @@ pub struct RunSection {
 
 fn default_runs_root() -> PathBuf {
     PathBuf::from("runs")
+}
+
+/// How much of the source run travels with the weights ([`super::init`]).
+///
+/// One field with three values rather than two booleans: `cold` and `warm` are points on one axis
+/// — how much history the new run inherits — and a pair of flags would let a `.toml` ask for the
+/// optimizer without the weights, which is not a thing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum InitMode {
+    /// Weights alone. AdamW starts at zero moments, the magnet is fresh (and seeded like a fresh
+    /// run's), and the batch counter is 0 — the source contributes a starting point and nothing
+    /// else. The only mode a baked model or a loose `.mpk` can serve, since a cold record is all
+    /// they hold.
+    Cold,
+    /// Weights, AdamW's moments, and the magnet with its own optimizer and reservoir when the
+    /// source carries them. What a resume would restore, minus the loop counters — which is the
+    /// whole point: a new run directory, a new log, a batch counter at 0.
+    Warm,
+}
+
+/// What of §1.5.2's pool comes across ([`super::init`]).
+///
+/// A clone's weights live in the *source* run's `pool/`, so anything but [`PoolCarry::Empty`] is a
+/// file copy — see the module docs for why the archive cannot simply be referenced in place.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PoolCarry {
+    /// Nothing. The pool refills from scratch, which costs `(best_slots + history_slots) ×
+    /// clone_every` batches during which the only opponents are clones of the model as it is now.
+    Empty,
+    /// The clones holding a slot at the checkpoint, and their ratings. The panel the source run
+    /// stopped on, without its history: cheap to copy, and enough that the first batch faces real
+    /// adversaries rather than itself.
+    Partial,
+    /// The whole archive. Every historical slot the source could have drawn, the new run can draw
+    /// too — at the price of copying every clone the source ever wrote.
+    Full,
+}
+
+impl PoolCarry {
+    /// The command-line spelling, which is the `.toml`'s spelling — one vocabulary, so a flag and
+    /// a config field cannot come to mean different things.
+    pub fn parse(value: &str) -> Result<Self, String> {
+        match value {
+            "empty" => Ok(PoolCarry::Empty),
+            "partial" => Ok(PoolCarry::Partial),
+            "full" => Ok(PoolCarry::Full),
+            other => Err(format!(
+                "unknown pool carry {other:?} — expected empty, partial or full"
+            )),
+        }
+    }
+}
+
+/// `[init]` — the starting weights, when they are not a random draw.
+///
+/// Deliberately a section and not a pair of command-line flags alone: §1.5.5's rule is that the
+/// `.toml` says what a run *is*, and where a run's weights came from is not a detail of how it was
+/// launched. The flags exist for the one-off case and [`TrainConfig::init`] refuses them against a
+/// populated section rather than picking a winner.
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct InitSection {
+    pub mode: InitMode,
+    /// A hot checkpoint directory, a baked model directory, or a loose `.mpk`. Which one it is is
+    /// read off the contents, not declared — see [`super::init`].
+    pub from: PathBuf,
+    /// Absent means the mode's own default: nothing for `cold`, the occupied slots for `warm`.
+    /// Written out, so a config that carries a pool says so.
+    #[serde(default)]
+    pub pool: Option<PoolCarry>,
+}
+
+impl InitSection {
+    /// The pool carry this section asks for, with the per-mode default applied.
+    ///
+    /// `cold` defaults to nothing and `warm` to the occupied slots, because the two modes are
+    /// asking different questions: a cold init is a fresh experiment that happens to start from
+    /// trained weights, and a warm one is a continuation that wants the run it continues to still
+    /// have opponents.
+    pub fn pool_carry(&self) -> PoolCarry {
+        self.pool.unwrap_or(match self.mode {
+            InitMode::Cold => PoolCarry::Empty,
+            InitMode::Warm => PoolCarry::Partial,
+        })
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -917,6 +1009,44 @@ impl TrainConfig {
         RunDir::open(&self.run.root, &self.run.name)
     }
 
+    /// Where this run's starting weights come from, reconciling `[init]` with the command line.
+    ///
+    /// **A populated section and a flag are a conflict, not a precedence.** [`super::run_dir`]'s
+    /// rule is that no override channel may contradict the `.toml`, and the alternative reading —
+    /// the flag wins — makes `runs/<name>/config.toml` a file that describes weights the run did
+    /// not start from, which is exactly the drift the clone exists to prevent. So the two are
+    /// refused together and the user picks one.
+    ///
+    /// `resume` is passed in rather than checked by the caller because the pair is meaningless in
+    /// both directions: a resume takes its weights from the run's own last checkpoint, and an init
+    /// is the first batch of a run that has none.
+    pub fn init(
+        &self,
+        flag: Option<InitSection>,
+        resume: bool,
+    ) -> Result<Option<InitSection>, String> {
+        let init = match (&self.init, flag) {
+            (Some(_), Some(_)) => {
+                return Err(format!(
+                    "both [init] in {} and an --init-from-* flag were given — they are the same \
+                     decision, so drop one rather than letting the command line contradict the \
+                     run's own config",
+                    self.source.display()
+                ))
+            }
+            (Some(section), None) => Some(section.clone()),
+            (None, flag) => flag,
+        };
+        if resume && init.is_some() {
+            return Err(
+                "--resume and --init-from-* are exclusive: a resume continues a run from \
+                        its own last checkpoint, an init starts a new one from someone else's"
+                    .to_string(),
+            );
+        }
+        Ok(init)
+    }
+
     /// The frozen text tables every model in the run is built on — the learner's, the magnet's,
     /// the pool clones', and the baked opponents'.
     ///
@@ -1304,6 +1434,61 @@ mod tests {
             .to_string()
     }
 
+    /// `[init]` has to be optional in exactly the way every other section added after the fact is:
+    /// the cloned `config.toml` of every run that started before it exists has to keep parsing, and
+    /// has to keep meaning "start from the init seed".
+    #[test]
+    fn a_config_without_an_init_section_starts_from_its_own_seed() {
+        let config: TrainConfig = toml::from_str(&minimal_config_base()).expect("config");
+
+        assert!(config.init.is_none());
+        assert!(config.init(None, false).expect("no init").is_none());
+        assert!(config.init(None, true).expect("a plain resume").is_none());
+    }
+
+    #[test]
+    fn an_init_section_parses_and_defaults_its_pool_carry_per_mode() {
+        let text = minimal_config_base()
+            + "[init]\nmode = \"warm\"\nfrom = \"runs/src/checkpoints/hot-00002300\"\n";
+        let config: TrainConfig = toml::from_str(&text).expect("config");
+        let init = config.init(None, false).expect("init").expect("section");
+
+        assert_eq!(init.mode, InitMode::Warm);
+        assert_eq!(init.pool_carry(), PoolCarry::Partial);
+    }
+
+    /// The `.toml` owns what a run is (`super::run_dir`), so a flag beside a populated `[init]` is
+    /// refused rather than resolved: the alternative leaves the run's own config clone describing
+    /// weights the run did not start from.
+    #[test]
+    fn a_flag_against_a_populated_init_section_is_refused() {
+        let text = minimal_config_base() + "[init]\nmode = \"cold\"\nfrom = \"models/veteran\"\n";
+        let config: TrainConfig = toml::from_str(&text).expect("config");
+        let flag = InitSection {
+            mode: InitMode::Warm,
+            from: PathBuf::from("runs/other/checkpoints/hot-00000100"),
+            pool: None,
+        };
+
+        let err = config
+            .init(Some(flag), false)
+            .expect_err("the command line must not contradict the config");
+        assert!(err.contains("drop one"), "{err}");
+    }
+
+    /// A resume takes its weights from the run's own last checkpoint. An init is the first batch of
+    /// a run that has none — the pair has no reading in either direction.
+    #[test]
+    fn resuming_and_initializing_are_exclusive() {
+        let text = minimal_config_base() + "[init]\nmode = \"cold\"\nfrom = \"models/veteran\"\n";
+        let config: TrainConfig = toml::from_str(&text).expect("config");
+
+        let err = config
+            .init(None, true)
+            .expect_err("--resume and [init] are exclusive");
+        assert!(err.contains("exclusive"), "{err}");
+    }
+
     /// `[curriculum]` has to be optional and default to empty: the configs of runs that started
     /// before §1.5.4 existed are cloned into their run directories, and a resume must not fail to
     /// parse its own record, nor silently start behaving like a curriculum run.
@@ -1450,8 +1635,8 @@ mod tests {
         assert_eq!(
             stages[1].eval_anchors,
             vec![crate::players::PlayerCode::ER],
-            "the mixed stage screens on the pin alone — `w`/`v` saturated at 0.84–0.94 in long_v3 \
-             and a saturated anchor cannot move a `min`"
+            "the mixed stage screens on the pin alone — a `w`/`v` anchor saturated at 0.84–0.94 in \
+             the runs this shape was tuned on, and a saturated anchor cannot move a `min`"
         );
 
         assert_eq!(stages.len(), 2);
@@ -1591,10 +1776,10 @@ mod tests {
     /// `schema_fingerprint` sees widths, and the frozen tables are rebuilt at construction rather
     /// than restored from a record, so nothing else in the load path can notice.
     ///
-    /// The stale bake is written here rather than read off `models/`, which ships empty: a
-    /// `meta.toml` alone is enough, because the schema is checked before the weights are opened
-    /// (`super::baked`'s `a_stale_schema_is_refused_with_both_halves_named` covers that check
-    /// itself — this one covers the config load path reaching it).
+    /// The stale bake is written here rather than read off `models/`, whose one model is baked at
+    /// the current schema: a `meta.toml` alone is enough, because the schema is checked before the
+    /// weights are opened (`super::baked`'s `a_stale_schema_is_refused_with_both_halves_named`
+    /// covers that check itself — this one covers the config load path reaching it).
     #[cfg(feature = "rl-model")]
     #[test]
     fn a_config_naming_a_stale_bake_is_refused() {

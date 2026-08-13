@@ -36,6 +36,14 @@ use super::pool::{Permanent, Pool, PoolRow};
 use super::rating::{score_from_reward, OpponentId, RatingTable};
 use super::rollout::Episode;
 
+/// A clone's weights inside a run's `pool/`, without the `.mpk` the recorder appends.
+///
+/// Free-standing because [`super::init`] copies these files between runs without owning a
+/// [`Panel`], and a second spelling of the name would be a second thing to keep in step.
+pub fn clone_stem(archive: &Path, batch: u64) -> PathBuf {
+    archive.join(format!("b{batch:09}"))
+}
+
 /// Everything the loop needs to checkpoint about the pool. The weights are on disk already; this is
 /// the bookkeeping that says which of them matter and what they are worth.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -184,7 +192,7 @@ impl<B: Backend> Panel<B> {
     /// Where [`Panel::admit`] writes a clone, and [`Panel::load`] reads one. Without the `.mpk` the
     /// recorder appends.
     fn clone_stem(&self, batch: u64) -> PathBuf {
-        self.archive.join(format!("b{batch:09}"))
+        clone_stem(&self.archive, batch)
     }
 
     /// Loads the weights of every model-driven member currently in the pool, dropping whatever was

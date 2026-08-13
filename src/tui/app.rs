@@ -653,18 +653,12 @@ impl App {
 /// A model seat in the TUI, on the two paths that reach it: the replay is played out in full
 /// before anything is drawn, and the interactive game is advanced a frame at a time.
 ///
-/// Both need a baked model on disk; `models/default_mmd_prot` is the one this repository tracks.
-///
-/// **Ignored: nothing under `models/` loads.** All five tracked directories were baked at
-/// `schema_version = 1` and have been rejected by `check_schema` since the bump to 2 — version 4's
-/// belief render only widens the gap. That is the check working, not a bug to route around, and no
-/// re-bake rescues the old weights: their input layer is the wrong shape. These come back with the
-/// first model trained on the current schema.
+/// Both need a baked model on disk; `models/Cliff` is the one this repository tracks.
 #[cfg(all(test, feature = "rl-model"))]
 mod model_seat_tests {
     use super::*;
 
-    const MODEL: &str = "default_mmd_prot";
+    const MODEL: &str = "Cliff";
 
     fn config(players: Vec<PlayerCode>) -> AppConfig {
         AppConfig {
@@ -678,7 +672,6 @@ mod model_seat_tests {
     }
 
     #[test]
-    #[ignore = "no model under models/ is baked against the current schema"]
     fn a_replay_against_a_model_plays_to_the_end() {
         let app = App::new(&config(vec![
             PlayerCode::RL {
@@ -701,7 +694,6 @@ mod model_seat_tests {
     /// The mat is drawn from the human's seat, so a model on P2 must not put the person at the
     /// keyboard behind P1's face-down hand.
     #[test]
-    #[ignore = "no model under models/ is baked against the current schema"]
     fn the_human_keeps_the_near_side_of_the_mat_on_either_seat() {
         let model = PlayerCode::RL {
             name: MODEL.to_string(),
@@ -715,7 +707,6 @@ mod model_seat_tests {
     }
 
     #[test]
-    #[ignore = "no model under models/ is baked against the current schema"]
     fn an_interactive_game_plays_the_model_and_then_waits_for_the_human() {
         let mut app = App::new(&config(vec![
             PlayerCode::RL {

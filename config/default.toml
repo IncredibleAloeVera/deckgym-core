@@ -16,6 +16,35 @@ seed = 0
 name = "default"
 root = "runs"
 
+# Where this run's *starting weights* come from. Absent — as here — is a run that starts from its
+# own `[model] init_seed`, which is every run before this section existed. It is not a resume:
+# `--resume` continues the run this file names, `[init]` starts a new one from someone else's
+# weights. The two are refused together, as are this section and the `--init-from-*` flags.
+#
+#   mode = "cold"    weights alone: AdamW starts at zero moments and the magnet is fresh (and
+#                    seeded like a fresh run's). The only mode a baked model or a loose .mpk can
+#                    serve, since a cold record is all they hold.
+#   mode = "warm"    plus AdamW's moments and the magnet with its own optimizer and reservoir —
+#                    what a resume restores, minus the loop counters. Needs a hot checkpoint.
+#
+#   from = ...       a hot checkpoint directory, a baked model directory, or a loose .mpk. Which
+#                    one it is is read off the contents, not declared.
+#
+#   pool = "empty"   the pool refills from scratch — (best_slots + history_slots) * clone_every
+#                    batches whose only opponents are clones of the model as it is now.
+#        = "partial" the clones holding a slot at the checkpoint, and their ratings. Default in
+#                    `warm`.
+#        = "full"    the whole archive, every historical draw included.
+#   Absent means the mode's default: nothing for `cold`, the occupied slots for `warm`. Anything
+#   but "empty" *copies* files — a clone's weights live in the source run's `pool/`, and a run
+#   directory has to be self-contained. Ratings travel with them, so the new run's elo continues
+#   the source's scale rather than restarting at 1500.
+#
+# [init]
+# mode = "warm"
+# from = "runs/<run>/checkpoints/<hot-dir>"
+# pool = "partial"
+
 [decks]
 root = "decks"
 
@@ -265,10 +294,9 @@ anchors = ["er", "w"]
 pinned = "er"
 
 # Curriculum-owned reference models from `models/<name>/`. They never leave the panel, and their
-# rating is stored in their own meta.toml so it survives across runs. The repository ships none —
-# bake one first with `examples/bake_model.rs`:
+# rating is stored in their own meta.toml so it survives across runs:
 #
-#   baked = ["my_model"]
+#   baked = ["Cliff"]
 baked = []
 models_root = "models"
 

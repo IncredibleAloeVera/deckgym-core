@@ -58,7 +58,7 @@ the player is optimized for being uniformly competent rather than for being stro
 everywhere else:
 
 ```bash
-cargo run --release --features rl-model-cuda --example benchmark_players -- --from runs/<run>/checkpoints/<hot-dir>
+cargo run --release --features rl-model-cuda --example benchmark_players -- --models Cliff
 ```
 
 Decisions per second, one seat, one thread. Not games per second: a game is not a fixed amount of
@@ -66,21 +66,21 @@ work.
 
 | Seat | Code | Decisions/s |
 | --- | --- | ---: |
-| EvolutionRusher | `er` | ~20 200 |
-| WeightedRandom | `w` | ~20 100 |
-| Random | `r` | ~18 600 |
-| AttachAttack | `aa` | ~17 500 |
-| EndTurn | `et` | ~12 700 |
-| ValueFunction | `v` | ~3 500 |
-| ExpectiMiniMax d=2 | `e2` | ~490 |
-| RL model, CUDA, `envs = 64` | `rl:<name>` | ~430 |
-| ExpectiMiniMax d=3 | `e3` | ~140 |
+| WeightedRandom | `w` | ~29 000 |
+| EvolutionRusher | `er` | ~29 000 |
+| Random | `r` | ~26 200 |
+| AttachAttack | `aa` | ~25 800 |
+| EndTurn | `et` | ~20 400 |
+| ValueFunction | `v` | ~5 000 |
+| RL model, CUDA, `envs = 64` | `rl:Cliff` | ~1 050 |
+| ExpectiMiniMax d=2 | `e2` | ~740 |
+| ExpectiMiniMax d=3 | `e3` | ~230 |
 | RL model, CPU NdArray | `rl:<name>` | ~90 |
 
 Below `v` the seat is the cost; above it the engine is. `rl-model-wgpu` builds and runs, not
 measured. Batching is what the GPU row rests on — a lone forward is ≈ 16 ms against ≈ 386 µs/sample
 saturated ([§1.4.3](./RL_ARCHITECTURE.md#143-sizes-and-measured-budget)) — and buys nothing on CPU,
-where NdArray is GEMM-bound and flat in the batch. The model is ~1.13 M trainable parameters, split
+where NdArray is GEMM-bound and flat in the batch. The model is ~1.26 M trainable parameters, split
 per component in `PERFORMANCE.md`; the frozen tables it gathers from are ~12 MB and are not
 parameters.
 
@@ -239,12 +239,13 @@ as Text**). A folder can replace the second deck, distributing games evenly acro
 are the ones in the performance table above, plus `h` for a human seat in the TUI.
 
 A seat can also be a baked model from `models/` (§1.5.2), on either side or both. **The repository
-ships no baked model**: `models/` does not exist until you bake one, and the checkpoints of the runs
-these documents quote are not published. Every `rl:<name>` below therefore names a model you have
-baked yourself.
+ships one, `Cliff`**: the final self-play model of a run whose checkpoints are not published, which
+is why its `meta.toml` names no source — the rating in it, on §1.5.2's `er`-pinned scale, is the
+only thing in that file which means anything outside the run. Any other `rl:<name>` names a model
+you have baked yourself.
 
 ```bash
-cargo run --release --features rl-model -- simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 --players r,rl:my_model --envs 64
+cargo run --release --features rl-model -- simulate example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --num 1000 --players r,rl:Cliff --envs 64
 ```
 
 `rl:<name>` names a directory under `--models-root` (default `models`), nested paths included.
@@ -266,7 +267,7 @@ on the other seat, in either order (the mat is drawn from yours). Same `--models
 as `simulate`; there is no `--envs`, one watched game has nothing to batch.
 
 ```bash
-cargo run --release --bin tui --features "tui,rl-model" -- example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --players rl:my_model,h
+cargo run --release --bin tui --features "tui,rl-model" -- example_decks/venusaur-exeggutor.txt example_decks/weezing-arbok.txt --players rl:Cliff,h
 ```
 
 **Inspect cards** — `search` exists because `database.json` blows through any context window

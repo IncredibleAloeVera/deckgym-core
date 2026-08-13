@@ -1,0 +1,25 @@
+schema_version = 4
+schema_fingerprint = "0x4caea8b7fd0b4e2c"
+
+[model]
+d_model = 192
+num_blocks = 1
+num_heads = 6
+d_ff = 384
+d_id = 64
+d_head_emb = 16
+d_head_hidden = 64
+init_seed = 62703790922399747
+max_scored_candidates = 64
+max_candidate_refs = 8
+candidate_cross_attention = true
+
+[provenance]
+created = "2026-08-13"
+note = "Self-play reference model. The run that produced it is not published, so the checkpoint it was baked from is deliberately not named here — nothing outside this repository could resolve it."
+
+[rating]
+rating = 1767.1470882438116
+deviation = 5.0
+volatility = 0.06
+games = 576316

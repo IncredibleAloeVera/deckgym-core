@@ -31,6 +31,8 @@ pub mod eval;
 pub mod gae;
 pub mod harvest;
 #[cfg(feature = "rl-model")]
+pub mod init;
+#[cfg(feature = "rl-model")]
 pub mod logger;
 #[cfg(feature = "rl-model")]
 pub mod magnet;
@@ -62,8 +64,8 @@ pub use checkpoint::{
     LoopState, SideState,
 };
 pub use config::{
-    DeckSection, EvalSection, EvalTrigger, FloorSpec, PoolSection, RecoverySection, RunSection,
-    TrainConfig,
+    DeckSection, EvalSection, EvalTrigger, FloorSpec, InitMode, InitSection, PoolCarry,
+    PoolSection, RecoverySection, RunSection, TrainConfig,
 };
 pub use crash::{CrashBudget, CrashLog};
 #[cfg(feature = "rl-model")]

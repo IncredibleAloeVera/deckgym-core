@@ -17,11 +17,16 @@
 //! cargo run --release --features rl-model-cuda --example train_player -- --cuda --resume
 //! ```
 //!
+//! `--resume` continues the run its `--config` names. To start a *new* run from another one's
+//! weights instead, `[init]` in the `.toml` or, for a one-off, `--init-from-cold <path>` /
+//! `--init-from-warm <path>` (exclusive, and refused against a populated `[init]`), with
+//! `--init-pool empty|partial|full`. What each carries is [`deckgym::rl::train::init`]'s subject.
+//!
 //! Three things end the loop: the `[rollout] batches` budget, Ctrl-C, and §1.5.4's plateau; the
 //! last two checkpoint on the way out. `p` is not one of them — it pauses in place, checkpoints,
 //! and waits for the same key.
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use burn::backend::{Autodiff, NdArray};
 use burn::tensor::backend::AutodiffBackend;
@@ -37,6 +42,7 @@ use deckgym::rl::train::diagnostics::{
     magnet as magnet_scalars, probe_points, standard,
 };
 use deckgym::rl::train::eval::EvalLog;
+use deckgym::rl::train::init;
 use deckgym::rl::train::logger::MetricLog;
 use deckgym::rl::train::magnet::Magnet;
 use deckgym::rl::train::opponent::{Assignment, OpponentModels};
@@ -44,7 +50,37 @@ use deckgym::rl::train::panel::{check_eval_disjoint, Panel, PanelState, PoolLog}
 use deckgym::rl::train::pause::Pause;
 use deckgym::rl::train::rollout::Collector;
 use deckgym::rl::train::update::{inference_model, Learner};
-use deckgym::rl::train::TrainConfig;
+use deckgym::rl::train::{InitMode, InitSection, PoolCarry, TrainConfig};
+
+/// The value after `name`, when it is not itself a flag.
+fn arg(name: &str) -> Option<String> {
+    std::env::args()
+        .skip_while(|value| value != name)
+        .nth(1)
+        .filter(|value| !value.starts_with("--"))
+}
+
+/// `[init]` as the command line spells it, or `None`.
+///
+/// Two flags rather than one plus a mode, because the mode is the decision — a reader of a shell
+/// history should not have to hold two words together to know whether a run inherited an optimizer.
+/// They are exclusive, and [`TrainConfig::init`] then refuses the pair against a populated
+/// `[init]` section.
+fn init_flag() -> Option<InitSection> {
+    let mode = match (arg("--init-from-cold"), arg("--init-from-warm")) {
+        (Some(_), Some(_)) => panic!("--init-from-cold and --init-from-warm are exclusive"),
+        (Some(from), None) => (InitMode::Cold, from),
+        (None, Some(from)) => (InitMode::Warm, from),
+        (None, None) => return None,
+    };
+    let pool = arg("--init-pool")
+        .map(|value| PoolCarry::parse(&value).unwrap_or_else(|err| panic!("--init-pool: {err}")));
+    Some(InitSection {
+        mode: mode.0,
+        from: PathBuf::from(mode.1),
+        pool,
+    })
+}
 
 fn main() {
     env_logger::init();
@@ -56,20 +92,28 @@ fn main() {
         .nth(1)
         .unwrap_or_else(|| "config/default.toml".to_string());
     let config = TrainConfig::from_file(Path::new(&path)).expect("config");
+    // Resolved before a backend is chosen: a contradiction between the `.toml` and the command
+    // line costs nothing to find and a run to discover late.
+    let init = config.init(init_flag(), resume).expect("init");
 
     if cuda {
         #[cfg(feature = "rl-model-cuda")]
         {
-            run::<Autodiff<burn::backend::Cuda>>(&config, &Default::default(), resume);
+            run::<Autodiff<burn::backend::Cuda>>(&config, &Default::default(), resume, init);
             return;
         }
         #[cfg(not(feature = "rl-model-cuda"))]
         panic!("--cuda needs --features rl-model-cuda");
     }
-    run::<Autodiff<NdArray>>(&config, &Default::default(), resume);
+    run::<Autodiff<NdArray>>(&config, &Default::default(), resume, init);
 }
 
-fn run<B: AutodiffBackend>(config: &TrainConfig, device: &B::Device, resume: bool) {
+fn run<B: AutodiffBackend>(
+    config: &TrainConfig,
+    device: &B::Device,
+    resume: bool,
+    init: Option<InitSection>,
+) {
     let interrupt = Interrupt::install().expect("interrupt handler");
     let pause = Pause::install();
 
@@ -419,6 +463,61 @@ fn run<B: AutodiffBackend>(config: &TrainConfig, device: &B::Device, resume: boo
             state.batch,
             clock(state.elapsed_seconds)
         );
+    } else if let Some(init) = &init {
+        // The counterpart of the resume above, and deliberately not a variant of it: `state` keeps
+        // its zeros, so this is batch 0 of a new run whose weights happen to have a history. What
+        // that history includes is `[init] mode`/`pool`, decided in `train::init` — everything here
+        // is installation.
+        let shell = magnet
+            .is_some()
+            .then(|| RlModel::<B>::new(model_config, &embeddings, device));
+        let loaded = init::load::<B>(init, config, model, shell, &run_dir.pool(), device)
+            .expect("init source");
+        model = loaded.model;
+        for note in &loaded.notes {
+            println!("init: {note}");
+        }
+        if let Some(record) = loaded.optimizer {
+            learner.load_optimizer(*record);
+        }
+        if let (Some(magnet), Some(restored)) = (&mut magnet, loaded.magnet) {
+            let (weights, optimizer) = *restored;
+            magnet.restore(weights, optimizer);
+            restored_magnet = true;
+            if let Some(encoded) = &loaded.reservoir {
+                magnet.restore_reservoir(encoded).expect("reservoir");
+            }
+        }
+        // A carried panel goes in through the same door a resume's does, so the ratings and the
+        // slots arrive as one unit — a `restore` is the only path that re-attaches the `.toml`'s
+        // pool parameters to a checkpointed membership.
+        if let (Some(panel), Some(restored)) = (&mut panel, loaded.panel) {
+            panel
+                .restore(restored, &config.pool, device)
+                .expect("carried pool");
+            // The permanent list has to be re-pointed at *this* run's starting stage, which a
+            // resume never has to do: a resume restores the stage index the panel was written at,
+            // and an init starts at stage 0 whatever stage the source had reached. Without this the
+            // new run would face the source's late-stage anchors while its curriculum, its sampler
+            // and its eval all ran the first stage — §1.5.4's membership and its deck mix silently
+            // describing different stages. `retarget` keeps the slots and the archive, so only the
+            // permanent half moves.
+            let starting = match curriculum.as_ref().map(|c| &c.stage().panel) {
+                Some(StagePanel::Pool(permanent)) => Some(permanent.clone()),
+                Some(StagePanel::Scripted(_)) => None,
+                None => Some(config.pool.permanent().expect("pool panel")),
+            };
+            if let Some(permanent) = starting {
+                panel
+                    .retarget(permanent, device)
+                    .expect("carried pool retarget");
+            }
+            println!(
+                "init: panel installed — {} member(s), {} archived",
+                panel.pool().active().len(),
+                panel.pool().archive().len(),
+            );
+        }
     }
 
     // §1.1.3's heuristic anchor as the initial magnet. Skipped only when a magnet was *restored*:
