@@ -58,7 +58,7 @@ the player is optimized for being uniformly competent rather than for being stro
 everywhere else:
 
 ```bash
-cargo run --release --features rl-model-cuda --example benchmark_players -- --from runs/<run>/checkpoints/<hot-dir>
+cargo run --release --features rl-model-cuda --example benchmark_players -- --models Cliff
 ```
 
 Decisions per second, one seat, one thread. Not games per second: a game is not a fixed amount of
@@ -66,21 +66,21 @@ work.
 
 | Seat | Code | Decisions/s |
 | --- | --- | ---: |
-| EvolutionRusher | `er` | ~20 200 |
-| WeightedRandom | `w` | ~20 100 |
-| Random | `r` | ~18 600 |
-| AttachAttack | `aa` | ~17 500 |
-| EndTurn | `et` | ~12 700 |
-| ValueFunction | `v` | ~3 500 |
-| ExpectiMiniMax d=2 | `e2` | ~490 |
-| RL model, CUDA, `envs = 64` | `rl:<name>` | ~430 |
-| ExpectiMiniMax d=3 | `e3` | ~140 |
+| WeightedRandom | `w` | ~29 000 |
+| EvolutionRusher | `er` | ~29 000 |
+| Random | `r` | ~26 200 |
+| AttachAttack | `aa` | ~25 800 |
+| EndTurn | `et` | ~20 400 |
+| ValueFunction | `v` | ~5 000 |
+| RL model, CUDA, `envs = 64` | `rl:Cliff` | ~1 050 |
+| ExpectiMiniMax d=2 | `e2` | ~740 |
+| ExpectiMiniMax d=3 | `e3` | ~230 |
 | RL model, CPU NdArray | `rl:<name>` | ~90 |
 
 Below `v` the seat is the cost; above it the engine is. `rl-model-wgpu` builds and runs, not
 measured. Batching is what the GPU row rests on — a lone forward is ≈ 16 ms against ≈ 386 µs/sample
 saturated ([§1.4.3](./RL_ARCHITECTURE.md#143-sizes-and-measured-budget)) — and buys nothing on CPU,
-where NdArray is GEMM-bound and flat in the batch. The model is ~1.13 M trainable parameters, split
+where NdArray is GEMM-bound and flat in the batch. The model is ~1.26 M trainable parameters, split
 per component in `PERFORMANCE.md`; the frozen tables it gathers from are ~12 MB and are not
 parameters.
 

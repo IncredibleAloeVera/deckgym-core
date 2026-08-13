@@ -894,8 +894,8 @@ Fixed decisions the objective above does not state:
 - **The buffer is checkpointed on a stop or a pause, not on the autosave cadence.** `seen` travels
   with the residents, because it is the acceptance denominator: a buffer restored without it re-takes
   the average over the post-resume stream only, which is the lagged copy the point above forbids.
-  Measured over `long_v3` (4 restarts) and `long_v4` (1), a reset drops `loss/kl_magnet` ~0.13 → 0.09
-  in 80 batches and makes the series incomparable across runs. A crash still resumes from an empty
+  Measured over two long runs (4 restarts in one, 1 in the other), a reset drops `loss/kl_magnet`
+  ~0.13 → 0.09 in 80 batches and makes the series incomparable across runs. A crash still resumes from an empty
   buffer, and a resumed run then holds the SL step until it refills past its fill floor.
 - **A batch larger than the §1.4.3 knee is split for the forward and accumulated**, staying one step
   for the optimizer: "one step per batch" is an algorithm property, the split is a VRAM one. The
@@ -1198,8 +1198,8 @@ interpretability pass over text would have to earn the same statement.
 **Pokémon and Trainer are read per zone as well** (`attn_focus/*/trainer.hand`, …), because for those
 two the family baseline is unreadable: their tokens span hand / deck / discard, so ~11 of a batch's
 ~14 Trainer tokens are cards nobody can play, and a head spending its mass on the relevant ones alone
-scores ~0.5 against chance. `long_v3` and `long_v4` both read all 48 head/family pairs below chance
-on Trainer — including the run with no text features, which rules out the text channel as the cause.
+scores ~0.5 against chance. Two long runs both read all 48 head/family pairs below chance on
+Trainer — including the one with no text features, which rules out the text channel as the cause.
 The zoned buckets refine the families rather than replace them (asserted: the four zones of a family
 sum to it, in share and in mass), and the aggregates stay so earlier runs' curves keep meaning
 something.
