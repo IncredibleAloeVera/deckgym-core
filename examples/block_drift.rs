@@ -7,7 +7,7 @@
 //! question needs the parameters and not the activations.
 //!
 //! ```text
-//! cargo run --release --features rl-model --example block_drift -- --run runs/long_v5
+//! cargo run --release --features rl-model --example block_drift -- --run runs/<run>
 //! ```
 //!
 //! **Read against the earliest clone, not against the initialization.** The init is not

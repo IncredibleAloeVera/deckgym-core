@@ -42,6 +42,13 @@ struct Dump<'a> {
     /// `Debug` rather than the `Serialize` impl `Action` has: what one reads first is a one-line
     /// name of the action, and the structured form is in `state` anyway for anything deeper.
     last_action: Option<String>,
+    /// The mask of the decision the game was waiting on, for a panic raised while *encoding* that
+    /// frame rather than while playing one. It is the subject in that case — an overflowed wire cap
+    /// is a statement about the enumerated action set, and a reader who has only `state` would have
+    /// to re-derive it. Absent for an engine panic, where the mask is spent and `last_action` is
+    /// what broke.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pending_mask: Option<&'a crate::rl::action_mask::ActionMask>,
     decks: [&'a crate::Deck; 2],
     state: &'a crate::State,
 }
@@ -71,13 +78,15 @@ impl CrashLog {
     /// Dumps a crashed env. Returns the file written, or `None` once `keep` is reached.
     ///
     /// The env must be the one that crashed and must not have been replaced yet — the state it
-    /// still holds is the subject.
+    /// still holds is the subject. `pending` is the mask the encoder choked on, and `None` for a
+    /// panic that came out of the engine.
     pub fn record(
         &mut self,
         panic: &EnginePanic,
         env: &Env<'_>,
         batch: u64,
         slot: usize,
+        pending: Option<&crate::rl::action_mask::ActionMask>,
     ) -> Result<Option<PathBuf>, String> {
         self.seen += 1;
         if self.written >= self.keep {
@@ -96,6 +105,7 @@ impl CrashLog {
             panic_location: panic.location.as_deref(),
             backtrace: &panic.backtrace,
             last_action: env.last_action().map(|action| format!("{action:?}")),
+            pending_mask: pending,
             decks: env.decks(),
             state,
         };
@@ -207,7 +217,7 @@ mod tests {
         let (env, panic) = crashed_env();
 
         let path = CrashLog::new(&dir, 8)
-            .record(&panic, &env, 17, 3)
+            .record(&panic, &env, 17, 3, None)
             .expect("write")
             .expect("a dump");
 
@@ -234,6 +244,31 @@ mod tests {
         assert_eq!(state.hands[0].len(), env.state().hands[0].len());
     }
 
+    /// A panic raised while *encoding* the pending frame rather than while playing one: the mask
+    /// is the subject, so the dump has to carry it, and carry it as an `ActionMask` rather than as
+    /// look-alike JSON — what a reader wants to know is which candidate overran the cap.
+    #[test]
+    fn a_dump_of_an_encoding_panic_carries_the_frame_that_broke_it() {
+        let dir = scratch("pending");
+        let (env, panic) = crashed_env();
+        let state = env.state().clone();
+        let (actor, actions) = state.generate_possible_actions();
+        let observation =
+            crate::rl::observation::get_observation(&state, actor, &actions, None, None);
+        let mask = crate::rl::action_mask::project(&state, &actions, &observation);
+
+        let path = CrashLog::new(&dir, 8)
+            .record(&panic, &env, 5, 0, Some(&mask))
+            .expect("write")
+            .expect("a dump");
+
+        let dump: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(&path).expect("read")).expect("json");
+        let carried: crate::rl::action_mask::ActionMask =
+            serde_json::from_value(dump["pending_mask"].clone()).expect("mask");
+        assert_eq!(carried, mask);
+    }
+
     /// The cap stops the writing, never the counting: §1.5.6's crash rate is read off `seen`, and
     /// a run whose disk quota silently flattened its own error curve is worse than one with no
     /// dumps at all.
@@ -243,9 +278,18 @@ mod tests {
         let (env, panic) = crashed_env();
         let mut log = CrashLog::new(&dir, 2);
 
-        assert!(log.record(&panic, &env, 0, 0).expect("first").is_some());
-        assert!(log.record(&panic, &env, 1, 0).expect("second").is_some());
-        assert!(log.record(&panic, &env, 2, 0).expect("third").is_none());
+        assert!(log
+            .record(&panic, &env, 0, 0, None)
+            .expect("first")
+            .is_some());
+        assert!(log
+            .record(&panic, &env, 1, 0, None)
+            .expect("second")
+            .is_some());
+        assert!(log
+            .record(&panic, &env, 2, 0, None)
+            .expect("third")
+            .is_none());
 
         assert_eq!(log.seen(), 3);
         assert_eq!(fs::read_dir(&dir).expect("dir").count(), 2);

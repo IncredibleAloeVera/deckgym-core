@@ -13,7 +13,7 @@
 //!
 //! ```text
 //! cargo run --release --features rl-model-cuda --example head_to_head -- \
-//!     --from runs/long_v5/checkpoints/hot-00001252
+//!     --from runs/<run>/checkpoints/<hot-dir>
 //! ```
 //!
 //! **The first arm is the control, and it is not optional.** The learner always occupies

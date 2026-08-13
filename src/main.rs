@@ -26,9 +26,9 @@ enum Commands {
         /// Path to the second deck file or folder containing multiple deck files
         deck_b_or_folder: String,
 
-        /// Players' strategies as a comma-separated list (e.g., "e2,e4" or "r,rl:my_model")
+        /// Players' strategies as a comma-separated list (e.g., "e2,e4" or "r,rl:Cliff")
         /// Available codes: aa, et, r, h, w, m, v, e<depth>, er, rl:<model>
-        /// Example: e2 = ExpectiMiniMax with depth 2; rl:my_model = a model you baked, under --models-root
+        /// Example: e2 = ExpectiMiniMax with depth 2; rl:Cliff = the baked model of that name
         #[arg(long, value_delimiter = ',', value_parser = parse_player_code)]
         players: Option<Vec<PlayerCode>>,
 

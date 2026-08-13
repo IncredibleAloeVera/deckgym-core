@@ -97,7 +97,7 @@ pub fn parse_player_code(s: &str) -> Result<PlayerCode, String> {
         }
         if name.is_empty() {
             return Err(
-                "Invalid player code: 'rl:' needs a model name, e.g. 'rl:my_model'".to_string(),
+                "Invalid player code: 'rl:' needs a model name, e.g. 'rl:Cliff'".to_string(),
             );
         }
         return Ok(PlayerCode::RL {
@@ -215,7 +215,7 @@ mod tests {
     fn model_codes_round_trip() {
         for code in [
             PlayerCode::RL {
-                name: "long_v2_b972".to_string(),
+                name: "Cliff".to_string(),
             },
             PlayerCode::RL {
                 name: "proto/mmd_v3".to_string(),

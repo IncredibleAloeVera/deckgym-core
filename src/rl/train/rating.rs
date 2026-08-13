@@ -533,6 +533,20 @@ impl RatingTable {
     /// difference is load-bearing: re-declaring the panel must *not* reset a rating, while a baked
     /// model arriving with a rating recorded in its `meta.toml` must not be silently ignored for
     /// having been touched first.
+    /// Drops the rating of every clone outside `keep`, leaving heuristics and baked models alone.
+    ///
+    /// The one caller is [`super::init`]'s partial pool carry, and the reason is [`Self::scalars`]:
+    /// `elo/pool_mean` and `elo/pool_best` average over every `Pool` entry, evicted ones included.
+    /// A table carrying ratings for clones whose weights were not copied would report a pool the
+    /// run does not have — the entries are unreachable, so the lie is only in the curve, which is
+    /// exactly where it would be believed.
+    pub fn retain_clones(&mut self, keep: &[u64]) {
+        self.entries.retain(|id, _| match id {
+            OpponentId::Pool(batch) => keep.contains(batch),
+            _ => true,
+        });
+    }
+
     pub fn set(&mut self, id: OpponentId, entry: Entry) {
         self.entries.insert(id, entry);
     }
@@ -958,7 +972,7 @@ mod tests {
         let cases = [
             OpponentId::Heuristic(PlayerCode::ER),
             OpponentId::Heuristic(PlayerCode::E { max_depth: 2 }),
-            OpponentId::Baked("default_mmd_prot".to_string()),
+            OpponentId::Baked("Cliff".to_string()),
             OpponentId::Pool(12_400),
         ];
         for id in cases {

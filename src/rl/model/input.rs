@@ -32,6 +32,7 @@ use crate::rl::observation::{
     Observation, TokenZone, MAX_ATTACK_TOKENS, MAX_POKEMON_TOKENS, MAX_TRAINER_TARGET_IDS,
     MAX_TRAINER_TOKENS,
 };
+use crate::rl::recover::{catch, EnginePanic};
 use crate::rl::static_tables::attack_table_row;
 
 use super::config::ModelConfig;
@@ -115,6 +116,55 @@ impl<B: Backend> ModelInput<B> {
             builder.push(point, scored, refs);
         }
         builder.into_tensors(batch, scored, refs, device)
+    }
+
+    /// [`ModelInput::from_points`] with the panic attributed to the point that raised it.
+    ///
+    /// The encoder asserts the wire caps (§1.3.8), and a frame that overflows one is the same kind
+    /// of event as an engine panic: one game found a position nothing anticipated, out of the
+    /// millions a run plays. But a rollout batches 128 of them into a single call, so an
+    /// unattributed panic costs the whole batch and — worse — says nothing about *which* frame to
+    /// go and read. So the batch is encoded under one guard, and only a failure pays for the
+    /// row-by-row re-encoding that names the offender.
+    ///
+    /// Re-encoding is exact rather than merely indicative: [`Builder::push`] reads one point and
+    /// appends to the builder, and no assertion it makes looks at what a previous point pushed. A
+    /// panic that then reproduces nowhere alone came from [`Builder::into_tensors`] — a shape bug,
+    /// which is the run's problem and not one frame's.
+    pub fn try_from_points(
+        points: &[DecisionPoint<'_>],
+        config: &ModelConfig,
+        device: &B::Device,
+    ) -> Result<Self, EncodeFault> {
+        let batch = match catch(|| Self::from_points(points, config, device)) {
+            Ok(input) => return Ok(input),
+            Err(panic) => panic,
+        };
+        for (row, point) in points.iter().enumerate() {
+            let alone = std::slice::from_ref(point);
+            if let Err(panic) = catch(|| Self::from_points(alone, config, device)) {
+                return Err(EncodeFault::Row { row, panic });
+            }
+        }
+        Err(EncodeFault::Batch(batch))
+    }
+}
+
+/// An encoding that panicked, and how much of the batch it condemns.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EncodeFault {
+    /// The point at `row` panics on its own — drop that frame and encode the rest.
+    Row { row: usize, panic: EnginePanic },
+    /// No single point reproduces it, so nothing here is worth retrying without it.
+    Batch(EnginePanic),
+}
+
+impl std::fmt::Display for EncodeFault {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EncodeFault::Row { row, panic } => write!(f, "row {row}: {panic}"),
+            EncodeFault::Batch(panic) => write!(f, "the batch as a whole: {panic}"),
+        }
     }
 }
 
@@ -616,11 +666,92 @@ fn candidate_reference_rows(action: &SimpleAction, observation: &Observation) ->
 #[cfg(test)]
 mod tests {
     use super::*;
+    use burn::backend::NdArray;
+
     use crate::actions::Action;
     use crate::card_ids::CardId;
     use crate::database::get_card_by_enum;
     use crate::models::PlayedCard;
+    use crate::rl::action_mask::{project, MaskEntry};
+    use crate::rl::observation::get_observation;
     use crate::test_support::get_test_game_with_board;
+
+    /// The §1.5.5 panic, raised by the *encoder* rather than by the engine: a frame whose candidate
+    /// list overruns the wire cap. Batched with clean frames — which is the only way a rollout ever
+    /// encodes one — it has to come back named, since a caller can only drop a game it can
+    /// identify, and the 127 frames sharing the forward did nothing wrong.
+    #[test]
+    fn an_overflowing_candidate_is_attributed_to_its_own_row() {
+        let game = get_test_game_with_board(
+            vec![PlayedCard::from_id(CardId::A1001Bulbasaur)],
+            vec![PlayedCard::from_id(CardId::A1005Caterpie)],
+        );
+        let state = game.get_state_clone();
+        let (actor, actions) = state.generate_possible_actions();
+        let observation = get_observation(&state, actor, &actions, None, None);
+        let mask = project(&state, &actions, &observation);
+        let config = ModelConfig::default();
+
+        let mut overflowing = mask.clone();
+        overflowing.entries.push(MaskEntry {
+            head: Head::CandidatePtr,
+            index: config.max_scored_candidates,
+            action: SimpleAction::EndTurn,
+            is_stack: false,
+        });
+        let point = |mask| DecisionPoint {
+            observation: &observation,
+            mask,
+        };
+        let points = vec![point(&mask), point(&overflowing), point(&mask)];
+
+        let fault = ModelInput::<NdArray>::try_from_points(&points, &config, &Default::default())
+            .err()
+            .expect("a candidate past the cap is not encodable");
+        let EncodeFault::Row { row, panic } = fault else {
+            panic!("one frame overflows, so the batch is not to blame: {fault}");
+        };
+        assert_eq!(row, 1);
+        assert!(
+            panic.message.contains("max_scored_candidates"),
+            "unhelpful: {panic}"
+        );
+        // The location is the assertion's, not the guard's — the point of re-encoding row by row
+        // is to keep the panic exactly as the encoder raised it.
+        assert!(panic
+            .location
+            .as_deref()
+            .expect("a location")
+            .contains("input.rs"));
+    }
+
+    /// The happy path pays nothing: the guarded call returns the same input the unguarded one does.
+    #[test]
+    fn a_clean_batch_passes_through_the_guard() {
+        let game = get_test_game_with_board(
+            vec![PlayedCard::from_id(CardId::A1001Bulbasaur)],
+            vec![PlayedCard::from_id(CardId::A1005Caterpie)],
+        );
+        let state = game.get_state_clone();
+        let (actor, actions) = state.generate_possible_actions();
+        let observation = get_observation(&state, actor, &actions, None, None);
+        let mask = project(&state, &actions, &observation);
+        let points = vec![DecisionPoint {
+            observation: &observation,
+            mask: &mask,
+        }];
+
+        let config = ModelConfig::default();
+        let guarded = ModelInput::<NdArray>::try_from_points(&points, &config, &Default::default())
+            .expect("a legal frame encodes");
+        let plain = ModelInput::<NdArray>::from_points(&points, &config, &Default::default());
+        assert_eq!(guarded.batch, plain.batch);
+        assert_eq!(guarded.wires, plain.wires);
+        assert_eq!(
+            guarded.mask_bits.to_data().to_vec::<f32>().expect("bits"),
+            plain.mask_bits.to_data().to_vec::<f32>().expect("bits")
+        );
+    }
 
     /// §1.3.6.2: the two reveal candidates used to reference nothing, because the card they point
     /// at was in a zone the encoder could not see. With the belief render they resolve to their

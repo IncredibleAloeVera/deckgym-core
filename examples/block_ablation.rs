@@ -7,7 +7,7 @@
 //!
 //! ```text
 //! cargo run --release --features rl-model --example block_ablation -- \
-//!     --from runs/long_v5/checkpoints/hot-00001252
+//!     --from runs/<run>/checkpoints/<hot-dir>
 //! ```
 //!
 //! Three arms per block, all on the same decks and the same seed, so the only thing that moves is

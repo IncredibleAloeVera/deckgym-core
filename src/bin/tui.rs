@@ -176,7 +176,6 @@ mod tests {
     /// the perspective there, and an off-by-one seat would show up as a panic or an empty board.
     #[test]
     #[cfg(feature = "rl-model")]
-    #[ignore = "no model under models/ is baked against the current schema"]
     fn test_ui_renders_with_the_human_on_the_first_seat() {
         let app = App::new(&AppConfig::new(
             "example_decks/venusaur-exeggutor.txt",
@@ -184,7 +183,7 @@ mod tests {
             vec![
                 PlayerCode::H,
                 PlayerCode::RL {
-                    name: "default_mmd_prot".to_string(),
+                    name: "Cliff".to_string(),
                 },
             ],
         ))

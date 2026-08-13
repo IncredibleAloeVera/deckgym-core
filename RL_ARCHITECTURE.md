@@ -1,6 +1,6 @@
 # 1. RL_ARCHITECTURE
 
-Version: 2.1.0\
+Version: 2.2.0\
 Any content below is subject to change.
 
 2.0.0 is an editorial refactor: no specification changed, but every heading was renamed and every
@@ -1106,6 +1106,21 @@ it live or commented, and the parser (`deny_unknown_fields`) refuses a field it 
   batch after a resume does not match the batch it replaces. A crash writes nothing, so the hazard
   the format guards is the torn write — a marker file published last, and a checkpoint is invisible
   until it exists.
+- **A third entry point** ([src/rl/train/init.rs](src/rl/train/init.rs)), beside a fresh run and a
+  resume: `[init]` starts a **new** run directory at batch 0 whose weights are another run's.
+  `mode = "cold"` is the weights alone — the only mode a baked model or a loose `.mpk` can serve;
+  `"warm"` adds AdamW's moments and the magnet, which is what a resume restores minus the loop
+  counters. The pool is a separate field because a clone is a *file* in the source run, so carrying
+  one copies rather than references — a run directory has to stay self-contained — and
+  `pool = empty | partial | full` is how much. Ratings travel with the members, so a carried pool
+  continues the source's elo scale instead of restarting: what makes two such runs comparable to each
+  other and to nothing else. Each source is checked as far as it can prove anything — a baked model
+  by its fingerprint, a hot checkpoint still inside its run by that run's cloned `[model]` and
+  `text_embeddings`, a loose record by nothing. `[init]` and the `--init-from-*` flags are refused
+  together rather than ranked, for the reason the run name has no CLI override.
+
+  > Carry semantics against a changed slot count, the checks that are *not* possible, and the two
+  > tenure/stage bugs the design walked into: `NOTES.md`.
 - **A pause is not a stop** ([src/rl/train/pause.rs](src/rl/train/pause.rs)). `p` between batches
   holds the process — model, optimizer, pool and envs resident, envs therefore *not* dropped — and
   takes a hot checkpoint on the way in against the machine dying during it. That checkpoint carries
@@ -1124,7 +1139,13 @@ it live or commented, and the parser (`deny_unknown_fields`) refuses a field it 
   state, the action being applied, the location and a forced backtrace go to `runs/<name>/crashes/`
   before the slot is reused ([src/rl/train/crash.rs](src/rl/train/crash.rs)), since the rollout is the
   only place that state ever existed; [examples/replay_crash.rs](examples/replay_crash.rs) drives a
-  dump again rather than only reading it. Two `.toml` bounds: a dump cap (first occurrences are the
+  dump again rather than only reading it. **Encoding a frame is guarded the same way**
+  ([src/rl/model/input.rs](src/rl/model/input.rs)): the §1.3.8 wire caps are asserted, and a frame
+  that overruns one is the same event as a broken invariant — one game in millions reaching a
+  position nothing anticipated. But a batch holds 128 frames, so the panicking batch is re-encoded
+  row by row to name the offender: that game is dropped and dumped with the mask that broke it, and
+  the rest of the group is forwarded. A panic no single row reproduces is a shape bug and stays
+  fatal. Two `.toml` bounds: a dump cap (first occurrences are the
   informative ones) and a per-collection panic limit, guarding the reproducible crash that would
   otherwise respawn into itself forever. A rejected mask bit stays fatal (§1.3.7 invariant 3): that
   one is the caller violating a contract, not the engine giving up.

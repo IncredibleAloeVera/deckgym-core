@@ -6,7 +6,7 @@
 //!
 //! ```text
 //! cargo run --release --features rl-model --example attention_probe -- \
-//!     --from runs/long_v5/checkpoints/hot-00001252
+//!     --from runs/<run>/checkpoints/<hot-dir>
 //! ```
 //!
 //! **Every arm is repeated on `--repeats` independent draws**, and the spread is printed beside the

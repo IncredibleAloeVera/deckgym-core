@@ -39,7 +39,7 @@ use crate::players::{create_players, PlayerCode};
 use crate::rl::action_mask::{ActionMask, Head, MaskEntry, ACTION_MASK_DIM, HEADS};
 use crate::rl::env::{env_rng, split_seed, AgentId, Env, SeatPolicy, SubmitFault, VecEnv};
 use crate::rl::model::config::ModelConfig;
-use crate::rl::model::input::{DecisionPoint, ModelInput};
+use crate::rl::model::input::{DecisionPoint, EncodeFault, ModelInput};
 use crate::rl::model::RlModel;
 use crate::rl::observation::Observation;
 use crate::rl::recover::EnginePanic;
@@ -368,7 +368,7 @@ impl Collector {
             let (pending, finished, crashed) = self.envs.poll();
 
             for fault in crashed {
-                let report = self.discard(fault.env, &fault.panic, batch)?;
+                let report = self.discard(fault.env, &fault.panic, batch, None)?;
                 stats.crashes.push(report);
             }
 
@@ -417,11 +417,10 @@ impl Collector {
             // cannot land in the middle of a readback it would have to be unwound from.
             let mut answers: Vec<Option<Answer>> = (0..pending.len()).map(|_| None).collect();
             for (agent, rows) in &by_agent {
-                let model = if *agent == AgentId::LEARNER {
-                    stats.forwards += 1;
+                let learner = *agent == AgentId::LEARNER;
+                let model = if learner {
                     model
                 } else {
-                    stats.opponent_forwards += 1;
                     opponents.get(*agent).ok_or_else(|| {
                         format!(
                             "env asked for opponent model {agent:?}, which the collector was not \
@@ -430,14 +429,52 @@ impl Collector {
                     })?
                 };
 
-                let points: Vec<DecisionPoint<'_>> = rows
-                    .iter()
-                    .map(|row| DecisionPoint {
-                        observation: &pending[*row].request.observation,
-                        mask: &pending[*row].request.mask,
-                    })
-                    .collect();
-                let input = ModelInput::<B>::from_points(&points, model_config, device);
+                // Encoding a frame can panic on a wire cap the way playing one can panic on an
+                // engine invariant (§1.5.5), and it costs the same thing: the game that produced
+                // that frame, and none of the others sharing its forward. So the offender is
+                // dropped and the group re-encoded without it.
+                let mut live: Vec<usize> = rows.clone();
+                let input = loop {
+                    if live.is_empty() {
+                        break None;
+                    }
+                    let points: Vec<DecisionPoint<'_>> = live
+                        .iter()
+                        .map(|row| DecisionPoint {
+                            observation: &pending[*row].request.observation,
+                            mask: &pending[*row].request.mask,
+                        })
+                        .collect();
+                    match ModelInput::<B>::try_from_points(&points, model_config, device) {
+                        Ok(input) => break Some(input),
+                        Err(EncodeFault::Row { row, panic }) => {
+                            let slot = &pending[live[row]];
+                            let report =
+                                self.discard(slot.env, &panic, batch, Some(&slot.request.mask))?;
+                            stats.crashes.push(report);
+                            live.remove(row);
+                        }
+                        // Not one frame's fault, so there is no frame to drop and retrying would
+                        // only reach the same assertion (§1.3.7 invariant 3's neighbour: the caller
+                        // broke a contract, the engine did not give up).
+                        Err(EncodeFault::Batch(panic)) => {
+                            return Err(format!(
+                                "encoding a {}-point batch for {agent:?} panicked without a frame \
+                                 to blame: {panic}",
+                                live.len()
+                            ))
+                        }
+                    }
+                };
+                // Every frame in this group was a crash; the envs are respawned and the next poll
+                // will ask again. Counted after that, so `frames / forwards` stays the mean batch
+                // size of forwards that actually ran.
+                let Some(input) = input else { continue };
+                if learner {
+                    stats.forwards += 1;
+                } else {
+                    stats.opponent_forwards += 1;
+                }
                 let output = model.forward(&input);
                 let policy = output
                     .policy
@@ -449,10 +486,8 @@ impl Collector {
                     .to_data()
                     .to_vec::<f32>()
                     .map_err(|err| format!("value readback failed: {err:?}"))?;
-                drop(points);
 
-                let learner = *agent == AgentId::LEARNER;
-                for (offset, row) in rows.iter().enumerate() {
+                for (offset, row) in live.iter().enumerate() {
                     let mask = &pending[*row].request.mask;
                     let row_probs =
                         &policy[offset * ACTION_MASK_DIM..(offset + 1) * ACTION_MASK_DIM];
@@ -498,7 +533,7 @@ impl Collector {
                         }
                     }
                     Err(SubmitFault::Panicked(panic)) => {
-                        let report = self.discard(slot.env, &panic, batch)?;
+                        let report = self.discard(slot.env, &panic, batch, None)?;
                         stats.crashes.push(report);
                     }
                     Err(SubmitFault::Rejected(err)) => {
@@ -565,18 +600,22 @@ impl Collector {
     /// The env's §1.5.7 harvest handler is dropped rather than closed — `on_game_end` reads the
     /// terminal state, and this game has no terminal state, only a broken one. So a crashed game
     /// contributes no labels either.
+    ///
+    /// `pending` is the mask of the decision the game was waiting on, for a panic raised while
+    /// encoding that frame rather than while playing one — see [`CrashLog::record`].
     fn discard(
         &mut self,
         slot: usize,
         panic: &EnginePanic,
         batch: u64,
+        pending: Option<&ActionMask>,
     ) -> Result<CrashReport, String> {
         self.budget.charge()?;
 
         // Dumped before the slot is replaced: the state that panicked is what the fresh game is
         // about to overwrite.
         let dump = match (self.crashes.as_mut(), self.envs.get(slot)) {
-            (Some(log), Some(env)) => log.record(panic, env, batch, slot)?,
+            (Some(log), Some(env)) => log.record(panic, env, batch, slot, pending)?,
             _ => None,
         };
 
@@ -1207,7 +1246,9 @@ mod tests {
         let panic = crate::rl::recover::catch(|| panic!("Active Pokemon should be there"))
             .expect_err("a panic");
 
-        let report = collector.discard(broken, &panic, 9).expect("recovery");
+        let report = collector
+            .discard(broken, &panic, 9, None)
+            .expect("recovery");
 
         assert_eq!(report.env, broken);
         assert!(report.message.contains("Active Pokemon"));
@@ -1233,9 +1274,11 @@ mod tests {
         collector.budget = CrashBudget::new(2);
         let panic = crate::rl::recover::catch(|| panic!("broken")).expect_err("a panic");
 
-        assert!(collector.discard(0, &panic, 0).is_ok());
-        assert!(collector.discard(0, &panic, 0).is_ok());
-        let stopped = collector.discard(0, &panic, 0).expect_err("past the limit");
+        assert!(collector.discard(0, &panic, 0, None).is_ok());
+        assert!(collector.discard(0, &panic, 0, None).is_ok());
+        let stopped = collector
+            .discard(0, &panic, 0, None)
+            .expect_err("past the limit");
         assert!(stopped.contains("engine panics"), "unhelpful: {stopped}");
     }
 

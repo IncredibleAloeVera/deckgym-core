@@ -29,7 +29,7 @@ use crate::players::{create_players, PlayerCode};
 use crate::rl::action_mask::ACTION_MASK_DIM;
 use crate::rl::env::{env_rng, split_seed, AgentId, Env, SeatPolicy, SubmitFault, VecEnv};
 use crate::rl::model::config::ModelConfig;
-use crate::rl::model::input::{DecisionPoint, ModelInput};
+use crate::rl::model::input::{DecisionPoint, EncodeFault, ModelInput};
 use crate::rl::model::RlModel;
 
 use super::config::EvalTrigger;
@@ -637,24 +637,51 @@ impl Evaluator {
                 continue;
             }
 
-            let points: Vec<DecisionPoint<'_>> = pending
-                .iter()
-                .map(|slot| DecisionPoint {
-                    observation: &slot.request.observation,
-                    mask: &slot.request.mask,
-                })
-                .collect();
-            let input = ModelInput::<B>::from_points(&points, model_config, device);
+            // Encoding a frame can panic on a wire cap (§1.3.8) the way playing one can panic on an
+            // engine invariant, and it is charged the same way — an evaluation that ends the
+            // process reports nothing at all, which is worse than one that reports a crash.
+            let mut live: Vec<usize> = (0..pending.len()).collect();
+            let input = loop {
+                if live.is_empty() {
+                    break None;
+                }
+                let points: Vec<DecisionPoint<'_>> = live
+                    .iter()
+                    .map(|row| DecisionPoint {
+                        observation: &pending[*row].request.observation,
+                        mask: &pending[*row].request.mask,
+                    })
+                    .collect();
+                match ModelInput::<B>::try_from_points(&points, model_config, device) {
+                    Ok(input) => break Some(input),
+                    Err(EncodeFault::Row { row, panic }) => {
+                        let slot = pending[live[row]].env;
+                        self.charge(budget, &mut report, &panic.to_string())?;
+                        self.refill(&mut vec_env, slot, opponent, first_game, &mut dealt, total)?;
+                        live.remove(row);
+                    }
+                    Err(EncodeFault::Batch(panic)) => {
+                        return Err(format!(
+                            "encoding a {}-point batch against {} panicked without a frame to \
+                             blame: {panic}",
+                            live.len(),
+                            report.label
+                        ))
+                    }
+                }
+            };
+            // Every pending frame crashed; the refilled slots are asked again on the next poll.
+            let Some(input) = input else { continue };
             let policy = model
                 .forward(&input)
                 .policy
                 .to_data()
                 .to_vec::<f32>()
                 .map_err(|err| format!("policy readback failed: {err:?}"))?;
-            drop(points);
 
-            for (row, pending) in pending.into_iter().enumerate() {
-                let row_probs = &policy[row * ACTION_MASK_DIM..(row + 1) * ACTION_MASK_DIM];
+            for (offset, row) in live.iter().enumerate() {
+                let pending = &pending[*row];
+                let row_probs = &policy[offset * ACTION_MASK_DIM..(offset + 1) * ACTION_MASK_DIM];
                 let (entry, _) = sample_entry(&pending.request.mask, row_probs, &mut action_rng);
                 let (head, arg) = (entry.head, entry.index);
                 match vec_env.submit(pending.env, head, arg) {
